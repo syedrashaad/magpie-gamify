@@ -6,27 +6,39 @@ import {
   resetUserState,
   calculateLane,
 } from './utils/storage';
+import { DEMO_UNITS, ScenarioData } from './data/scenarios';
 import { Navigation } from './components/Navigation';
 import { MagpieHome } from './components/MagpieHome';
+import { TasksView } from './components/TasksView';
+import { MagpieCoachView } from './components/MagpieCoachView';
+import { TrainingView } from './components/TrainingView';
 import { MagpieCreationModal } from './components/MagpieCreationModal';
 import { MagpieCoachModal } from './components/MagpieCoachModal';
 import { RewardSequence } from './components/RewardSequence';
-import { SkyRaceView } from './components/SkyRaceView';
-import { SkyRaceGame } from './components/SkyRaceGame';
+import { PersonalFlightGame } from './components/PersonalFlightGame';
 import { LevelUpModal } from './components/LevelUpModal';
-import { MyCoursesView } from './components/MyCoursesView';
-import { MyTrainingView } from './components/MyTrainingView';
+import { UserProfileModal } from './components/UserProfileModal';
 
 export function App() {
   const [userState, setUserState] = useState<UserState>(() => loadUserState());
   const [activeTab, setActiveTab] = useState<ActiveTab>('home');
+
+  // Scenario Progression State
+  const [unlockedScenarioIds, setUnlockedScenarioIds] = useState<string[]>(['sc-1', 'sc-2', 'sc-3']);
+  const [completedScenarioIds, setCompletedScenarioIds] = useState<string[]>(['sc-1', 'sc-2']);
+  const [activeScenarioId, setActiveScenarioId] = useState<string>('sc-3');
+  const [selectedScenario, setSelectedScenario] = useState<ScenarioData | null>(null);
+
+  // Modals & Game States
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
-  const [isCoachOpen, setIsCoachOpen] = useState(false);
+  const [isCoachModalOpen, setIsCoachModalOpen] = useState(false);
   const [isRewardOpen, setIsRewardOpen] = useState(false);
   const [isLevelUpOpen, setIsLevelUpOpen] = useState(false);
+  const [isFlightGameOpen, setIsFlightGameOpen] = useState(false);
   const [latestScore, setLatestScore] = useState(8);
 
-  // Save state to localStorage
+  // Auto-save state
   useEffect(() => {
     saveUserState(userState);
   }, [userState]);
@@ -35,30 +47,42 @@ export function App() {
     setUserState(updated);
   };
 
-  const handleStartScenario = () => {
-    setIsCoachOpen(true);
+  const handleStartScenario = (scenarioId?: string) => {
+    const targetId = scenarioId || activeScenarioId;
+    const target = DEMO_UNITS.flatMap((u) => u.scenarios).find((s) => s.id === targetId) || DEMO_UNITS[0].scenarios[2];
+    setSelectedScenario(target);
+    setIsCoachModalOpen(true);
   };
 
   const handleCompleteScenario = (score: number) => {
     setLatestScore(score);
-    setIsCoachOpen(false);
+    setIsCoachModalOpen(false);
 
-    // Open Cinematic Reward Sequence
+    // Mark current scenario completed & unlock next scenario (sc-4 Angry Guest)
+    if (!completedScenarioIds.includes(activeScenarioId)) {
+      setCompletedScenarioIds((prev) => [...prev, activeScenarioId]);
+    }
+    if (!unlockedScenarioIds.includes('sc-4')) {
+      setUnlockedScenarioIds((prev) => [...prev, 'sc-4']);
+      setActiveScenarioId('sc-4');
+    }
+
+    // Trigger Reward Sequence
     setTimeout(() => {
       setIsRewardOpen(true);
     }, 400);
   };
 
   const handleFeedMagpie = () => {
-    // Rewards boost: +3 Food, +2 Feathers, +1 Egg
+    // Rewards boost: +20 XP, +3 Food 🍎, +2 Feathers 🪶, +1 Egg 🥚
     const newFood = userState.rewards.food + 3;
     const newFeathers = userState.rewards.feathers + 2;
     const newEggs = userState.rewards.eggs + 1;
 
     let newGrowth = userState.magpie.growth + 12; // 82% -> 94%
     let newLevel = userState.magpie.level;
-
     let didLevelUp = false;
+
     if (newGrowth >= 100 && newLevel < 3) {
       newGrowth = newGrowth - 100;
       newLevel = (newLevel + 1) as 1 | 2 | 3;
@@ -66,9 +90,11 @@ export function App() {
     }
 
     const newLane = calculateLane(newEggs);
+    const newStreak = userState.flightDays + 1; // 🔥 12 -> 13 days streak
 
     setUserState({
       ...userState,
+      flightDays: newStreak,
       magpie: {
         ...userState.magpie,
         level: newLevel,
@@ -81,6 +107,7 @@ export function App() {
       },
       flight: {
         ...userState.flight,
+        power: userState.flight.power + 20,
         lane: newLane,
       },
       training: {
@@ -94,27 +121,17 @@ export function App() {
     if (didLevelUp) {
       setTimeout(() => {
         setIsLevelUpOpen(true);
-      }, 1000);
+      }, 900);
     }
   };
 
-  const handleFinishSkyRace = (newDistance: number, eggsEarned: number, feathersEarned: number) => {
-    const newEggs = userState.rewards.eggs + eggsEarned;
-    const newFeathers = userState.rewards.feathers + feathersEarned;
-    const newLane = calculateLane(newEggs);
-
+  const handleFinishFlightGame = (newDistance: number) => {
     setUserState({
       ...userState,
-      rewards: {
-        ...userState.rewards,
-        eggs: newEggs,
-        feathers: newFeathers,
-      },
       flight: {
         ...userState.flight,
         currentDistance: newDistance,
         personalBest: Math.max(userState.flight.personalBest, newDistance),
-        lane: newLane,
       },
     });
   };
@@ -122,68 +139,95 @@ export function App() {
   const handleResetDemoState = () => {
     const res = resetUserState();
     setUserState(res);
+    setUnlockedScenarioIds(['sc-1', 'sc-2', 'sc-3']);
+    setCompletedScenarioIds(['sc-1', 'sc-2']);
+    setActiveScenarioId('sc-3');
   };
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-slate-900 font-sans flex flex-col selection:bg-purple-200">
       
       {/* Navigation Header */}
-      {activeTab !== 'sky-race' && (
+      {!isFlightGameOpen && (
         <Navigation
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           userState={userState}
-          onOpenCustomize={() => setIsCustomizeOpen(true)}
+          onOpenProfile={() => setIsProfileOpen(true)}
         />
       )}
 
-      {/* Main Content Router */}
+      {/* Main App View Router */}
       <main className="flex-1 pb-16">
+        {/* TASKS / HOME VIEW */}
         {activeTab === 'home' && (
-          <MagpieHome
-            userState={userState}
-            onStartScenario={handleStartScenario}
-            onOpenSkyRace={() => setActiveTab('sky-race')}
-            onOpenCustomize={() => setIsCustomizeOpen(true)}
-            onResetState={handleResetDemoState}
-          />
+          <div className="space-y-6">
+            <MagpieHome
+              userState={userState}
+              onStartScenario={() => handleStartScenario(activeScenarioId)}
+              onOpenSkyRace={() => setIsFlightGameOpen(true)}
+              onOpenCustomize={() => setIsCustomizeOpen(true)}
+              onResetState={handleResetDemoState}
+            />
+
+            {/* Learning Path Preview */}
+            <div className="pt-4 border-t border-slate-200/80">
+              <TasksView
+                userState={userState}
+                unlockedScenarioIds={unlockedScenarioIds}
+                completedScenarioIds={completedScenarioIds}
+                activeScenarioId={activeScenarioId}
+                onSelectScenario={(sc) => handleStartScenario(sc.id)}
+              />
+            </div>
+          </div>
         )}
 
+        {/* COURSES ROUTE FALLBACK */}
         {activeTab === 'courses' && (
-          <MyCoursesView
+          <TasksView
             userState={userState}
-            onStartScenario={handleStartScenario}
+            unlockedScenarioIds={unlockedScenarioIds}
+            completedScenarioIds={completedScenarioIds}
+            activeScenarioId={activeScenarioId}
+            onSelectScenario={(sc) => handleStartScenario(sc.id)}
           />
         )}
 
+        {/* MAGPIE COACH VIEW */}
         {activeTab === 'coach' && (
-          <MagpieHome
+          <MagpieCoachView
             userState={userState}
-            onStartScenario={handleStartScenario}
-            onOpenSkyRace={() => setActiveTab('sky-race')}
-            onOpenCustomize={() => setIsCustomizeOpen(true)}
-            onResetState={handleResetDemoState}
+            onStartScenario={(id) => handleStartScenario(id)}
           />
         )}
 
+        {/* TRAINING DASHBOARD VIEW */}
         {activeTab === 'training' && (
-          <MyTrainingView
+          <TrainingView
             userState={userState}
-            onStartScenario={handleStartScenario}
+            onStartScenario={() => handleStartScenario(activeScenarioId)}
           />
         )}
 
-        {/* Full-screen Playable Sky Race State */}
-        {activeTab === 'sky-race' && (
-          <SkyRaceGame
+        {/* PERSONAL FLIGHT MINI-GAME */}
+        {isFlightGameOpen && (
+          <PersonalFlightGame
             userState={userState}
-            onFinishRace={handleFinishSkyRace}
-            onReturnHome={() => setActiveTab('home')}
+            onFinishFlight={handleFinishFlightGame}
+            onReturnHome={() => setIsFlightGameOpen(false)}
           />
         )}
       </main>
 
-      {/* Modals & Visual Events */}
+      {/* Modals & Overlay Sequences */}
+      <UserProfileModal
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+        userState={userState}
+        onOpenCustomize={() => setIsCustomizeOpen(true)}
+      />
+
       <MagpieCreationModal
         isOpen={isCustomizeOpen}
         onClose={() => setIsCustomizeOpen(false)}
@@ -192,8 +236,8 @@ export function App() {
       />
 
       <MagpieCoachModal
-        isOpen={isCoachOpen}
-        onClose={() => setIsCoachOpen(false)}
+        isOpen={isCoachModalOpen}
+        onClose={() => setIsCoachModalOpen(false)}
         userState={userState}
         onCompleteScenario={handleCompleteScenario}
       />
@@ -206,7 +250,7 @@ export function App() {
         onClose={() => setIsRewardOpen(false)}
         onGoToSkyRace={() => {
           setIsRewardOpen(false);
-          setActiveTab('sky-race');
+          setIsFlightGameOpen(true);
         }}
       />
 
@@ -217,7 +261,7 @@ export function App() {
       />
 
       {/* Footer */}
-      {activeTab !== 'sky-race' && (
+      {!isFlightGameOpen && (
         <footer className="border-t border-slate-200/80 bg-white py-6 px-4 text-center text-xs text-slate-500">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-2">
@@ -225,7 +269,7 @@ export function App() {
               <span>• Sandalwood Grand Hotel & Resorts Training System</span>
             </div>
             <div>
-              <span>Powered by Magpie AI Gamified Learning Engine</span>
+              <span>Powered by Magpie AI Gamified Hospitality Simulator</span>
             </div>
           </div>
         </footer>
