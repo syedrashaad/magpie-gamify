@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { UserState, BodyColor, FeatherStyle, Accessory } from '../types';
 import { MagpieCharacter } from './MagpieCharacter';
 import { Magpie3DCanvas } from './Magpie3DCanvas';
-import { Check, Sparkles, X, Palette, Feather, ShieldAlert } from 'lucide-react';
+import { Check, Sparkles, X, Palette, Feather } from 'lucide-react';
 
 interface MagpieCreationModalProps {
   isOpen: boolean;
@@ -22,7 +22,7 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
   const [bodyColor, setBodyColor] = useState<BodyColor>(userState.magpie.bodyColor);
   const [featherStyle, setFeatherStyle] = useState<FeatherStyle>(userState.magpie.featherStyle);
   const [accessory, setAccessory] = useState<Accessory>(userState.magpie.accessory);
-  const [use3DMode, setUse3DMode] = useState(true);
+  const [use3DMode, setUse3DMode] = useState(false);
 
   if (!isOpen) return null;
 
@@ -35,10 +35,10 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
   ];
 
   const featherOptions: { id: FeatherStyle; name: string }[] = [
-    { id: 'sleek', name: 'Sleek Royal' },
+    { id: 'classic', name: 'Classic Plume' },
+    { id: 'soft', name: 'Soft Down' },
     { id: 'iridescent', name: 'Iridescent Sheen' },
-    { id: 'fluffy', name: 'Soft Down' },
-    { id: 'golden', name: 'Golden Plume' },
+    { id: 'patterned', name: 'Patterned Feathers' },
   ];
 
   const accessoryOptions: { id: Accessory; name: string; icon: string }[] = [
@@ -54,7 +54,7 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
       ...userState,
       magpie: {
         ...userState.magpie,
-        name: name || 'Corvus',
+        name: name.trim() || 'Nova',
         bodyColor,
         featherStyle,
         accessory,
@@ -66,7 +66,7 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md overflow-y-auto">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto">
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -79,10 +79,10 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
               <span className="text-2xl">✨</span>
               <div>
                 <h2 className="font-serif font-bold text-xl text-slate-900">
-                  Meet Your Magpie
+                  Customise Your Magpie
                 </h2>
                 <p className="text-xs text-slate-500 font-medium">
-                  Customize your persistent learning companion
+                  Personalise your persistent companion
                 </p>
               </div>
             </div>
@@ -92,7 +92,7 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
                 onClick={() => setUse3DMode(!use3DMode)}
                 className="text-xs font-bold px-3 py-1.5 rounded-full bg-purple-100 text-purple-900 hover:bg-purple-200 transition-colors flex items-center gap-1.5"
               >
-                <span>{use3DMode ? '3D WebGL' : '2.5D Canvas'}</span>
+                <span>{use3DMode ? '3D Mode' : '2.5D Mode'}</span>
                 <Sparkles className="w-3.5 h-3.5 text-purple-700" />
               </button>
               <button
@@ -115,10 +115,10 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
                 </span>
 
                 <h3 className="font-serif text-2xl font-bold text-white mb-6">
-                  {name || 'Corvus'}
+                  {name || 'Nova'}
                 </h3>
 
-                {/* 3D or 2.5D Bird View */}
+                {/* Bird Preview */}
                 <div className="w-64 h-64 relative flex items-center justify-center">
                   {use3DMode ? (
                     <Magpie3DCanvas
@@ -144,28 +144,28 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
               </div>
             </div>
 
-            {/* Right Customization Form */}
+            {/* Right Customization Options */}
             <div className="lg:col-span-7 p-6 space-y-6 overflow-y-auto max-h-[600px]">
               
               {/* Magpie Name */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
-                  Magpie Name
+                  What's your Magpie's name?
                 </label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Name your Magpie..."
+                  placeholder="e.g. Nova"
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent text-sm"
                 />
               </div>
 
-              {/* Body Color Picker */}
+              {/* Body Color */}
               <div>
                 <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
                   <Palette className="w-4 h-4 text-purple-700" />
-                  <span>Feather & Body Color</span>
+                  <span>Body Colour</span>
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                   {colorOptions.map((opt) => {
@@ -193,11 +193,11 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
                 </div>
               </div>
 
-              {/* Feather Texture Style */}
+              {/* Feather Style */}
               <div>
                 <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
                   <Feather className="w-4 h-4 text-purple-700" />
-                  <span>Feather Texture</span>
+                  <span>Feather Style</span>
                 </label>
                 <div className="grid grid-cols-2 gap-2.5">
                   {featherOptions.map((opt) => {
@@ -221,10 +221,10 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
                 </div>
               </div>
 
-              {/* Starter Accessories */}
+              {/* Accessories */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
-                  Starter Accessory
+                  Accessories
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                   {accessoryOptions.map((opt) => {

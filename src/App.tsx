@@ -12,6 +12,8 @@ import { MagpieCreationModal } from './components/MagpieCreationModal';
 import { MagpieCoachModal } from './components/MagpieCoachModal';
 import { RewardSequence } from './components/RewardSequence';
 import { SkyRaceView } from './components/SkyRaceView';
+import { SkyRaceGame } from './components/SkyRaceGame';
+import { LevelUpModal } from './components/LevelUpModal';
 import { MyCoursesView } from './components/MyCoursesView';
 import { MyTrainingView } from './components/MyTrainingView';
 
@@ -21,9 +23,10 @@ export function App() {
   const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
   const [isCoachOpen, setIsCoachOpen] = useState(false);
   const [isRewardOpen, setIsRewardOpen] = useState(false);
+  const [isLevelUpOpen, setIsLevelUpOpen] = useState(false);
   const [latestScore, setLatestScore] = useState(8);
 
-  // Save state whenever userState updates
+  // Save state to localStorage
   useEffect(() => {
     saveUserState(userState);
   }, [userState]);
@@ -40,25 +43,26 @@ export function App() {
     setLatestScore(score);
     setIsCoachOpen(false);
 
-    // Open Cinematic Reward Sequence after brief pause
+    // Open Cinematic Reward Sequence
     setTimeout(() => {
       setIsRewardOpen(true);
     }, 400);
   };
 
   const handleFeedMagpie = () => {
-    // Add rewards: +3 Food, +2 Feathers, +1 Egg
+    // Rewards boost: +3 Food, +2 Feathers, +1 Egg
     const newFood = userState.rewards.food + 3;
     const newFeathers = userState.rewards.feathers + 2;
     const newEggs = userState.rewards.eggs + 1;
 
-    // Calculate growth boost: 82% + 10% = 92%
-    let newGrowth = userState.magpie.growth + 10;
+    let newGrowth = userState.magpie.growth + 12; // 82% -> 94%
     let newLevel = userState.magpie.level;
 
-    if (newGrowth >= 100 && newLevel < 4) {
+    let didLevelUp = false;
+    if (newGrowth >= 100 && newLevel < 3) {
       newGrowth = newGrowth - 100;
-      newLevel = (newLevel + 1) as 1 | 2 | 3 | 4;
+      newLevel = (newLevel + 1) as 1 | 2 | 3;
+      didLevelUp = true;
     }
 
     const newLane = calculateLane(newEggs);
@@ -86,15 +90,31 @@ export function App() {
         scenariosCompleted: userState.training.scenariosCompleted + 1,
       },
     });
+
+    if (didLevelUp) {
+      setTimeout(() => {
+        setIsLevelUpOpen(true);
+      }, 1000);
+    }
   };
 
-  const handleUpdateDistance = (newDistance: number) => {
+  const handleFinishSkyRace = (newDistance: number, eggsEarned: number, feathersEarned: number) => {
+    const newEggs = userState.rewards.eggs + eggsEarned;
+    const newFeathers = userState.rewards.feathers + feathersEarned;
+    const newLane = calculateLane(newEggs);
+
     setUserState({
       ...userState,
+      rewards: {
+        ...userState.rewards,
+        eggs: newEggs,
+        feathers: newFeathers,
+      },
       flight: {
         ...userState.flight,
         currentDistance: newDistance,
         personalBest: Math.max(userState.flight.personalBest, newDistance),
+        lane: newLane,
       },
     });
   };
@@ -108,14 +128,16 @@ export function App() {
     <div className="min-h-screen bg-[#FAF8F5] text-slate-900 font-sans flex flex-col selection:bg-purple-200">
       
       {/* Navigation Header */}
-      <Navigation
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        userState={userState}
-        onOpenCustomize={() => setIsCustomizeOpen(true)}
-      />
+      {activeTab !== 'sky-race' && (
+        <Navigation
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          userState={userState}
+          onOpenCustomize={() => setIsCustomizeOpen(true)}
+        />
+      )}
 
-      {/* Main View Router */}
+      {/* Main Content Router */}
       <main className="flex-1 pb-16">
         {activeTab === 'home' && (
           <MagpieHome
@@ -151,16 +173,17 @@ export function App() {
           />
         )}
 
+        {/* Full-screen Playable Sky Race State */}
         {activeTab === 'sky-race' && (
-          <SkyRaceView
+          <SkyRaceGame
             userState={userState}
-            onUpdateDistance={handleUpdateDistance}
-            onStartScenario={handleStartScenario}
+            onFinishRace={handleFinishSkyRace}
+            onReturnHome={() => setActiveTab('home')}
           />
         )}
       </main>
 
-      {/* Modals & Overlay Sequences */}
+      {/* Modals & Visual Events */}
       <MagpieCreationModal
         isOpen={isCustomizeOpen}
         onClose={() => setIsCustomizeOpen(false)}
@@ -187,18 +210,26 @@ export function App() {
         }}
       />
 
-      {/* Enterprise Footer */}
-      <footer className="border-t border-slate-200/80 bg-white py-6 px-4 text-center text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="font-serif font-bold text-slate-800 text-sm">MAGPIE AI</span>
-            <span>• Sandalwood Grand Hotel & Resorts Training System</span>
+      <LevelUpModal
+        isOpen={isLevelUpOpen}
+        userState={userState}
+        onClose={() => setIsLevelUpOpen(false)}
+      />
+
+      {/* Footer */}
+      {activeTab !== 'sky-race' && (
+        <footer className="border-t border-slate-200/80 bg-white py-6 px-4 text-center text-xs text-slate-500">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <span className="font-serif font-bold text-slate-800 text-sm">MAGPIE AI</span>
+              <span>• Sandalwood Grand Hotel & Resorts Training System</span>
+            </div>
+            <div>
+              <span>Powered by Magpie AI Gamified Learning Engine</span>
+            </div>
           </div>
-          <div>
-            <span>Powered by Magpie AI Gamified Learning Engine</span>
-          </div>
-        </div>
-      </footer>
+        </footer>
+      )}
 
     </div>
   );

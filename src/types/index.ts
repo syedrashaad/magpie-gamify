@@ -1,15 +1,15 @@
 export type BodyColor = 'black' | 'blue' | 'purple' | 'green' | 'gold';
-export type FeatherStyle = 'sleek' | 'iridescent' | 'fluffy' | 'golden';
-export type Accessory = 'none' | 'scarf' | 'glasses' | 'cap' | 'headphones';
+export type FeatherStyle = 'classic' | 'soft' | 'iridescent' | 'patterned';
+export type Accessory = 'none' | 'scarf' | 'glasses' | 'headphones' | 'cap';
 
-export interface MagpieCharacter {
+export interface MagpieCharacterState {
   name: string;
   bodyColor: BodyColor;
   featherStyle: FeatherStyle;
   accessory: Accessory;
-  level: 1 | 2 | 3 | 4; // 1: Baby 🐣, 2: Young 🐦, 3: Flying 🪽, 4: Elite ✨
+  level: 1 | 2 | 3; // 1: Baby Magpie, 2: Young Magpie, 3: Flying Magpie
   xp: number;
-  growth: number; // 0 - 100 percentage inside current level
+  growth: number; // 0-100 percentage inside current level
 }
 
 export interface RewardsState {
@@ -27,19 +27,6 @@ export interface FlightState {
   lane: FlightLane;
 }
 
-export interface Scenario {
-  id: string;
-  title: string;
-  category: string;
-  property: string;
-  guestName: string;
-  situation: string;
-  timeLimit: string;
-  rewardFood: number;
-  rewardFeathers: number;
-  rewardEggs: number;
-}
-
 export interface TrainingState {
   scenariosCompleted: number;
   currentScore: number;
@@ -53,7 +40,7 @@ export interface UserState {
   property: string;
   course: string;
   flightDays: number;
-  magpie: MagpieCharacter;
+  magpie: MagpieCharacterState;
   rewards: RewardsState;
   flight: FlightState;
   training: TrainingState;

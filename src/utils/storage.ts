@@ -1,15 +1,15 @@
 import { UserState } from '../types';
 
-const STORAGE_KEY = 'magpie_ai_user_state_v1';
+const STORAGE_KEY = 'magpie_ai_world_v2';
 
 export const INITIAL_USER_STATE: UserState = {
   name: 'Rashaad Syed',
   role: 'Front Office Associate',
-  property: 'Sandalwood Grand - BLR',
+  property: 'Sandalwood Grand • BLR',
   course: 'Front Office Excellence',
   flightDays: 5,
   magpie: {
-    name: 'Corvus',
+    name: 'Nova',
     bodyColor: 'blue',
     featherStyle: 'iridescent',
     accessory: 'headphones',
@@ -18,9 +18,9 @@ export const INITIAL_USER_STATE: UserState = {
     growth: 82, // 82% to Level 3
   },
   rewards: {
-    eggs: 24,
-    feathers: 18,
-    food: 12,
+    eggs: 25,
+    feathers: 20,
+    food: 15,
   },
   flight: {
     power: 145,
@@ -65,24 +65,22 @@ export const resetUserState = (): UserState => {
   return INITIAL_USER_STATE;
 };
 
-export const calculateLane = (eggs: number): 'PRACTICE' | 'FLIGHT' | 'BOOST' | 'GOLDEN' => {
-  if (eggs >= 51) return 'GOLDEN';
-  if (eggs >= 26) return 'BOOST';
-  if (eggs >= 11) return 'FLIGHT';
-  return 'PRACTICE';
-};
-
 export const getLevelTitle = (level: number): string => {
   switch (level) {
     case 1:
-      return 'Baby Magpie 🐣';
+      return 'Baby Magpie';
     case 2:
-      return 'Young Magpie 🐦';
+      return 'Young Magpie';
     case 3:
-      return 'Flying Magpie 🪽';
-    case 4:
-      return 'Elite Magpie ✨';
+      return 'Flying Magpie';
     default:
-      return 'Magpie';
+      return 'Flying Magpie';
   }
+};
+
+export const calculateLane = (eggs: number): 'PRACTICE' | 'FLIGHT' | 'BOOST' | 'GOLDEN' => {
+  if (eggs >= 50) return 'GOLDEN';
+  if (eggs >= 25) return 'BOOST';
+  if (eggs >= 10) return 'FLIGHT';
+  return 'PRACTICE';
 };
