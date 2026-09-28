@@ -1,6 +1,7 @@
-import { UserState, MagpieLevel, FlightLane } from '../types';
+import { UserState, MagpieLevel, FlightLane, SkyLeagueMember } from '../types';
 
-const STORAGE_KEY = 'magpie_ai_v2_store';
+const STORAGE_KEY = 'magpie_ai_v3_store';
+const LEADERBOARD_KEY = 'magpie_ai_v3_leaderboard';
 
 export const INITIAL_USER_STATE: UserState = {
   name: 'Rashaad Syed',
@@ -8,7 +9,10 @@ export const INITIAL_USER_STATE: UserState = {
   property: 'The Sandalwood Grand',
   location: 'BLR',
   streak: 5,
+  flightDays: 5,
   xp: 840,
+  flightPower: 142,
+  rank: 4,
   dailyGoal: {
     targetXP: 20,
     currentXP: 15,
@@ -39,6 +43,14 @@ export const INITIAL_USER_STATE: UserState = {
   scenariosCompletedCount: 16,
 };
 
+export const INITIAL_LEADERBOARD: SkyLeagueMember[] = [
+  { id: 'usr-1', rank: 1, name: 'Ananya Sharma', role: 'Duty Manager', property: 'The Sandalwood Grand', xp: 910, flightPower: 185, streak: 8, avatarColor: 'purple' },
+  { id: 'usr-2', rank: 2, name: 'Priya Patel', role: 'Concierge Lead', property: 'The Sandalwood Grand', xp: 860, flightPower: 168, streak: 6, avatarColor: 'emerald' },
+  { id: 'usr-3', rank: 3, name: 'Arjun Verma', role: 'Guest Relations', property: 'The Sandalwood Grand', xp: 810, flightPower: 140, streak: 4, avatarColor: 'amber' },
+  { id: 'usr-4', rank: 4, name: 'Rashaad Syed', role: 'Front Office Associate', property: 'The Sandalwood Grand', xp: 840, flightPower: 142, streak: 5, avatarColor: 'blue', isCurrentUser: true },
+  { id: 'usr-5', rank: 5, name: 'Sarah Jenkins', role: 'Front Desk Officer', property: 'The Sandalwood Grand', xp: 760, flightPower: 125, streak: 3, avatarColor: 'rose' },
+];
+
 export const loadUserState = (): UserState => {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -59,9 +71,30 @@ export const saveUserState = (state: UserState): void => {
   }
 };
 
+export const loadLeaderboardState = (): SkyLeagueMember[] => {
+  try {
+    const saved = localStorage.getItem(LEADERBOARD_KEY);
+    if (saved) {
+      return JSON.parse(saved);
+    }
+  } catch (e) {
+    console.error('Failed to load leaderboard state', e);
+  }
+  return INITIAL_LEADERBOARD;
+};
+
+export const saveLeaderboardState = (board: SkyLeagueMember[]): void => {
+  try {
+    localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(board));
+  } catch (e) {
+    console.error('Failed to save leaderboard state', e);
+  }
+};
+
 export const resetUserState = (): UserState => {
   try {
     localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(LEADERBOARD_KEY);
   } catch (e) {
     console.error('Failed to reset user state', e);
   }

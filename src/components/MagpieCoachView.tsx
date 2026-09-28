@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { UserState } from '../types';
-import { ScenarioData } from '../data/scenarios';
 import { MagpieCharacter } from './MagpieCharacter';
-import { MessageSquareHeart, Sparkles, ArrowRight, ShieldAlert, Zap, RefreshCcw } from 'lucide-react';
+import { Sparkles, ArrowRight, Bot, User, Send, ShieldAlert } from 'lucide-react';
 
 interface MagpieCoachViewProps {
   userState: UserState;
@@ -17,94 +15,92 @@ export const MagpieCoachView: React.FC<MagpieCoachViewProps> = ({
   const [messages, setMessages] = useState<{ sender: 'nova' | 'user'; text: string }[]>([
     {
       sender: 'nova',
-      text: `Hey ${userState.name.split(' ')[0]}! I noticed your Empathy score dropped slightly during the last flight. Would you like to practice de-escalating an upset guest?`,
+      text: `Good morning ${userState.name.split(' ')[0]}! I reviewed your recent guest interaction metrics at The Sandalwood Grand. Your Communication score is outstanding (91/100). How can I help you prepare today?`,
     },
   ]);
   const [inputValue, setInputValue] = useState('');
 
   const promptSuggestions = [
-    'How should I handle an angry guest?',
-    'Practice my check-in protocol',
-    'Why did I lose points on Ownership?',
-    'Give me another scenario flight',
+    'How do I handle an angry guest?',
+    'Tips for VIP check-in protocol',
+    'Why did my empathy score dip?',
+    'Start Mr. Iyer wrong charges scenario',
   ];
 
   const handleSendPrompt = (text: string) => {
     setMessages((prev) => [...prev, { sender: 'user', text }]);
 
     setTimeout(() => {
-      let coachReply = `Great question! In 5-star luxury hospitality at Sandalwood Grand, always validate emotion first before explaining hotel policy. Taking direct ownership turns crises into guest loyalty.`;
+      let coachReply = `In luxury 5-star hospitality at Sandalwood Grand, always lead with empathy before stating policy. Taking personal ownership is what turns guest complaints into lifelong brand loyalty.`;
 
-      if (text.includes('angry')) {
-        coachReply = `When handling an angry guest: 1) Acknowledge their frustration immediately without interrupting. 2) Take personal ownership regardless of department. 3) Provide an instant tangible resolution (e.g., hold refund or suite move).`;
-      } else if (text.includes('check-in')) {
-        coachReply = `For 5-star check-in: Greet by surname, confirm loyalty tier benefits, verify room preferences, and ensure luggage is pre-loaded seamlessly.`;
-      } else if (text.includes('scenario')) {
-        coachReply = `Let’s launch your next flight! Mr. Iyer’s wrong charges scenario is ready for you in Tasks.`;
+      if (text.toLowerCase().includes('angry')) {
+        coachReply = `When handling an angry guest: 1) Listen attentively without interrupting. 2) Validate their emotional state ("I completely understand why you're upset"). 3) Provide immediate direct action (e.g., hold refund or room upgrade).`;
+      } else if (text.toLowerCase().includes('vip') || text.toLowerCase().includes('check-in')) {
+        coachReply = `For VIP guest check-in: Greet by surname, acknowledge loyalty tier status, offer complimentary lounge seating during early arrivals, and coordinate luggage handling seamlessly.`;
+      } else if (text.toLowerCase().includes('scenario') || text.toLowerCase().includes('iyer')) {
+        coachReply = `Launching Mr. Iyer's wrong charges scenario! He is waiting at reception regarding a ₹18,000 room service dispute.`;
       }
 
       setMessages((prev) => [...prev, { sender: 'nova', text: coachReply }]);
-    }, 800);
+    }, 700);
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
+    <div className="max-w-4xl mx-auto space-y-8">
       
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-black uppercase tracking-wider bg-purple-100 text-purple-900 px-3 py-1 rounded-full border border-purple-200">
-              AI HOSPITALITY MENTOR
-            </span>
-          </div>
-          <h1 className="font-serif font-bold text-3xl sm:text-4xl text-slate-900 tracking-tight">
-            Magpie Coach • {userState.magpie.name}
-          </h1>
-          <p className="text-xs sm:text-sm font-semibold text-slate-600 mt-1">
-            Personalized mentoring synchronized with your training performance analytics
-          </p>
+      {/* Page Header */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-md border border-purple-100">
+            AI Hospitality Mentor • Sandalwood Grand
+          </span>
         </div>
+        <h1 className="font-extrabold text-2xl sm:text-3xl text-slate-900 tracking-tight">
+          Magpie Coach
+        </h1>
+        <p className="text-xs sm:text-sm font-medium text-slate-500 mt-1">
+          Real-time AI coaching and roleplay advice synchronized with your live skill performance.
+        </p>
       </div>
 
-      {/* Targeted Performance Alert Card (Connected Coach Feature) */}
-      <div className="bg-gradient-to-r from-amber-500/10 via-purple-500/10 to-indigo-500/10 border border-amber-400/40 rounded-3xl p-6 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      {/* Performance Focus Alert Card */}
+      <div className="bg-white border border-amber-300 rounded-2xl p-5 shadow-2xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center font-bold text-xl shrink-0 mt-0.5">
+          <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold shrink-0 mt-0.5">
             ⚠️
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold uppercase text-amber-900 bg-amber-200/60 px-2 py-0.5 rounded-md">
-                Performance Focus Alert
+              <span className="text-[10px] font-bold uppercase text-amber-800 bg-amber-50 px-2 py-0.5 rounded-md">
+                Skill Focus Alert
               </span>
-              <span className="text-xs text-slate-500 font-semibold">Empathy Score: 74/100</span>
+              <span className="text-xs text-slate-500 font-medium">Empathy Rating: 82/100</span>
             </div>
-            <h4 className="font-serif font-bold text-slate-900 text-base mt-1">
-              "Your empathy score was lower than usual during billing disputes."
+            <h4 className="font-bold text-slate-900 text-sm mt-1">
+              "Practice billing disputes to raise Empathy score back to 90+"
             </h4>
-            <p className="text-xs text-slate-600 mt-0.5">
-              Practice de-escalating Mr. Iyer's room service charge dispute to raise your skill rating back to 85+.
+            <p className="text-xs text-slate-500 mt-0.5">
+              Mr. Iyer's checkout dispute scenario is recommended for your current skill focus.
             </p>
           </div>
         </div>
 
         <button
           onClick={() => onStartScenario('sc-3')}
-          className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-md transition-all flex items-center justify-center gap-2 shrink-0"
+          className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-2xs transition-all flex items-center justify-center gap-2 shrink-0"
         >
-          <Sparkles className="w-4 h-4 fill-slate-950" />
-          <span>PRACTISE EMPATHY</span>
+          <Sparkles className="w-3.5 h-3.5 text-purple-400" />
+          <span>START PRACTICE</span>
         </button>
       </div>
 
-      {/* Main Chat Stage */}
-      <div className="bg-white border border-slate-200/90 rounded-3xl shadow-xl overflow-hidden flex flex-col min-h-[440px]">
+      {/* Clean Linear/Raycast Style Chat Interface */}
+      <div className="bg-white border border-slate-200/90 rounded-2xl shadow-2xs overflow-hidden flex flex-col min-h-[460px]">
         
-        {/* Chat Stage Banner */}
-        <div className="bg-slate-900 text-white p-4 px-6 flex items-center justify-between border-b border-slate-800">
+        {/* Chat Header */}
+        <div className="p-4 px-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10">
+            <div className="w-9 h-9 shrink-0 overflow-hidden rounded-xl bg-purple-100 flex items-center justify-center border border-purple-200">
               <MagpieCharacter
                 bodyColor={userState.magpie.bodyColor}
                 featherStyle={userState.magpie.featherStyle}
@@ -114,13 +110,13 @@ export const MagpieCoachView: React.FC<MagpieCoachViewProps> = ({
               />
             </div>
             <div>
-              <h3 className="font-serif font-bold text-base text-white">{userState.magpie.name}</h3>
-              <p className="text-[10px] text-purple-300 font-semibold">Hospitality AI Mentor • Sandalwood Grand</p>
+              <h3 className="font-bold text-sm text-slate-900">{userState.magpie.name}</h3>
+              <p className="text-[10px] text-slate-500 font-medium">Level {userState.magpie.level} AI Companion • Active Mentor</p>
             </div>
           </div>
         </div>
 
-        {/* Messages Stream */}
+        {/* Message Stream */}
         <div className="flex-1 p-6 space-y-4 overflow-y-auto max-h-[380px]">
           {messages.map((msg, idx) => (
             <div
@@ -128,20 +124,20 @@ export const MagpieCoachView: React.FC<MagpieCoachViewProps> = ({
               className={`flex items-start gap-3 ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}
             >
               {msg.sender === 'nova' ? (
-                <div className="w-9 h-9 rounded-full bg-purple-100 border border-purple-300 flex items-center justify-center text-base shrink-0">
+                <div className="w-8 h-8 rounded-xl bg-purple-100 border border-purple-300 flex items-center justify-center text-sm shrink-0">
                   🐦
                 </div>
               ) : (
-                <div className="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs font-bold shrink-0">
-                  {userState.name.split(' ')[0][0]}
+                <div className="w-8 h-8 rounded-xl bg-slate-900 text-white flex items-center justify-center text-xs font-bold shrink-0">
+                  {userState.name.charAt(0)}
                 </div>
               )}
 
               <div
-                className={`max-w-md p-4 rounded-2xl text-xs sm:text-sm font-medium ${
+                className={`max-w-md p-4 rounded-2xl text-xs font-medium leading-relaxed ${
                   msg.sender === 'nova'
-                    ? 'bg-purple-50 text-slate-900 border border-purple-200 shadow-xs'
-                    : 'bg-slate-900 text-white shadow-md'
+                    ? 'bg-purple-50/70 text-slate-900 border border-purple-200/60 shadow-2xs'
+                    : 'bg-slate-900 text-white shadow-2xs'
                 }`}
               >
                 {msg.text}
@@ -150,17 +146,17 @@ export const MagpieCoachView: React.FC<MagpieCoachViewProps> = ({
           ))}
         </div>
 
-        {/* Suggested Prompts */}
-        <div className="p-4 bg-slate-50 border-t border-slate-200/80 space-y-2">
-          <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-500">
-            Suggested Mentoring Topics:
+        {/* Prompt Suggestions */}
+        <div className="p-3 px-6 bg-slate-50/70 border-t border-slate-100 space-y-2">
+          <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            Suggested Prompts:
           </span>
           <div className="flex flex-wrap gap-2">
             {promptSuggestions.map((prompt, idx) => (
               <button
                 key={idx}
                 onClick={() => handleSendPrompt(prompt)}
-                className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 hover:border-purple-300 hover:bg-purple-50 transition-all shadow-2xs text-left"
+                className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-medium text-slate-700 hover:border-purple-300 hover:bg-purple-50 transition-all shadow-2xs text-left"
               >
                 {prompt}
               </button>
@@ -169,7 +165,7 @@ export const MagpieCoachView: React.FC<MagpieCoachViewProps> = ({
         </div>
 
         {/* Input Bar */}
-        <div className="p-4 bg-white border-t border-slate-200/80 flex items-center gap-3">
+        <div className="p-4 bg-white border-t border-slate-100 flex items-center gap-3">
           <input
             type="text"
             value={inputValue}
@@ -180,8 +176,8 @@ export const MagpieCoachView: React.FC<MagpieCoachViewProps> = ({
                 setInputValue('');
               }
             }}
-            placeholder="Ask Nova a hospitality training question..."
-            className="flex-1 px-4 py-3 rounded-2xl border border-slate-300 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-purple-600"
+            placeholder="Ask Nova a hospitality coaching question..."
+            className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-purple-600"
           />
           <button
             onClick={() => {
@@ -190,10 +186,10 @@ export const MagpieCoachView: React.FC<MagpieCoachViewProps> = ({
                 setInputValue('');
               }
             }}
-            className="px-5 py-3 rounded-2xl bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold shadow-md transition-all flex items-center gap-1.5 shrink-0"
+            className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-2xs transition-all flex items-center gap-1.5 shrink-0"
           >
             <span>Ask</span>
-            <ArrowRight className="w-4 h-4" />
+            <Send className="w-3.5 h-3.5 text-purple-400" />
           </button>
         </div>
 

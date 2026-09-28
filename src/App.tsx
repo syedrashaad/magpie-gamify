@@ -1,25 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { UserState, ActiveTab } from './types';
+import { UserState, ActiveTab, SkyLeagueMember } from './types';
 import {
   loadUserState,
   saveUserState,
   resetUserState,
-  calculateLane,
+  loadLeaderboardState,
+  saveLeaderboardState,
 } from './utils/storage';
 import { DEMO_UNITS, ScenarioData } from './data/scenarios';
 import { AppShell } from './components/AppShell';
 import { TasksView } from './components/TasksView';
 import { MagpieCoachView } from './components/MagpieCoachView';
+import { SkyLeagueView } from './components/SkyLeagueView';
 import { TrainingView } from './components/TrainingView';
+import { ProfileView } from './components/ProfileView';
+import { SettingsView } from './components/SettingsView';
 import { MagpieCreationModal } from './components/MagpieCreationModal';
 import { MagpieCoachModal } from './components/MagpieCoachModal';
 import { RewardSequence } from './components/RewardSequence';
-import { PersonalFlightGame } from './components/PersonalFlightGame';
+import { FlightChallengeGame } from './components/FlightChallengeGame';
 import { LevelUpModal } from './components/LevelUpModal';
-import { UserProfileModal } from './components/UserProfileModal';
 
 export function App() {
   const [userState, setUserState] = useState<UserState>(() => loadUserState());
+  const [leaderboard, setLeaderboard] = useState<SkyLeagueMember[]>(() => loadLeaderboardState());
   const [activeTab, setActiveTab] = useState<ActiveTab>('tasks');
 
   // Scenario Progression State
@@ -28,19 +32,23 @@ export function App() {
   const [activeScenarioId, setActiveScenarioId] = useState<string>('sc-3');
   const [selectedScenario, setSelectedScenario] = useState<ScenarioData | null>(null);
 
-  // Modals & Game Overlay States
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  // Modals & Overlay States
   const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
   const [isScenarioModalOpen, setIsScenarioModalOpen] = useState(false);
   const [isRewardOpen, setIsRewardOpen] = useState(false);
   const [isLevelUpOpen, setIsLevelUpOpen] = useState(false);
   const [isFlightGameOpen, setIsFlightGameOpen] = useState(false);
-  const [latestScore, setLatestScore] = useState(8);
+  const [latestScore, setLatestScore] = useState(82);
+  const [justOvertook, setJustOvertook] = useState(false);
 
-  // Auto-save state
+  // Auto-save user state & leaderboard
   useEffect(() => {
     saveUserState(userState);
   }, [userState]);
+
+  useEffect(() => {
+    saveLeaderboardState(leaderboard);
+  }, [leaderboard]);
 
   const handleSaveCustomize = (updated: UserState) => {
     setUserState(updated);
@@ -94,19 +102,15 @@ export function App() {
       didLevelUp = true;
     }
 
-    const newStreak = userState.streak + 1;
-    const newLane = calculateLane(newEggs);
-
-    setUserState({
-      ...userState,
-      streak: newStreak,
+    setUserState((prev) => ({
+      ...prev,
       xp: newXP,
       dailyGoal: {
-        ...userState.dailyGoal,
+        ...prev.dailyGoal,
         currentXP: newCurrentGoal,
       },
       magpie: {
-        ...userState.magpie,
+        ...prev.magpie,
         level: newLevel,
         growth: Math.min(newGrowth, 100),
       },
@@ -115,12 +119,8 @@ export function App() {
         feathers: newFeathers,
         food: newFood,
       },
-      flight: {
-        ...userState.flight,
-        lane: newLane,
-      },
-      scenariosCompletedCount: userState.scenariosCompletedCount + 1,
-    });
+      scenariosCompletedCount: prev.scenariosCompletedCount + 1,
+    }));
 
     if (didLevelUp) {
       setTimeout(() => {
@@ -129,15 +129,37 @@ export function App() {
     }
   };
 
-  const handleFinishFlightGame = (newDistance: number) => {
-    setUserState({
-      ...userState,
-      flight: {
-        ...userState.flight,
-        lastFlightDistance: newDistance,
-        personalBest: Math.max(userState.flight.personalBest, newDistance),
-      },
-    });
+  const handleFinishFlightChallenge = (gainedFP: number) => {
+    const newFP = userState.flightPower + gainedFP;
+    setIsFlightGameOpen(false);
+
+    // Update user flight power and rank bump (#4 -> #3)
+    setUserState((prev) => ({
+      ...prev,
+      flightPower: newFP,
+      rank: 3,
+    }));
+
+    // Update Sandalwood Leaderboard order (Rashaad #3, Arjun #4)
+    const updatedBoard = leaderboard.map((m) => {
+      if (m.isCurrentUser) {
+        return { ...m, rank: 3, flightPower: newFP, xp: userState.xp + 20 };
+      }
+      if (m.id === 'usr-3') {
+        return { ...m, rank: 4 };
+      }
+      return m;
+    }).sort((a, b) => a.rank - b.rank);
+
+    setLeaderboard(updatedBoard);
+    setJustOvertook(true);
+    setActiveTab('sky-league');
+  };
+
+  const handleResetData = () => {
+    const fresh = resetUserState();
+    setUserState(fresh);
+    setLeaderboard(loadLeaderboardState());
   };
 
   return (
@@ -145,13 +167,14 @@ export function App() {
       activeTab={activeTab}
       setActiveTab={setActiveTab}
       userState={userState}
-      onOpenProfile={() => setIsProfileOpen(true)}
+      onOpenProfile={() => setActiveTab('profile')}
+      onOpenSettings={() => setActiveTab('settings')}
       onOpenCustomize={() => setIsCustomizeOpen(true)}
       onOpenFlightGame={() => setIsFlightGameOpen(true)}
       onSelectScenario={(scId) => handleStartScenario(scId)}
     >
-      {/* Main View Router */}
-      {(activeTab === 'tasks' || activeTab === 'home' || activeTab === 'courses') && (
+      {/* View Router */}
+      {activeTab === 'tasks' && (
         <TasksView
           userState={userState}
           unlockedScenarioIds={unlockedScenarioIds}
@@ -168,6 +191,15 @@ export function App() {
         />
       )}
 
+      {activeTab === 'sky-league' && (
+        <SkyLeagueView
+          userState={userState}
+          leaderboard={leaderboard}
+          onOpenFlightChallenge={() => setIsFlightGameOpen(true)}
+          justOvertook={justOvertook}
+        />
+      )}
+
       {activeTab === 'training' && (
         <TrainingView
           userState={userState}
@@ -175,14 +207,22 @@ export function App() {
         />
       )}
 
-      {/* Modals */}
-      <UserProfileModal
-        isOpen={isProfileOpen}
-        onClose={() => setIsProfileOpen(false)}
-        userState={userState}
-        onOpenCustomize={() => setIsCustomizeOpen(true)}
-      />
+      {activeTab === 'profile' && (
+        <ProfileView
+          userState={userState}
+          onUpdateUserState={(updated) => setUserState(updated)}
+          onOpenCustomize={() => setIsCustomizeOpen(true)}
+        />
+      )}
 
+      {activeTab === 'settings' && (
+        <SettingsView
+          userState={userState}
+          onResetState={handleResetData}
+        />
+      )}
+
+      {/* Modals & Game Overlays */}
       <MagpieCreationModal
         isOpen={isCustomizeOpen}
         onClose={() => setIsCustomizeOpen(false)}
@@ -203,7 +243,7 @@ export function App() {
         userState={userState}
         onFeedMagpie={handleFeedMagpie}
         onClose={() => setIsRewardOpen(false)}
-        onGoToSkyRace={() => {
+        onLaunchFlightChallenge={() => {
           setIsRewardOpen(false);
           setIsFlightGameOpen(true);
         }}
@@ -216,10 +256,10 @@ export function App() {
       />
 
       {isFlightGameOpen && (
-        <PersonalFlightGame
+        <FlightChallengeGame
           userState={userState}
-          onFinishFlight={handleFinishFlightGame}
-          onReturnHome={() => setIsFlightGameOpen(false)}
+          onFinishChallenge={handleFinishFlightChallenge}
+          onClose={() => setIsFlightGameOpen(false)}
         />
       )}
     </AppShell>

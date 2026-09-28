@@ -41,6 +41,19 @@ export interface FlightState {
   lane?: FlightLane;
 }
 
+export interface SkyLeagueMember {
+  id: string;
+  rank: number;
+  name: string;
+  role: string;
+  property: string;
+  xp: number;
+  flightPower: number;
+  streak: number;
+  avatarColor: string;
+  isCurrentUser?: boolean;
+}
+
 export interface UserState {
   name: string;
   role: string;
@@ -49,6 +62,8 @@ export interface UserState {
   streak: number; // 🔥 5
   flightDays?: number;
   xp: number; // 840
+  flightPower: number; // 142
+  rank: number; // 4
   dailyGoal: DailyGoal;
   magpie: MagpieCharacterState;
   rewards: RewardsState;
@@ -57,4 +72,4 @@ export interface UserState {
   scenariosCompletedCount: number;
 }
 
-export type ActiveTab = 'tasks' | 'coach' | 'training' | 'profile' | 'settings' | 'home' | 'courses' | 'sky-race';
+export type ActiveTab = 'tasks' | 'coach' | 'sky-league' | 'training' | 'profile' | 'settings';

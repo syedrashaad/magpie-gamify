@@ -1,7 +1,6 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { UserState } from '../types';
-import { DEMO_UNITS, ScenarioData, NodeType } from '../data/scenarios';
+import { DEMO_UNITS, ScenarioData } from '../data/scenarios';
 import { MagpieCharacter } from './MagpieCharacter';
 import { Check, Lock, Play, ArrowRight, Sparkles } from 'lucide-react';
 
@@ -25,29 +24,32 @@ export const TasksView: React.FC<TasksViewProps> = ({
       
       {/* Page Header */}
       <div>
-        <h1 className="font-serif font-bold text-3xl text-slate-900 tracking-tight">
-          Tasks
+        <h1 className="font-extrabold text-2xl sm:text-3xl text-slate-900 tracking-tight">
+          Tasks & Learning Path
         </h1>
-        <p className="text-sm font-medium text-slate-500 mt-1">
-          Continue your hospitality journey. Complete scenarios to improve skills and earn XP.
+        <p className="text-xs sm:text-sm font-medium text-slate-500 mt-1">
+          Complete scenario-based roleplays to build hospitality skills, earn XP, and advance your rank.
         </p>
       </div>
 
-      {/* Units List */}
+      {/* Vertical Learning Path Units */}
       <div className="space-y-12 relative pb-12">
         
-        {/* Connecting Path Line */}
+        {/* Path Connecting Line */}
         <div className="absolute left-7 top-10 bottom-10 w-0.5 bg-slate-200 z-0" />
 
         {DEMO_UNITS.map((unit) => (
           <div key={unit.id} className="relative z-10 space-y-6">
             
-            {/* Unit Header Block */}
+            {/* Unit Card Header */}
             <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-2xs border-l-4 border-l-purple-600">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-purple-700 bg-purple-50 px-2 py-0.5 rounded-md">
-                {unit.number}
-              </span>
-              <h2 className="font-serif font-bold text-lg text-slate-900 mt-1">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-md border border-purple-100">
+                  {unit.number}
+                </span>
+                <span className="text-xs text-slate-400 font-semibold">{unit.scenarios.length} Scenarios</span>
+              </div>
+              <h2 className="font-bold text-lg text-slate-900 mt-2">
                 {unit.title}
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -65,11 +67,11 @@ export const TasksView: React.FC<TasksViewProps> = ({
                 return (
                   <div key={scenario.id} className="flex items-start gap-5">
                     
-                    {/* Circle Node Icon */}
+                    {/* Compact Node Icon */}
                     <button
                       onClick={() => isUnlocked && onSelectScenario(scenario)}
                       disabled={!isUnlocked}
-                      className={`w-14 h-14 rounded-full flex items-center justify-center font-bold shrink-0 transition-all shadow-xs ${
+                      className={`w-14 h-14 rounded-full flex items-center justify-center font-bold shrink-0 transition-all shadow-2xs ${
                         isCompleted
                           ? 'bg-emerald-500 text-white ring-4 ring-emerald-100'
                           : isActive
@@ -90,11 +92,11 @@ export const TasksView: React.FC<TasksViewProps> = ({
                       )}
                     </button>
 
-                    {/* Scenario Card Block */}
+                    {/* Scenario Block */}
                     <div className="flex-1">
                       {isActive ? (
-                        /* Current Active Scenario Hero Block */
-                        <div className="bg-white border border-purple-300 rounded-2xl p-5 shadow-md space-y-3 relative overflow-hidden">
+                        /* Active Scenario Hero Block */
+                        <div className="bg-white border border-purple-300 rounded-2xl p-5 shadow-sm space-y-3 relative overflow-hidden">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               <span className="text-[10px] font-bold uppercase tracking-wider text-purple-700 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-100">
@@ -104,13 +106,14 @@ export const TasksView: React.FC<TasksViewProps> = ({
                                 {scenario.estimatedTime}
                               </span>
                             </div>
-                            <span className="text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200/80 px-2.5 py-0.5 rounded-full">
-                              +{scenario.xpReward} XP
+                            <span className="text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200/80 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                              <Sparkles className="w-3 h-3 text-amber-500" />
+                              <span>+{scenario.xpReward} XP</span>
                             </span>
                           </div>
 
                           <div>
-                            <h3 className="font-serif font-bold text-slate-900 text-lg">
+                            <h3 className="font-bold text-slate-900 text-lg">
                               {scenario.title}
                             </h3>
                             <p className="text-xs text-slate-600 mt-1">
@@ -118,9 +121,9 @@ export const TasksView: React.FC<TasksViewProps> = ({
                             </p>
                           </div>
 
-                          {/* Companion Nova Speech Note */}
-                          <div className="flex items-center gap-3 bg-purple-50/70 border border-purple-200/60 p-3 rounded-xl text-xs font-medium text-slate-800">
-                            <div className="w-8 h-8 shrink-0">
+                          {/* Companion Speech Note with Bounded Nova Avatar */}
+                          <div className="flex items-center gap-3 bg-purple-50/70 border border-purple-200/60 p-3 rounded-xl text-xs font-medium text-slate-800 overflow-hidden">
+                            <div className="w-8 h-8 shrink-0 overflow-hidden rounded-lg bg-purple-100 flex items-center justify-center">
                               <MagpieCharacter
                                 bodyColor={userState.magpie.bodyColor}
                                 featherStyle={userState.magpie.featherStyle}
@@ -129,14 +132,14 @@ export const TasksView: React.FC<TasksViewProps> = ({
                                 size="sm"
                               />
                             </div>
-                            <span>"{userState.magpie.name} is ready! Mr. Iyer is waiting at reception."</span>
+                            <span>"{userState.magpie.name} is ready! {scenario.guestName} is waiting at reception."</span>
                           </div>
 
                           <button
                             onClick={() => onSelectScenario(scenario)}
-                            className="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-xs transition-all flex items-center justify-center gap-2"
+                            className="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-2xs transition-all flex items-center justify-center gap-2"
                           >
-                            <span>CONTINUE</span>
+                            <span>CONTINUE SCENARIO</span>
                             <ArrowRight className="w-4 h-4 text-purple-400" />
                           </button>
                         </div>
@@ -167,7 +170,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                           {isCompleted && (
                             <span className="text-[11px] font-semibold text-emerald-600 flex items-center gap-1 mt-2">
                               <Check className="w-3.5 h-3.5" />
-                              <span>Completed • Score 8/10</span>
+                              <span>Completed • Score 82/100</span>
                             </span>
                           )}
                         </div>
