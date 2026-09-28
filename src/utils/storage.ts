@@ -1,4 +1,4 @@
-import { UserState, MagpieLevel } from '../types';
+import { UserState, MagpieLevel, FlightLane } from '../types';
 
 const STORAGE_KEY = 'magpie_ai_v2_store';
 
@@ -83,4 +83,11 @@ export const getLevelTitle = (level: MagpieLevel): string => {
     default:
       return 'Young Magpie';
   }
+};
+
+export const calculateLane = (eggs: number): FlightLane => {
+  if (eggs >= 50) return 'GOLDEN';
+  if (eggs >= 25) return 'BOOST';
+  if (eggs >= 10) return 'FLIGHT';
+  return 'PRACTICE';
 };

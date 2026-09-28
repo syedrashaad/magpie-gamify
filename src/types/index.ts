@@ -47,7 +47,7 @@ export interface UserState {
   property: string;
   location: string;
   streak: number; // 🔥 5
-  flightDays?: number; // legacy alias
+  flightDays?: number;
   xp: number; // 840
   dailyGoal: DailyGoal;
   magpie: MagpieCharacterState;
@@ -57,4 +57,4 @@ export interface UserState {
   scenariosCompletedCount: number;
 }
 
-export type ActiveTab = 'tasks' | 'coach' | 'training' | 'home' | 'courses' | 'sky-race';
+export type ActiveTab = 'tasks' | 'coach' | 'training' | 'profile' | 'settings' | 'home' | 'courses' | 'sky-race';
