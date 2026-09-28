@@ -1,3 +1,5 @@
+export type NodeType = 'SCENARIO' | 'ROLEPLAY' | 'COACH_PRACTICE' | 'REVIEW' | 'CHALLENGE';
+
 export interface ScenarioChoice {
   text: string;
   quality: 'optimal' | 'neutral' | 'poor';
@@ -21,6 +23,7 @@ export interface ScenarioData {
   id: string;
   unitId: string;
   unitTitle: string;
+  nodeType: NodeType;
   title: string;
   department: string;
   difficulty: 1 | 2 | 3 | 4 | 5;
@@ -45,14 +48,15 @@ export interface UnitData {
 export const DEMO_UNITS: UnitData[] = [
   {
     id: 'unit-01',
-    number: 'UNIT 01',
-    title: 'FIRST IMPRESSIONS & CHECKOUT',
-    description: 'Master front desk greetings, billing accuracy, and guest arrival protocols.',
+    number: 'UNIT 1',
+    title: 'FIRST IMPRESSIONS',
+    description: 'Build confidence at the front desk and master arrival protocols.',
     scenarios: [
       {
         id: 'sc-1',
         unitId: 'unit-01',
         unitTitle: 'FIRST IMPRESSIONS',
+        nodeType: 'SCENARIO',
         title: 'Welcome a VIP Guest',
         department: 'Front Office',
         difficulty: 1,
@@ -98,7 +102,8 @@ export const DEMO_UNITS: UnitData[] = [
         id: 'sc-2',
         unitId: 'unit-01',
         unitTitle: 'FIRST IMPRESSIONS',
-        title: 'Handling Special Luggage Requests',
+        nodeType: 'ROLEPLAY',
+        title: 'Handle a Special Request',
         department: 'Concierge',
         difficulty: 2,
         estimatedTime: '3 min',
@@ -133,6 +138,7 @@ export const DEMO_UNITS: UnitData[] = [
         id: 'sc-3',
         unitId: 'unit-01',
         unitTitle: 'FIRST IMPRESSIONS',
+        nodeType: 'SCENARIO',
         title: 'Wrong Charges at Checkout',
         department: 'Front Office',
         difficulty: 3,
@@ -214,11 +220,12 @@ export const DEMO_UNITS: UnitData[] = [
         id: 'sc-4',
         unitId: 'unit-01',
         unitTitle: 'FIRST IMPRESSIONS',
-        title: 'Handling an Angry Guest',
+        nodeType: 'CHALLENGE',
+        title: 'Angry Guest',
         department: 'Front Office',
         difficulty: 4,
         estimatedTime: '4 min',
-        xpReward: 25,
+        xpReward: 20,
         primarySkill: 'Empathy',
         description: 'De-escalate a guest upset about air conditioning breakdown during peak summer.',
         guestName: 'Dr. Mehta',
@@ -249,7 +256,8 @@ export const DEMO_UNITS: UnitData[] = [
         id: 'sc-5',
         unitId: 'unit-01',
         unitTitle: 'FIRST IMPRESSIONS',
-        title: 'Late Night Check-In Protocol',
+        nodeType: 'SCENARIO',
+        title: 'Late Check-In',
         department: 'Night Audit',
         difficulty: 3,
         estimatedTime: '3 min',
@@ -284,14 +292,15 @@ export const DEMO_UNITS: UnitData[] = [
   },
   {
     id: 'unit-02',
-    number: 'UNIT 02',
-    title: 'SERVICE RECOVERY & CONFLICTS',
-    description: 'Turn service breakdowns into guest loyalty opportunities.',
+    number: 'UNIT 2',
+    title: 'SERVICE RECOVERY',
+    description: 'Turn difficult moments into great experiences.',
     scenarios: [
       {
         id: 'sc-6',
         unitId: 'unit-02',
         unitTitle: 'SERVICE RECOVERY',
+        nodeType: 'SCENARIO',
         title: 'Wrong Room Assignment',
         department: 'Front Office',
         difficulty: 3,
@@ -327,8 +336,9 @@ export const DEMO_UNITS: UnitData[] = [
         id: 'sc-7',
         unitId: 'unit-02',
         unitTitle: 'SERVICE RECOVERY',
-        title: 'VIP Guest Dining Complaint',
-        department: 'Food & Beverage',
+        nodeType: 'CHALLENGE',
+        title: 'Billing Dispute',
+        department: 'Front Office',
         difficulty: 4,
         estimatedTime: '4 min',
         xpReward: 25,
@@ -362,14 +372,15 @@ export const DEMO_UNITS: UnitData[] = [
   },
   {
     id: 'unit-03',
-    number: 'UNIT 03',
-    title: 'GUEST EXCELLENCE & ESCALATIONS',
+    number: 'UNIT 3',
+    title: 'GUEST EXCELLENCE',
     description: 'Master high-stakes VIP escalations and executive leadership diplomacy.',
     scenarios: [
       {
         id: 'sc-8',
         unitId: 'unit-03',
         unitTitle: 'GUEST EXCELLENCE',
+        nodeType: 'CHALLENGE',
         title: 'Difficult Guest Escalation',
         department: 'General Management',
         difficulty: 5,

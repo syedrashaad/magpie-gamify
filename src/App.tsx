@@ -4,11 +4,9 @@ import {
   loadUserState,
   saveUserState,
   resetUserState,
-  calculateLane,
 } from './utils/storage';
 import { DEMO_UNITS, ScenarioData } from './data/scenarios';
 import { Navigation } from './components/Navigation';
-import { MagpieHome } from './components/MagpieHome';
 import { TasksView } from './components/TasksView';
 import { MagpieCoachView } from './components/MagpieCoachView';
 import { TrainingView } from './components/TrainingView';
@@ -18,27 +16,29 @@ import { RewardSequence } from './components/RewardSequence';
 import { PersonalFlightGame } from './components/PersonalFlightGame';
 import { LevelUpModal } from './components/LevelUpModal';
 import { UserProfileModal } from './components/UserProfileModal';
+import { IphoneFrame } from './components/IphoneFrame';
 
 export function App() {
   const [userState, setUserState] = useState<UserState>(() => loadUserState());
-  const [activeTab, setActiveTab] = useState<ActiveTab>('home');
+  const [activeTab, setActiveTab] = useState<ActiveTab>('tasks');
+  const [useIphoneFrame, setUseIphoneFrame] = useState(true);
 
-  // Scenario Progression State
+  // Learning Path Progression State
   const [unlockedScenarioIds, setUnlockedScenarioIds] = useState<string[]>(['sc-1', 'sc-2', 'sc-3']);
   const [completedScenarioIds, setCompletedScenarioIds] = useState<string[]>(['sc-1', 'sc-2']);
   const [activeScenarioId, setActiveScenarioId] = useState<string>('sc-3');
   const [selectedScenario, setSelectedScenario] = useState<ScenarioData | null>(null);
 
-  // Modals & Game States
+  // Modals & Game Overlay States
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
-  const [isCoachModalOpen, setIsCoachModalOpen] = useState(false);
+  const [isScenarioModalOpen, setIsScenarioModalOpen] = useState(false);
   const [isRewardOpen, setIsRewardOpen] = useState(false);
   const [isLevelUpOpen, setIsLevelUpOpen] = useState(false);
   const [isFlightGameOpen, setIsFlightGameOpen] = useState(false);
   const [latestScore, setLatestScore] = useState(8);
 
-  // Auto-save state
+  // Auto-save to localStorage
   useEffect(() => {
     saveUserState(userState);
   }, [userState]);
@@ -47,18 +47,16 @@ export function App() {
     setUserState(updated);
   };
 
-  const handleStartScenario = (scenarioId?: string) => {
-    const targetId = scenarioId || activeScenarioId;
-    const target = DEMO_UNITS.flatMap((u) => u.scenarios).find((s) => s.id === targetId) || DEMO_UNITS[0].scenarios[2];
-    setSelectedScenario(target);
-    setIsCoachModalOpen(true);
+  const handleStartScenario = (scenario: ScenarioData) => {
+    setSelectedScenario(scenario);
+    setIsScenarioModalOpen(true);
   };
 
   const handleCompleteScenario = (score: number) => {
     setLatestScore(score);
-    setIsCoachModalOpen(false);
+    setIsScenarioModalOpen(false);
 
-    // Mark current scenario completed & unlock next scenario (sc-4 Angry Guest)
+    // Mark completed & unlock next scenario (sc-4 Angry Guest)
     if (!completedScenarioIds.includes(activeScenarioId)) {
       setCompletedScenarioIds((prev) => [...prev, activeScenarioId]);
     }
@@ -74,7 +72,9 @@ export function App() {
   };
 
   const handleFeedMagpie = () => {
-    // Rewards boost: +20 XP, +3 Food 🍎, +2 Feathers 🪶, +1 Egg 🥚
+    // Reward rewards: +20 XP, +3 Food 🍎, +2 Feathers 🪶, +1 Egg 🥚
+    const newXP = userState.xp + 20;
+    const newCurrentGoal = Math.min(userState.dailyGoal.currentXP + 20, userState.dailyGoal.targetXP);
     const newFood = userState.rewards.food + 3;
     const newFeathers = userState.rewards.feathers + 2;
     const newEggs = userState.rewards.eggs + 1;
@@ -83,18 +83,22 @@ export function App() {
     let newLevel = userState.magpie.level;
     let didLevelUp = false;
 
-    if (newGrowth >= 100 && newLevel < 3) {
+    if (newGrowth >= 100 && newLevel < 5) {
       newGrowth = newGrowth - 100;
-      newLevel = (newLevel + 1) as 1 | 2 | 3;
+      newLevel = (newLevel + 1) as 1 | 2 | 3 | 4 | 5;
       didLevelUp = true;
     }
 
-    const newLane = calculateLane(newEggs);
-    const newStreak = userState.flightDays + 1; // 🔥 12 -> 13 days streak
+    const newStreak = userState.streak + 1; // 🔥 5 -> 6 days streak
 
     setUserState({
       ...userState,
-      flightDays: newStreak,
+      streak: newStreak,
+      xp: newXP,
+      dailyGoal: {
+        ...userState.dailyGoal,
+        currentXP: newCurrentGoal,
+      },
       magpie: {
         ...userState.magpie,
         level: newLevel,
@@ -105,17 +109,7 @@ export function App() {
         feathers: newFeathers,
         food: newFood,
       },
-      flight: {
-        ...userState.flight,
-        power: userState.flight.power + 20,
-        lane: newLane,
-      },
-      training: {
-        ...userState.training,
-        previousScore: userState.training.currentScore,
-        currentScore: latestScore,
-        scenariosCompleted: userState.training.scenariosCompleted + 1,
-      },
+      scenariosCompletedCount: userState.scenariosCompletedCount + 1,
     });
 
     if (didLevelUp) {
@@ -130,7 +124,7 @@ export function App() {
       ...userState,
       flight: {
         ...userState.flight,
-        currentDistance: newDistance,
+        lastFlightDistance: newDistance,
         personalBest: Math.max(userState.flight.personalBest, newDistance),
       },
     });
@@ -145,137 +139,104 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] text-slate-900 font-sans flex flex-col selection:bg-purple-200">
-      
-      {/* Navigation Header */}
-      {!isFlightGameOpen && (
-        <Navigation
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          userState={userState}
-          onOpenProfile={() => setIsProfileOpen(true)}
-        />
-      )}
+    <IphoneFrame enabled={useIphoneFrame} onToggle={() => setUseIphoneFrame(!useIphoneFrame)}>
+      <div className="min-h-full bg-[#FAF8F5] text-slate-900 font-sans flex flex-col selection:bg-purple-200">
+        
+        {/* Navigation Top Header & Bottom Nav */}
+        {!isFlightGameOpen && (
+          <Navigation
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            userState={userState}
+            onOpenProfile={() => setIsProfileOpen(true)}
+          />
+        )}
 
-      {/* Main App View Router */}
-      <main className="flex-1 pb-16">
-        {/* TASKS / HOME VIEW */}
-        {activeTab === 'home' && (
-          <div className="space-y-6">
-            <MagpieHome
+        {/* Main Learning Canvas */}
+        <main className="flex-1 pb-20">
+          {(activeTab === 'tasks' || activeTab === 'home') && (
+            <TasksView
               userState={userState}
-              onStartScenario={() => handleStartScenario(activeScenarioId)}
-              onOpenSkyRace={() => setIsFlightGameOpen(true)}
-              onOpenCustomize={() => setIsCustomizeOpen(true)}
-              onResetState={handleResetDemoState}
+              unlockedScenarioIds={unlockedScenarioIds}
+              completedScenarioIds={completedScenarioIds}
+              activeScenarioId={activeScenarioId}
+              onSelectScenario={handleStartScenario}
+              onOpenFlightGame={() => setIsFlightGameOpen(true)}
             />
+          )}
 
-            {/* Learning Path Preview */}
-            <div className="pt-4 border-t border-slate-200/80">
-              <TasksView
-                userState={userState}
-                unlockedScenarioIds={unlockedScenarioIds}
-                completedScenarioIds={completedScenarioIds}
-                activeScenarioId={activeScenarioId}
-                onSelectScenario={(sc) => handleStartScenario(sc.id)}
-              />
-            </div>
-          </div>
-        )}
+          {activeTab === 'coach' && (
+            <MagpieCoachView
+              userState={userState}
+              onStartScenario={(scId) => {
+                const target = DEMO_UNITS.flatMap((u) => u.scenarios).find((s) => s.id === scId) || DEMO_UNITS[0].scenarios[2];
+                handleStartScenario(target);
+              }}
+            />
+          )}
 
-        {/* COURSES ROUTE FALLBACK */}
-        {activeTab === 'courses' && (
-          <TasksView
-            userState={userState}
-            unlockedScenarioIds={unlockedScenarioIds}
-            completedScenarioIds={completedScenarioIds}
-            activeScenarioId={activeScenarioId}
-            onSelectScenario={(sc) => handleStartScenario(sc.id)}
-          />
-        )}
+          {activeTab === 'training' && (
+            <TrainingView
+              userState={userState}
+              onStartScenario={() => {
+                const target = DEMO_UNITS[0].scenarios[2];
+                handleStartScenario(target);
+              }}
+            />
+          )}
 
-        {/* MAGPIE COACH VIEW */}
-        {activeTab === 'coach' && (
-          <MagpieCoachView
-            userState={userState}
-            onStartScenario={(id) => handleStartScenario(id)}
-          />
-        )}
+          {/* Personal Flight Celebration Mini-Game */}
+          {isFlightGameOpen && (
+            <PersonalFlightGame
+              userState={userState}
+              onFinishFlight={handleFinishFlightGame}
+              onReturnHome={() => setIsFlightGameOpen(false)}
+            />
+          )}
+        </main>
 
-        {/* TRAINING DASHBOARD VIEW */}
-        {activeTab === 'training' && (
-          <TrainingView
-            userState={userState}
-            onStartScenario={() => handleStartScenario(activeScenarioId)}
-          />
-        )}
+        {/* Modals & Visual Overlay Events */}
+        <UserProfileModal
+          isOpen={isProfileOpen}
+          onClose={() => setIsProfileOpen(false)}
+          userState={userState}
+          onOpenCustomize={() => setIsCustomizeOpen(true)}
+        />
 
-        {/* PERSONAL FLIGHT MINI-GAME */}
-        {isFlightGameOpen && (
-          <PersonalFlightGame
-            userState={userState}
-            onFinishFlight={handleFinishFlightGame}
-            onReturnHome={() => setIsFlightGameOpen(false)}
-          />
-        )}
-      </main>
+        <MagpieCreationModal
+          isOpen={isCustomizeOpen}
+          onClose={() => setIsCustomizeOpen(false)}
+          userState={userState}
+          onSave={handleSaveCustomize}
+        />
 
-      {/* Modals & Overlay Sequences */}
-      <UserProfileModal
-        isOpen={isProfileOpen}
-        onClose={() => setIsProfileOpen(false)}
-        userState={userState}
-        onOpenCustomize={() => setIsCustomizeOpen(true)}
-      />
+        <MagpieCoachModal
+          isOpen={isScenarioModalOpen}
+          onClose={() => setIsScenarioModalOpen(false)}
+          userState={userState}
+          onCompleteScenario={handleCompleteScenario}
+        />
 
-      <MagpieCreationModal
-        isOpen={isCustomizeOpen}
-        onClose={() => setIsCustomizeOpen(false)}
-        userState={userState}
-        onSave={handleSaveCustomize}
-      />
+        <RewardSequence
+          isOpen={isRewardOpen}
+          score={latestScore}
+          userState={userState}
+          onFeedMagpie={handleFeedMagpie}
+          onClose={() => setIsRewardOpen(false)}
+          onGoToSkyRace={() => {
+            setIsRewardOpen(false);
+            setIsFlightGameOpen(true);
+          }}
+        />
 
-      <MagpieCoachModal
-        isOpen={isCoachModalOpen}
-        onClose={() => setIsCoachModalOpen(false)}
-        userState={userState}
-        onCompleteScenario={handleCompleteScenario}
-      />
+        <LevelUpModal
+          isOpen={isLevelUpOpen}
+          userState={userState}
+          onClose={() => setIsLevelUpOpen(false)}
+        />
 
-      <RewardSequence
-        isOpen={isRewardOpen}
-        score={latestScore}
-        userState={userState}
-        onFeedMagpie={handleFeedMagpie}
-        onClose={() => setIsRewardOpen(false)}
-        onGoToSkyRace={() => {
-          setIsRewardOpen(false);
-          setIsFlightGameOpen(true);
-        }}
-      />
-
-      <LevelUpModal
-        isOpen={isLevelUpOpen}
-        userState={userState}
-        onClose={() => setIsLevelUpOpen(false)}
-      />
-
-      {/* Footer */}
-      {!isFlightGameOpen && (
-        <footer className="border-t border-slate-200/80 bg-white py-6 px-4 text-center text-xs text-slate-500">
-          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <span className="font-serif font-bold text-slate-800 text-sm">MAGPIE AI</span>
-              <span>• Sandalwood Grand Hotel & Resorts Training System</span>
-            </div>
-            <div>
-              <span>Powered by Magpie AI Gamified Hospitality Simulator</span>
-            </div>
-          </div>
-        </footer>
-      )}
-
-    </div>
+      </div>
+    </IphoneFrame>
   );
 }
 

@@ -1,39 +1,42 @@
-import { UserState } from '../types';
+import { UserState, MagpieLevel } from '../types';
 
-const STORAGE_KEY = 'magpie_ai_world_v2';
+const STORAGE_KEY = 'magpie_ai_v2_store';
 
 export const INITIAL_USER_STATE: UserState = {
   name: 'Rashaad Syed',
   role: 'Front Office Associate',
-  property: 'Sandalwood Grand • BLR',
-  course: 'Front Office Excellence',
-  flightDays: 5,
+  property: 'The Sandalwood Grand',
+  location: 'BLR',
+  streak: 5,
+  xp: 840,
+  dailyGoal: {
+    targetXP: 20,
+    currentXP: 15,
+  },
   magpie: {
     name: 'Nova',
     bodyColor: 'blue',
     featherStyle: 'iridescent',
     accessory: 'headphones',
     level: 2,
-    xp: 82,
-    growth: 82, // 82% to Level 3
+    growth: 82, // 82%
   },
   rewards: {
-    eggs: 25,
-    feathers: 20,
-    food: 15,
+    eggs: 35,
+    feathers: 26,
+    food: 18,
   },
   flight: {
-    power: 145,
-    currentDistance: 112,
-    personalBest: 112,
-    lane: 'BOOST',
+    personalBest: 148,
+    lastFlightDistance: 112,
   },
-  training: {
-    scenariosCompleted: 14,
-    currentScore: 8,
-    previousScore: 6,
-    lastPracticeDate: 'Today',
+  skills: {
+    empathy: 82,
+    communication: 91,
+    ownership: 76,
+    problemSolving: 86,
   },
+  scenariosCompletedCount: 16,
 };
 
 export const loadUserState = (): UserState => {
@@ -65,22 +68,19 @@ export const resetUserState = (): UserState => {
   return INITIAL_USER_STATE;
 };
 
-export const getLevelTitle = (level: number): string => {
+export const getLevelTitle = (level: MagpieLevel): string => {
   switch (level) {
     case 1:
-      return 'Baby Magpie';
+      return 'Nestling';
     case 2:
       return 'Young Magpie';
     case 3:
       return 'Flying Magpie';
+    case 4:
+      return 'Skilled Magpie';
+    case 5:
+      return 'Master Magpie';
     default:
-      return 'Flying Magpie';
+      return 'Young Magpie';
   }
-};
-
-export const calculateLane = (eggs: number): 'PRACTICE' | 'FLIGHT' | 'BOOST' | 'GOLDEN' => {
-  if (eggs >= 50) return 'GOLDEN';
-  if (eggs >= 25) return 'BOOST';
-  if (eggs >= 10) return 'FLIGHT';
-  return 'PRACTICE';
 };

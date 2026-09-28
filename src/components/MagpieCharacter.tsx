@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { BodyColor, FeatherStyle, Accessory } from '../types';
+import { BodyColor, FeatherStyle, Accessory, MagpieLevel } from '../types';
 
 interface MagpieCharacterProps {
   bodyColor?: BodyColor;
   featherStyle?: FeatherStyle;
   accessory?: Accessory;
-  level?: 1 | 2 | 3;
+  level?: MagpieLevel | number;
   isFlying?: boolean;
   isCelebrating?: boolean;
   isEating?: boolean;
@@ -59,15 +59,15 @@ export const MagpieCharacter: React.FC<MagpieCharacterProps> = ({
           beak: '#F59E0B',
           glow: 'rgba(147, 51, 234, 0.45)',
         };
-      case 'green':
+      case 'silver':
         return {
-          bodyGrad: ['#059669', '#047857', '#064E3B'],
-          chestGrad: ['#FFFFFF', '#ECFDF5', '#D1FAE5'],
-          wingGrad: ['#34D399', '#059669', '#065F46'],
-          accent: '#A7F3D0',
-          tail: '#10B981',
+          bodyGrad: ['#94A3B8', '#64748B', '#334155'],
+          chestGrad: ['#FFFFFF', '#F8FAFC', '#E2E8F0'],
+          wingGrad: ['#CBD5E1', '#64748B', '#475569'],
+          accent: '#94A3B8',
+          tail: '#CBD5E1',
           beak: '#F59E0B',
-          glow: 'rgba(16, 185, 129, 0.45)',
+          glow: 'rgba(148, 163, 184, 0.45)',
         };
       case 'gold':
         return {
@@ -107,7 +107,7 @@ export const MagpieCharacter: React.FC<MagpieCharacterProps> = ({
   }, [size]);
 
   // Level visual scaling
-  const levelScale = level === 1 ? 0.82 : level === 2 ? 1.0 : 1.22;
+  const levelScale = level === 1 ? 0.82 : level === 2 ? 1.0 : level === 3 ? 1.18 : 1.25;
 
   return (
     <div
@@ -134,8 +134,8 @@ export const MagpieCharacter: React.FC<MagpieCharacterProps> = ({
         }}
       />
 
-      {/* Level 3 Flying Magpie Radiant Rings */}
-      {level === 3 && (
+      {/* Level 3+ Flying Magpie Radiant Rings */}
+      {level >= 3 && (
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
@@ -373,7 +373,14 @@ export const MagpieCharacter: React.FC<MagpieCharacterProps> = ({
             </g>
           )}
 
-          {accessory === 'cap' && (
+          {accessory === 'badge' && (
+            <g>
+              <rect x="115" y="115" width="22" height="14" rx="3" fill="#D97706" stroke="#FEF3C7" strokeWidth="1" />
+              <circle cx="126" cy="122" r="3" fill="#FFFFFF" />
+            </g>
+          )}
+
+          {accessory === 'hat' && (
             <g>
               <path
                 d="M120 52 Q 150 32 178 50 L 194 60 Q 155 64 112 58 Z"
@@ -401,8 +408,8 @@ export const MagpieCharacter: React.FC<MagpieCharacterProps> = ({
             </g>
           )}
 
-          {/* Level 3 Crown */}
-          {level === 3 && (
+          {/* Level 3+ Crown */}
+          {level >= 3 && (
             <g>
               <path
                 d="M135 36 L 142 20 L 150 33 L 158 18 L 166 36 Z"

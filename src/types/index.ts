@@ -1,15 +1,16 @@
-export type BodyColor = 'black' | 'blue' | 'purple' | 'green' | 'gold';
+export type BodyColor = 'black' | 'blue' | 'purple' | 'green' | 'silver' | 'gold';
 export type FeatherStyle = 'classic' | 'soft' | 'iridescent' | 'patterned';
-export type Accessory = 'none' | 'scarf' | 'glasses' | 'headphones' | 'cap';
+export type Accessory = 'none' | 'scarf' | 'badge' | 'hat' | 'bow' | 'headphones' | 'glasses' | 'cap';
+
+export type MagpieLevel = 1 | 2 | 3 | 4 | 5;
 
 export interface MagpieCharacterState {
   name: string;
   bodyColor: BodyColor;
   featherStyle: FeatherStyle;
   accessory: Accessory;
-  level: 1 | 2 | 3; // 1: Baby Magpie, 2: Young Magpie, 3: Flying Magpie
-  xp: number;
-  growth: number; // 0-100 percentage inside current level
+  level: MagpieLevel;
+  growth: number; // 0-100 percentage
 }
 
 export interface RewardsState {
@@ -18,32 +19,42 @@ export interface RewardsState {
   food: number;
 }
 
+export interface DailyGoal {
+  targetXP: number; // e.g. 20
+  currentXP: number; // e.g. 15
+}
+
+export interface SkillScores {
+  empathy: number; // 0-100
+  communication: number; // 0-100
+  ownership: number; // 0-100
+  problemSolving: number; // 0-100
+}
+
 export type FlightLane = 'PRACTICE' | 'FLIGHT' | 'BOOST' | 'GOLDEN';
 
 export interface FlightState {
-  power: number;
-  currentDistance: number; // in meters, e.g. 112
-  personalBest: number; // in meters, e.g. 112
-  lane: FlightLane;
-}
-
-export interface TrainingState {
-  scenariosCompleted: number;
-  currentScore: number;
-  previousScore: number;
-  lastPracticeDate: string;
+  personalBest: number; // in meters, e.g. 148
+  lastFlightDistance?: number;
+  currentDistance?: number;
+  power?: number;
+  lane?: FlightLane;
 }
 
 export interface UserState {
   name: string;
   role: string;
   property: string;
-  course: string;
-  flightDays: number;
+  location: string;
+  streak: number; // 🔥 5
+  flightDays?: number; // legacy alias
+  xp: number; // 840
+  dailyGoal: DailyGoal;
   magpie: MagpieCharacterState;
   rewards: RewardsState;
   flight: FlightState;
-  training: TrainingState;
+  skills: SkillScores;
+  scenariosCompletedCount: number;
 }
 
-export type ActiveTab = 'home' | 'courses' | 'coach' | 'training' | 'my-magpie' | 'sky-race';
+export type ActiveTab = 'tasks' | 'coach' | 'training' | 'home' | 'courses' | 'sky-race';
