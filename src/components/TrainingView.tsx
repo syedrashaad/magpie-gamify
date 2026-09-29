@@ -1,6 +1,6 @@
 import React from 'react';
 import { UserState } from '../types';
-import { Play, Sparkles, Flame, Trophy, TrendingUp, CheckCircle2 } from 'lucide-react';
+import { Play, Sparkles, Flame, Trophy, TrendingUp, CheckCircle2, Target, ArrowRight } from 'lucide-react';
 
 interface TrainingViewProps {
   userState: UserState;
@@ -12,10 +12,10 @@ export const TrainingView: React.FC<TrainingViewProps> = ({
   onStartScenario,
 }) => {
   const skills = [
-    { name: 'Empathy', score: userState.skills.empathy, color: 'from-purple-600 to-indigo-600', note: 'Strong guest validation' },
-    { name: 'Communication', score: userState.skills.communication, color: 'from-blue-600 to-cyan-600', note: '+14% recent improvement!' },
-    { name: 'Ownership', score: userState.skills.ownership, color: 'from-emerald-600 to-teal-600', note: 'Direct billing hold authority' },
-    { name: 'Problem Solving', score: userState.skills.problemSolving, color: 'from-amber-500 to-yellow-500', note: 'Top 5% in Sandalwood Grand' },
+    { name: 'Empathy', score: 82, color: 'from-purple-600 to-indigo-600', note: 'Strong guest validation in billing disputes' },
+    { name: 'Communication', score: 76, color: 'from-blue-600 to-cyan-600', note: '+14% recent improvement!' },
+    { name: 'Problem Solving', score: 91, color: 'from-emerald-600 to-teal-600', note: 'Top 5% in Sandalwood Grand' },
+    { name: 'Guest Focus', score: 88, color: 'from-amber-500 to-yellow-500', note: 'Consistently high rating' },
   ];
 
   const history = [
@@ -24,7 +24,7 @@ export const TrainingView: React.FC<TrainingViewProps> = ({
       date: 'Today',
       scenario: 'Wrong Charges at Checkout (Mr. Iyer)',
       score: 82,
-      prevScore: 60,
+      prevScore: 68,
       feedback: 'Excellent empathy and direct hold credit refund.',
       rewards: '+20 XP, +3 Food 🍎, +2 Feathers 🪶',
       status: 'Personal Best! 🎉',
@@ -51,6 +51,25 @@ export const TrainingView: React.FC<TrainingViewProps> = ({
     },
   ];
 
+  const recommendedPractices = [
+    {
+      id: 'sc-4',
+      title: 'Handle an Angry Guest',
+      skillFocus: 'Empathy & De-escalation',
+      estTime: '4 min',
+      xp: '+20 XP',
+      reason: 'Recommended to boost your Empathy rating back to 90+',
+    },
+    {
+      id: 'sc-6',
+      title: 'Wrong Room Assignment',
+      skillFocus: 'Problem Solving',
+      estTime: '3 min',
+      xp: '+20 XP',
+      reason: 'Recommended for asthmatic guest relocation protocols',
+    },
+  ];
+
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       
@@ -59,14 +78,14 @@ export const TrainingView: React.FC<TrainingViewProps> = ({
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[10px] font-bold uppercase tracking-wider text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-md border border-purple-100">
-              Analytics & Practice Log
+              Overall Performance & Analytics
             </span>
           </div>
           <h1 className="font-extrabold text-2xl sm:text-3xl text-slate-900 tracking-tight">
             Training Dashboard
           </h1>
           <p className="text-xs sm:text-sm font-medium text-slate-500 mt-1">
-            Track your hospitality skill evolution, practice history, and performance benchmarks.
+            Empirical skill ratings, practice history, and personalized recommendations.
           </p>
         </div>
 
@@ -75,14 +94,14 @@ export const TrainingView: React.FC<TrainingViewProps> = ({
           className="px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-2xs transition-all flex items-center justify-center gap-2 self-start sm:self-auto shrink-0"
         >
           <Play className="w-4 h-4 fill-white" />
-          <span>START PRACTICE</span>
+          <span>START RECOMMENDED PRACTICE</span>
         </button>
       </div>
 
       {/* Stat Summary Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs">
-          <span className="block text-[10px] font-bold uppercase text-slate-400">Journey Progress</span>
+          <span className="block text-[10px] font-bold uppercase text-slate-400">Journey Mastery</span>
           <span className="text-2xl font-extrabold text-purple-700 mt-1 block">82%</span>
           <span className="text-[11px] text-slate-500 font-semibold">Front Office Path</span>
         </div>
@@ -102,19 +121,19 @@ export const TrainingView: React.FC<TrainingViewProps> = ({
         <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs">
           <span className="block text-[10px] font-bold uppercase text-slate-400">Average Score</span>
           <span className="text-2xl font-extrabold text-emerald-600 mt-1 block">82 / 100</span>
-          <span className="text-[11px] text-emerald-600 font-semibold">+14% recent improvement</span>
+          <span className="text-[11px] text-emerald-600 font-semibold">+14% recent boost</span>
         </div>
       </div>
 
-      {/* Hospitality Skill Ratings */}
+      {/* Overall Performance Skill Breakdown */}
       <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-2xs space-y-6">
         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
           <div>
             <h3 className="font-bold text-slate-900 text-base">
-              Hospitality Skill Ratings
+              Overall Performance Ratings
             </h3>
             <p className="text-xs text-slate-500">
-              Evaluated across empathy, communication, ownership, and problem solving
+              Evaluated across core 5-star hospitality competence pillars
             </p>
           </div>
           <span className="text-[10px] font-bold uppercase tracking-wider text-purple-700 bg-purple-50 px-2.5 py-1 rounded-md">
@@ -141,6 +160,36 @@ export const TrainingView: React.FC<TrainingViewProps> = ({
               <span className="block text-[10px] text-slate-500 font-medium">
                 {skill.note}
               </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Recommended Practice Section */}
+      <div className="bg-white border border-purple-200/90 rounded-2xl p-6 shadow-2xs space-y-4">
+        <div className="flex items-center gap-2">
+          <Target className="w-5 h-5 text-purple-700" />
+          <h3 className="font-bold text-slate-900 text-base">Recommended Practice</h3>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {recommendedPractices.map((rec) => (
+            <div key={rec.id} className="p-4 rounded-xl border border-purple-100 bg-purple-50/40 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold text-purple-700 uppercase bg-purple-100 px-2 py-0.5 rounded-md">
+                  {rec.skillFocus}
+                </span>
+                <span className="text-xs font-bold text-amber-600">{rec.xp}</span>
+              </div>
+              <h4 className="font-bold text-slate-900 text-sm">{rec.title}</h4>
+              <p className="text-xs text-slate-500">{rec.reason}</p>
+              <button
+                onClick={onStartScenario}
+                className="w-full py-2 mt-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-2xs transition-all flex items-center justify-center gap-1.5"
+              >
+                <span>Practice Now</span>
+                <ArrowRight className="w-3.5 h-3.5 text-purple-400" />
+              </button>
             </div>
           ))}
         </div>
