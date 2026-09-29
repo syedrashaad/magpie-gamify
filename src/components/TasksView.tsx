@@ -3,7 +3,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { UserState, Teammate } from '../types';
 import { DEMO_UNITS, ScenarioData, UnitData } from '../data/scenarios';
 import { MagpieCharacter } from './MagpieCharacter';
-import { Check, Lock, Play, ArrowRight, Sparkles, Flame, Trophy, LockKeyhole, Info } from 'lucide-react';
+import {
+  HotelEntranceIllustration,
+  ConciergeDeskIllustration,
+  CheckoutCounterIllustration,
+  GuestServicesIllustration,
+  NightArrivalIllustration,
+  DiningRestaurantIllustration,
+  GuestSuitesIllustration,
+  SpaPoolDeckIllustration,
+  VIPLoungeIllustration,
+  CommandCenterIllustration,
+} from './HotelMapIllustrations';
+import { Check, Lock, Play, ArrowRight, Sparkles, Flame, Trophy, Info, Navigation, MapPin } from 'lucide-react';
 
 interface TasksViewProps {
   userState: UserState;
@@ -32,30 +44,27 @@ export const TasksView: React.FC<TasksViewProps> = ({
     setTimeout(() => setToastMessage(null), 2500);
   };
 
-  // Helper to generate SVG Path coordinates for winding S-curve across all 25 levels
+  // Helper to map global level index (0..24) to (xPct, yPx) coordinates on map canvas
   const getNodePosition = (globalIndex: number) => {
-    // globalIndex: 0 to 24
     const unitIndex = Math.floor(globalIndex / 5);
     const inUnitIndex = globalIndex % 5;
 
-    // X percentage pattern: Left (22%), Center (50%), Right (78%), Center (50%), Left (22%)...
-    const xPattern = [22, 50, 78, 50, 22];
+    // Winding X pattern: 25% (Left), 50% (Center), 75% (Right), 50% (Center), 25% (Left)...
+    const xPattern = [25, 50, 75, 50, 25];
     const xPct = xPattern[inUnitIndex];
 
-    // Y position calculation taking Unit headers into account
-    // Each unit block is ~720px high, with 120px per level + 120px for unit header
-    const yPx = unitIndex * 720 + inUnitIndex * 125 + 130;
+    // Y spacing taking destination illustration height and region banners into account
+    const yPx = unitIndex * 780 + inUnitIndex * 135 + 160;
 
     return { xPct, yPx };
   };
 
-  // Generate SVG path 'd' attribute string connecting all 25 level nodes smoothly
+  // Build continuous SVG path 'd' attribute string connecting all 25 level destinations
   const buildSvgPath = () => {
     let d = '';
     const totalLevels = 25;
     for (let i = 0; i < totalLevels; i++) {
       const pos = getNodePosition(i);
-      // convert X pct to approx px in a 600px viewBox
       const xPx = (pos.xPct / 100) * 600;
       const yPx = pos.yPx;
 
@@ -66,7 +75,6 @@ export const TasksView: React.FC<TasksViewProps> = ({
         const prevXPx = (prevPos.xPct / 100) * 600;
         const prevYPx = prevPos.yPx;
 
-        // Smooth cubic bezier curve control points
         const cy1 = prevYPx + (yPx - prevYPx) / 2;
         const cy2 = prevYPx + (yPx - prevYPx) / 2;
         d += ` C ${prevXPx} ${cy1}, ${xPx} ${cy2}, ${xPx} ${yPx}`;
@@ -75,13 +83,45 @@ export const TasksView: React.FC<TasksViewProps> = ({
     return d;
   };
 
-  // Flatten all 25 scenarios
+  // Map illustration selection for each level destination
+  const getDestinationIllustration = (levelNum: number) => {
+    switch (levelNum) {
+      case 1:
+        return <HotelEntranceIllustration className="w-20 h-20" />;
+      case 2:
+        return <ConciergeDeskIllustration className="w-20 h-20" />;
+      case 3:
+        return <CheckoutCounterIllustration className="w-24 h-24" />;
+      case 4:
+        return <GuestServicesIllustration className="w-20 h-20" />;
+      case 5:
+        return <NightArrivalIllustration className="w-20 h-20" />;
+      case 6:
+      case 7:
+        return <DiningRestaurantIllustration className="w-20 h-20" />;
+      case 11:
+      case 14:
+        return <GuestSuitesIllustration className="w-20 h-20" />;
+      case 15:
+        return <SpaPoolDeckIllustration className="w-20 h-20" />;
+      case 16:
+      case 20:
+        return <VIPLoungeIllustration className="w-20 h-20" />;
+      case 21:
+      case 25:
+        return <CommandCenterIllustration className="w-20 h-20" />;
+      default:
+        return <ConciergeDeskIllustration className="w-20 h-20" />;
+    }
+  };
+
+  // Flatten all scenarios
   const allScenarios = DEMO_UNITS.flatMap((u) => u.scenarios);
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-20">
       
-      {/* TOAST NOTIFICATION POPUP */}
+      {/* TOAST POPUP NOTIFICATION */}
       <AnimatePresence>
         {toastMessage && (
           <motion.div
@@ -96,29 +136,29 @@ export const TasksView: React.FC<TasksViewProps> = ({
         )}
       </AnimatePresence>
 
-      {/* COMPACT JOURNEY HEADER & TEAM PRESENCE BAR */}
-      <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-2xs space-y-4">
+      {/* COMPACT JOURNEY HEADER & TEAM WIDGET */}
+      <div className="bg-[#FAF8F5] border border-slate-200/90 rounded-2xl p-6 shadow-2xs space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           
-          {/* Left: Journey Title & Property */}
+          {/* Left Title & Property */}
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-md border border-purple-100">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-purple-700 bg-purple-100/80 px-2.5 py-0.5 rounded-md border border-purple-200">
                 THE SANDALWOOD GRAND · BLR
               </span>
               <span className="text-xs font-semibold text-slate-400">•</span>
-              <span className="text-xs font-extrabold text-amber-600">Currently on Level 03</span>
+              <span className="text-xs font-extrabold text-amber-700">Currently on Level 03</span>
             </div>
             <h1 className="font-extrabold text-2xl text-slate-900 tracking-tight">
-              Hospitality Learning Journey Map
+              Hospitality Game World Map
             </h1>
-            <p className="text-xs font-medium text-slate-500 mt-0.5">
-              Navigate the winding hotel map, master guest scenarios, and level up with your team.
+            <p className="text-xs font-semibold text-slate-600 mt-0.5">
+              Travel through hotel destinations, complete guest roleplays, and level up with your team.
             </p>
           </div>
 
-          {/* Right: Hotel Team Presence Widget */}
-          <div className="bg-slate-50 border border-slate-200/80 p-3 px-4 rounded-xl flex items-center gap-4 shrink-0">
+          {/* Right: Team Presence Widget */}
+          <div className="bg-white border border-slate-200/80 p-3 px-4 rounded-xl flex items-center gap-4 shrink-0 shadow-2xs">
             <div>
               <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
                 Your Hotel Team
@@ -132,7 +172,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                   <div
                     key={tm.id}
                     title={`${tm.name} (${tm.role}) • ${tm.xp} XP`}
-                    className="w-6 h-6 rounded-full bg-white border border-slate-300 flex items-center justify-center text-[10px] font-bold text-slate-800 shadow-2xs cursor-pointer hover:scale-110 transition-transform"
+                    className="w-6 h-6 rounded-full bg-purple-100 border border-purple-300 flex items-center justify-center text-[10px] font-bold text-purple-900 shadow-2xs cursor-pointer hover:scale-110 transition-transform"
                   >
                     {tm.name.charAt(0)}
                   </div>
@@ -152,10 +192,10 @@ export const TasksView: React.FC<TasksViewProps> = ({
         </div>
 
         {/* Status Pills */}
-        <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-3 text-xs font-bold text-slate-700">
-          <div className="flex items-center gap-1.5 bg-purple-50 text-purple-900 px-3 py-1 rounded-lg border border-purple-100">
-            <Sparkles className="w-3.5 h-3.5 text-purple-600" />
-            <span>82% Journey Progress</span>
+        <div className="pt-3 border-t border-slate-200/60 flex flex-wrap items-center gap-3 text-xs font-bold text-slate-700">
+          <div className="flex items-center gap-1.5 bg-purple-100/80 text-purple-900 px-3 py-1 rounded-lg border border-purple-200">
+            <Sparkles className="w-3.5 h-3.5 text-purple-700" />
+            <span>82% Journey Mastery</span>
           </div>
 
           <div className="flex items-center gap-1.5 bg-amber-50 text-amber-900 px-3 py-1 rounded-lg border border-amber-200/80">
@@ -163,44 +203,57 @@ export const TasksView: React.FC<TasksViewProps> = ({
             <span>🔥 {userState.streak} Day Streak</span>
           </div>
 
-          <div className="flex items-center gap-1.5 bg-slate-100 text-slate-800 px-3 py-1 rounded-lg">
+          <div className="flex items-center gap-1.5 bg-white border border-slate-200 text-slate-800 px-3 py-1 rounded-lg">
             <span>{userState.xp} Total XP</span>
           </div>
         </div>
       </div>
 
-      {/* GAME MAP CONTAINER CANVAS */}
-      <div className="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-xs relative overflow-hidden min-h-[3650px]">
+      {/* ILLUSTRATED HOTEL WORLD GAME MAP CANVAS */}
+      <div className="bg-[#FAF8F5] border border-slate-200/90 rounded-3xl p-6 shadow-xs relative overflow-hidden min-h-[3950px] selection:bg-purple-100">
         
-        {/* SVG WINDING PATH GRAPHIC LAYER */}
+        {/* SUBTLE HOTEL FLOOR-PLAN ARCHITECTURAL GRID BACKGROUND */}
+        <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#94A3B8_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
+
+        {/* MULTI-LAYERED WINDING HOTEL CORRIDOR CARPET PATH */}
         <div className="absolute inset-0 pointer-events-none z-0">
-          <svg className="w-full h-full" viewBox="0 0 600 3650" preserveAspectRatio="none">
+          <svg className="w-full h-full" viewBox="0 0 600 3950" preserveAspectRatio="none">
             
-            {/* Background Base Path (Locked/Future Path) */}
+            {/* Outer Walkway Floor Layer */}
             <path
               d={buildSvgPath()}
               fill="none"
-              stroke="#E2E8F0"
-              strokeWidth="8"
+              stroke="#E5E0D8"
+              strokeWidth="24"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
 
-            {/* Active / Completed Segment Glowing Path */}
+            {/* Inner Runner Carpet Line Layer */}
             <path
               d={buildSvgPath()}
               fill="none"
-              stroke="url(#pathGradient)"
+              stroke="#D6CEC2"
+              strokeWidth="14"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+
+            {/* Active / Completed Illuminated Runner Trail */}
+            <path
+              d={buildSvgPath()}
+              fill="none"
+              stroke="url(#carpetRunnerGradient)"
               strokeWidth="8"
               strokeDasharray="600"
-              strokeDashoffset="350"
+              strokeDashoffset="340"
               strokeLinecap="round"
               strokeLinejoin="round"
               className="transition-all duration-1000"
             />
 
             <defs>
-              <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <linearGradient id="carpetRunnerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#10B981" />
                 <stop offset="50%" stopColor="#7C3AED" />
                 <stop offset="100%" stopColor="#CBD5E1" />
@@ -209,86 +262,30 @@ export const TasksView: React.FC<TasksViewProps> = ({
           </svg>
         </div>
 
-        {/* MAP UNITS & LANDMARKS RENDERED IN SEQUENCE */}
+        {/* REGION TRANSITION GATEWAYS & HOTEL ATMOSPHERE HEADERS */}
         {DEMO_UNITS.map((unit, unitIdx) => {
-          const unitHeaderY = unitIdx * 720 + 30;
+          const regionHeaderY = unitIdx * 780 + 30;
 
           return (
             <React.Fragment key={unit.id}>
-              
-              {/* ELEGANT UNIT DESTINATION HEADER */}
               <div
-                className="absolute left-1/2 -translate-x-1/2 z-10 w-11/12 max-w-xl text-center bg-white/95 backdrop-blur-md border border-slate-200 p-4 px-6 rounded-2xl shadow-2xs space-y-1"
-                style={{ top: `${unitHeaderY}px` }}
+                className="absolute left-1/2 -translate-x-1/2 z-10 w-11/12 max-w-lg text-center bg-white/95 backdrop-blur-md border border-slate-200 p-4 px-6 rounded-2xl shadow-2xs space-y-1"
+                style={{ top: `${regionHeaderY}px` }}
               >
                 <div className="flex items-center justify-center gap-2">
-                  <span className="text-lg">{unit.icon}</span>
-                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-md border border-purple-100">
-                    {unit.number} · {unit.title}
+                  <span className="text-xl">{unit.icon}</span>
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-purple-800 bg-purple-100/80 px-2.5 py-0.5 rounded-md border border-purple-200">
+                    REGION 0{unitIdx + 1} · {unit.title}
                   </span>
                 </div>
                 <h3 className="font-extrabold text-base text-slate-900">{unit.atmosphere}</h3>
-                <p className="text-xs text-slate-500 font-medium">{unit.subtitle}</p>
+                <p className="text-xs text-slate-500 font-medium">"{unit.subtitle}"</p>
               </div>
-
-              {/* ENVIRONMENTAL HOSPITALITY LANDMARKS */}
-              {unitIdx === 0 && (
-                <>
-                  <div className="absolute left-6 top-[220px] z-0 text-slate-300 flex items-center gap-1.5 text-xs font-semibold select-none pointer-events-none">
-                    <span>🏨 Main Entrance</span>
-                  </div>
-                  <div className="absolute right-8 top-[360px] z-0 text-slate-300 flex items-center gap-1.5 text-xs font-semibold select-none pointer-events-none">
-                    <span>🧳 Luggage Desk</span>
-                  </div>
-                </>
-              )}
-
-              {unitIdx === 1 && (
-                <>
-                  <div className="absolute left-8 top-[940px] z-0 text-slate-300 flex items-center gap-1.5 text-xs font-semibold select-none pointer-events-none">
-                    <span>🔔 Concierge Counter</span>
-                  </div>
-                  <div className="absolute right-6 top-[1080px] z-0 text-slate-300 flex items-center gap-1.5 text-xs font-semibold select-none pointer-events-none">
-                    <span>🍷 Signature Dining</span>
-                  </div>
-                </>
-              )}
-
-              {unitIdx === 2 && (
-                <>
-                  <div className="absolute left-6 top-[1660px] z-0 text-slate-300 flex items-center gap-1.5 text-xs font-semibold select-none pointer-events-none">
-                    <span>🛏️ Guest Suites</span>
-                  </div>
-                  <div className="absolute right-8 top-[1800px] z-0 text-slate-300 flex items-center gap-1.5 text-xs font-semibold select-none pointer-events-none">
-                    <span>🧘 Spa & Pool Deck</span>
-                  </div>
-                </>
-              )}
-
-              {unitIdx === 3 && (
-                <>
-                  <div className="absolute left-8 top-[2380px] z-0 text-slate-300 flex items-center gap-1.5 text-xs font-semibold select-none pointer-events-none">
-                    <span>👑 VIP Lounge</span>
-                  </div>
-                  <div className="absolute right-6 top-[2520px] z-0 text-slate-300 flex items-center gap-1.5 text-xs font-semibold select-none pointer-events-none">
-                    <span>🍾 Penthouse Corridor</span>
-                  </div>
-                </>
-              )}
-
-              {unitIdx === 4 && (
-                <>
-                  <div className="absolute left-6 top-[3100px] z-0 text-slate-300 flex items-center gap-1.5 text-xs font-semibold select-none pointer-events-none">
-                    <span>🏢 Command Center</span>
-                  </div>
-                </>
-              )}
-
             </React.Fragment>
           );
         })}
 
-        {/* ALL 25 LEVEL NODES POSITIONED DIRECTLY ON THE SVG PATH */}
+        {/* ALL 25 HOTEL LEVEL DESTINATIONS INTEGRATED DIRECTLY ON PATH */}
         {allScenarios.map((scenario, globalIdx) => {
           const pos = getNodePosition(globalIdx);
           const isCompleted = completedScenarioIds.includes(scenario.id);
@@ -308,7 +305,12 @@ export const TasksView: React.FC<TasksViewProps> = ({
               style={{ left: `${pos.xPct}%`, top: `${pos.yPx}px` }}
             >
               
-              {/* TEAMMATES AVATARS ON THE PATH */}
+              {/* HOTEL DESTINATION ENVIRONMENT VECTOR ILLUSTRATION BACKGROUND */}
+              <div className="mb-1 transition-transform duration-300 hover:scale-105">
+                {getDestinationIllustration(scenario.levelNumber)}
+              </div>
+
+              {/* TEAMMATES MAGPIE AVATARS AT THIS DESTINATION */}
               {teammatesHere.length > 0 && !isUserHere && (
                 <div className="absolute -top-10 flex items-center gap-1 z-20">
                   {teammatesHere.map((tm) => (
@@ -316,17 +318,17 @@ export const TasksView: React.FC<TasksViewProps> = ({
                       key={tm.id}
                       onMouseEnter={() => setHoveredTeammate(tm)}
                       onMouseLeave={() => setHoveredTeammate(null)}
-                      className="relative flex items-center gap-1 bg-white border border-slate-200 px-2 py-0.5 rounded-full shadow-2xs cursor-pointer hover:scale-110 transition-transform"
+                      className="relative flex items-center gap-1.5 bg-white border border-slate-200 px-2.5 py-1 rounded-full shadow-2xs cursor-pointer hover:scale-110 transition-transform"
                     >
-                      <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-[10px] font-bold text-emerald-800">
+                      <div className="w-5 h-5 rounded-full bg-purple-100 flex items-center justify-center text-[10px] font-bold text-purple-900">
                         {tm.name.charAt(0)}
                       </div>
-                      <span className="text-[10px] font-bold text-slate-800">{tm.name.split(' ')[0]}</span>
+                      <span className="text-[10px] font-extrabold text-slate-800">{tm.name.split(' ')[0]}</span>
 
-                      {/* Teammate Hover Tooltip */}
+                      {/* Teammate Profile Tooltip */}
                       {hoveredTeammate?.id === tm.id && (
-                        <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 w-36 bg-slate-900 text-white text-[10px] p-2 rounded-xl shadow-xl z-30 pointer-events-none text-center">
-                          <span className="font-bold block">{tm.name}</span>
+                        <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-40 bg-slate-900 text-white text-[10px] p-2.5 rounded-xl shadow-xl z-40 pointer-events-none text-center">
+                          <span className="font-extrabold block">{tm.name}</span>
                           <span className="text-slate-300 block">{tm.role}</span>
                           <span className="text-amber-300 font-extrabold block mt-0.5">{tm.xp} XP · Level {tm.currentLevelNumber}</span>
                         </div>
@@ -336,19 +338,19 @@ export const TasksView: React.FC<TasksViewProps> = ({
                 </div>
               )}
 
-              {/* PERSISTENT USER MAGPIE COMPANION (NOVA) PHYSICALLY ON THE PATH */}
+              {/* PERSISTENT USER MAGPIE COMPANION (NOVA) AT CURRENT DESTINATION */}
               {isUserHere && (
                 <motion.div
                   initial={{ y: -8, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  className="absolute -top-16 z-30 flex flex-col items-center select-none"
+                  className="absolute -top-20 z-30 flex flex-col items-center select-none"
                 >
-                  <span className="text-[9px] font-extrabold uppercase bg-amber-400 text-slate-950 px-2 py-0.5 rounded-full shadow-2xs mb-1 tracking-wider">
+                  <span className="text-[9px] font-extrabold uppercase bg-amber-400 text-slate-950 px-2.5 py-0.5 rounded-full shadow-2xs mb-1 tracking-wider animate-bounce">
                     YOU ARE HERE
                   </span>
                   
-                  <div className="flex items-center gap-2 bg-slate-900 text-white border border-purple-400/60 px-3 py-1 rounded-2xl shadow-xl">
-                    <div className="w-8 h-8 overflow-hidden rounded-xl bg-purple-900 border border-purple-300 flex items-center justify-center shrink-0">
+                  <div className="flex items-center gap-2 bg-slate-900 text-white border border-purple-400/80 px-3 py-1.5 rounded-2xl shadow-xl">
+                    <div className="w-9 h-9 overflow-hidden rounded-xl bg-purple-900 border border-purple-300 flex items-center justify-center shrink-0">
                       <MagpieCharacter
                         bodyColor={userState.magpie.bodyColor}
                         featherStyle={userState.magpie.featherStyle}
@@ -358,7 +360,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                       />
                     </div>
                     <div className="text-left leading-none pr-1">
-                      <span className="block text-[10px] font-extrabold text-amber-300">
+                      <span className="block text-[11px] font-extrabold text-amber-300">
                         {userState.magpie.name.toUpperCase()}
                       </span>
                       <span className="block text-[8px] font-semibold text-slate-300">
@@ -369,7 +371,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                 </motion.div>
               )}
 
-              {/* CIRCULAR LEVEL NODE SITTING DIRECTLY ON PATH */}
+              {/* CIRCULAR LEVEL NODE SITTING DIRECTLY ON DESTINATION PATH */}
               <button
                 onClick={() => {
                   if (isUnlocked) {
@@ -410,7 +412,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                 {scenario.levelLabel}
               </span>
 
-              {/* SCENARIO TITLE & METRICS */}
+              {/* DESTINATION TITLE & METRICS */}
               <div className="mt-0.5 text-center max-w-[160px] space-y-0.5">
                 <h4 className={`font-bold text-xs leading-tight ${
                   isActive ? 'text-slate-900 font-extrabold' : 'text-slate-700'
@@ -431,7 +433,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                 )}
               </div>
 
-              {/* ACTIVE LEVEL EXPANDED CTA ACTION CARD */}
+              {/* ACTIVE LEVEL EXPANDED HERO ACTION CARD */}
               {isActive && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
