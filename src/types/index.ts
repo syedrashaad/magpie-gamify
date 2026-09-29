@@ -41,6 +41,20 @@ export interface FlightState {
   lane?: FlightLane;
 }
 
+export interface Teammate {
+  id: string;
+  name: string;
+  role: string;
+  xp: number;
+  currentLevelNumber: number;
+  avatarColor: string;
+  magpie: {
+    bodyColor: BodyColor;
+    featherStyle: FeatherStyle;
+    accessory: Accessory;
+  };
+}
+
 export interface SkyLeagueMember {
   id: string;
   rank: number;
@@ -64,6 +78,7 @@ export interface UserState {
   xp: number; // 840
   flightPower: number; // 142
   rank: number; // 4
+  currentLevelNumber: number; // 3
   dailyGoal: DailyGoal;
   magpie: MagpieCharacterState;
   rewards: RewardsState;

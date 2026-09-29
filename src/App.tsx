@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { UserState, ActiveTab, SkyLeagueMember } from './types';
+import { UserState, ActiveTab, SkyLeagueMember, Teammate } from './types';
 import {
   loadUserState,
   saveUserState,
   resetUserState,
   loadLeaderboardState,
   saveLeaderboardState,
+  loadTeammatesState,
+  saveTeammatesState,
 } from './utils/storage';
 import { DEMO_UNITS, ScenarioData } from './data/scenarios';
 import { AppShell } from './components/AppShell';
@@ -24,6 +26,7 @@ import { LevelUpModal } from './components/LevelUpModal';
 export function App() {
   const [userState, setUserState] = useState<UserState>(() => loadUserState());
   const [leaderboard, setLeaderboard] = useState<SkyLeagueMember[]>(() => loadLeaderboardState());
+  const [teammates, setTeammates] = useState<Teammate[]>(() => loadTeammatesState());
   const [activeTab, setActiveTab] = useState<ActiveTab>('tasks');
 
   // Scenario Progression State
@@ -41,7 +44,7 @@ export function App() {
   const [latestScore, setLatestScore] = useState(82);
   const [justOvertook, setJustOvertook] = useState(false);
 
-  // Auto-save user state & leaderboard
+  // Auto-save state
   useEffect(() => {
     saveUserState(userState);
   }, [userState]);
@@ -49,6 +52,10 @@ export function App() {
   useEffect(() => {
     saveLeaderboardState(leaderboard);
   }, [leaderboard]);
+
+  useEffect(() => {
+    saveTeammatesState(teammates);
+  }, [teammates]);
 
   const handleSaveCustomize = (updated: UserState) => {
     setUserState(updated);
@@ -72,6 +79,8 @@ export function App() {
     setLatestScore(score);
     setIsScenarioModalOpen(false);
 
+    const nextLevelNum = userState.currentLevelNumber + 1;
+
     if (!completedScenarioIds.includes(activeScenarioId)) {
       setCompletedScenarioIds((prev) => [...prev, activeScenarioId]);
     }
@@ -79,6 +88,12 @@ export function App() {
       setUnlockedScenarioIds((prev) => [...prev, 'sc-4']);
       setActiveScenarioId('sc-4');
     }
+
+    // Advance user's level position on map
+    setUserState((prev) => ({
+      ...prev,
+      currentLevelNumber: nextLevelNum,
+    }));
 
     setTimeout(() => {
       setIsRewardOpen(true);
@@ -140,10 +155,10 @@ export function App() {
       rank: 3,
     }));
 
-    // Update Sandalwood Leaderboard order (Rashaad #3, Arjun #4)
+    // Update Sandalwood Leaderboard order
     const updatedBoard = leaderboard.map((m) => {
       if (m.isCurrentUser) {
-        return { ...m, rank: 3, flightPower: newFP, xp: userState.xp + 20 };
+        return { ...m, rank: 3, flightPower: newFP, xp: userState.xp };
       }
       if (m.id === 'usr-3') {
         return { ...m, rank: 4 };
@@ -160,6 +175,10 @@ export function App() {
     const fresh = resetUserState();
     setUserState(fresh);
     setLeaderboard(loadLeaderboardState());
+    setTeammates(loadTeammatesState());
+    setUnlockedScenarioIds(['sc-1', 'sc-2', 'sc-3']);
+    setCompletedScenarioIds(['sc-1', 'sc-2']);
+    setActiveScenarioId('sc-3');
   };
 
   return (
@@ -177,10 +196,12 @@ export function App() {
       {activeTab === 'tasks' && (
         <TasksView
           userState={userState}
+          teammates={teammates}
           unlockedScenarioIds={unlockedScenarioIds}
           completedScenarioIds={completedScenarioIds}
           activeScenarioId={activeScenarioId}
           onSelectScenario={(sc) => handleStartScenario(sc)}
+          onNavigateToSkyLeague={() => setActiveTab('sky-league')}
         />
       )}
 
