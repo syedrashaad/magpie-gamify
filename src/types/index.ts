@@ -85,6 +85,8 @@ export interface UserState {
   flight: FlightState;
   skills: SkillScores;
   scenariosCompletedCount: number;
+  mySkyUnlocks?: string[]; // Array of unlocked item IDs in My Sky
 }
 
-export type ActiveTab = 'tasks' | 'coach' | 'sky-league' | 'training' | 'profile' | 'settings';
+export type ActiveTab = 'tasks' | 'my-sky' | 'coach' | 'sky-league' | 'training' | 'profile' | 'settings';
+

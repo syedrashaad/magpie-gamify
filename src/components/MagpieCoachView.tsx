@@ -72,15 +72,17 @@ export const MagpieCoachView: React.FC<MagpieCoachViewProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-bold uppercase text-amber-800 bg-amber-50 px-2 py-0.5 rounded-md">
-                Skill Focus Alert
+                Live Skill Focus Alert
               </span>
-              <span className="text-xs text-slate-500 font-medium">Empathy Rating: 82/100</span>
+              <span className="text-xs text-slate-500 font-semibold">
+                Empathy: {userState.skills.empathy}/100 · Ownership: {userState.skills.ownership}/100
+              </span>
             </div>
             <h4 className="font-bold text-slate-900 text-sm mt-1">
-              "Practice billing disputes to raise Empathy score back to 90+"
+              "Practice billing dispute de-escalation to raise Empathy score back to 90+"
             </h4>
             <p className="text-xs text-slate-500 mt-0.5">
-              Mr. Iyer's checkout dispute scenario is recommended for your current skill focus.
+              Nova identified a minor drop in Empathy during dispute handling. Scenario "Mr. Iyer Wrong Charges" is recommended.
             </p>
           </div>
         </div>
@@ -90,7 +92,7 @@ export const MagpieCoachView: React.FC<MagpieCoachViewProps> = ({
           className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-2xs transition-all flex items-center justify-center gap-2 shrink-0"
         >
           <Sparkles className="w-3.5 h-3.5 text-purple-400" />
-          <span>START PRACTICE</span>
+          <span>START PRACTICE (+20 XP)</span>
         </button>
       </div>
 

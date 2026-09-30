@@ -209,11 +209,66 @@ export const TasksView: React.FC<TasksViewProps> = ({
         </div>
       </div>
 
+      {/* ROTATING DAILY HOSPITALITY CHALLENGE CARD */}
+      <div className="bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 text-white p-5 rounded-2xl border border-purple-400/30 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex items-start gap-3">
+          <div className="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 font-bold flex items-center justify-center text-xl shrink-0">
+            🎯
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-extrabold uppercase text-amber-300 bg-amber-400/20 px-2.5 py-0.5 rounded-md border border-amber-400/30">
+                DAILY HOSPITALITY CHALLENGE
+              </span>
+              <span className="text-[10px] text-purple-300 font-semibold">Resets in 8h</span>
+            </div>
+            <h4 className="font-extrabold text-white text-base mt-1">
+              Master 1 VIP Guest Check-in Scenario Today
+            </h4>
+            <p className="text-xs text-purple-200 mt-0.5 font-medium">
+              Reward: <span className="text-amber-300 font-bold">+10 XP · +3 Eggs 🥚 · +2 Feathers 🪶</span>
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={() => {
+            const activeSc = allScenarios.find((s) => s.id === activeScenarioId) || allScenarios[2];
+            onSelectScenario(activeSc);
+          }}
+          className="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs shadow-md transition-all flex items-center gap-1.5 shrink-0 self-end sm:self-auto"
+        >
+          <span>ACCEPT CHALLENGE</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </button>
+      </div>
+
       {/* ILLUSTRATED HOTEL WORLD GAME MAP CANVAS */}
       <div className="bg-[#FAF8F5] border border-slate-200/90 rounded-3xl p-6 shadow-xs relative overflow-hidden min-h-[3950px] selection:bg-purple-100">
         
         {/* SUBTLE HOTEL FLOOR-PLAN ARCHITECTURAL GRID BACKGROUND */}
         <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#94A3B8_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
+
+        {/* DISCOVER MOMENT CACHES ON MAP */}
+        <div
+          className="absolute z-20 flex flex-col items-center cursor-pointer hover:scale-125 transition-transform"
+          style={{ left: '50%', top: '570px' }}
+          onClick={() => showToast('✨ Discover Moment! You found a hidden guest service tip cache (+5 XP, +2 Eggs)!')}
+        >
+          <div className="bg-amber-400 text-slate-950 px-2 py-0.5 rounded-full text-[9px] font-black shadow-md animate-bounce">
+            DISCOVER 🥚
+          </div>
+        </div>
+
+        <div
+          className="absolute z-20 flex flex-col items-center cursor-pointer hover:scale-125 transition-transform"
+          style={{ left: '75%', top: '1630px' }}
+          onClick={() => showToast('💡 Discover Moment! "Always address returning Sandalwood Grand guests by surname" (+5 XP)!')}
+        >
+          <div className="bg-purple-600 text-white px-2 py-0.5 rounded-full text-[9px] font-black shadow-md animate-bounce">
+            GUEST TIP 💡
+          </div>
+        </div>
 
         {/* MULTI-LAYERED WINDING HOTEL CORRIDOR CARPET PATH */}
         <div className="absolute inset-0 pointer-events-none z-0">

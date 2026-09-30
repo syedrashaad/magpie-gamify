@@ -17,6 +17,7 @@ import { SkyLeagueView } from './components/SkyLeagueView';
 import { TrainingView } from './components/TrainingView';
 import { ProfileView } from './components/ProfileView';
 import { SettingsView } from './components/SettingsView';
+import { MySkyView } from './components/MySkyView';
 import { MagpieCreationModal } from './components/MagpieCreationModal';
 import { MagpieCoachModal } from './components/MagpieCoachModal';
 import { RewardSequence } from './components/RewardSequence';
@@ -171,6 +172,21 @@ export function App() {
     setActiveTab('sky-league');
   };
 
+  const handleUnlockSkyItem = (itemId: string, cost: number) => {
+    setUserState((prev) => {
+      const currentUnlocks = prev.mySkyUnlocks || ['nest-gold'];
+      if (currentUnlocks.includes(itemId)) return prev;
+      return {
+        ...prev,
+        rewards: {
+          ...prev.rewards,
+          eggs: Math.max(0, prev.rewards.eggs - cost),
+        },
+        mySkyUnlocks: [...currentUnlocks, itemId],
+      };
+    });
+  };
+
   const handleResetData = () => {
     const fresh = resetUserState();
     setUserState(fresh);
@@ -202,6 +218,14 @@ export function App() {
           activeScenarioId={activeScenarioId}
           onSelectScenario={(sc) => handleStartScenario(sc)}
           onNavigateToSkyLeague={() => setActiveTab('sky-league')}
+        />
+      )}
+
+      {activeTab === 'my-sky' && (
+        <MySkyView
+          userState={userState}
+          onUnlockItem={handleUnlockSkyItem}
+          onNavigateToTasks={() => setActiveTab('tasks')}
         />
       )}
 

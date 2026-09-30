@@ -44,6 +44,7 @@ export const INITIAL_USER_STATE: UserState = {
     problemSolving: 86,
   },
   scenariosCompletedCount: 16,
+  mySkyUnlocks: ['nest-gold'],
 };
 
 export const INITIAL_LEADERBOARD: SkyLeagueMember[] = [
@@ -64,6 +65,7 @@ export const loadUserState = (): UserState => {
         ...INITIAL_USER_STATE,
         ...parsed,
         currentLevelNumber: parsed.currentLevelNumber || 3,
+        mySkyUnlocks: parsed.mySkyUnlocks || ['nest-gold'],
       };
     }
   } catch (e) {

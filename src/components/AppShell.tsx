@@ -41,6 +41,7 @@ export const AppShell: React.FC<AppShellProps> = ({
 }) => {
   const sidebarNavItems = [
     { id: 'tasks' as ActiveTab, label: 'TASKS', icon: BookOpen, description: 'Learning Path' },
+    { id: 'my-sky' as ActiveTab, label: 'MY SKY', icon: Sparkles, description: "Nova's Haven" },
     { id: 'coach' as ActiveTab, label: 'MAGPIE COACH', icon: MessageSquareHeart, description: 'AI Mentor' },
     { id: 'sky-league' as ActiveTab, label: 'SKY LEAGUE', icon: Trophy, description: 'Organisation Leaderboard' },
     { id: 'training' as ActiveTab, label: 'TRAINING', icon: BarChart2, description: 'Analytics & Practice Log' },
@@ -152,16 +153,24 @@ export const AppShell: React.FC<AppShellProps> = ({
               </div>
 
               {/* Eggs */}
-              <div className="hidden sm:flex items-center gap-1 text-xs font-semibold text-slate-700 bg-slate-100 border border-slate-200/80 px-2.5 py-1 rounded-xl">
+              <button
+                onClick={() => setActiveTab('my-sky')}
+                title="Go to My Sky Haven"
+                className="hidden sm:flex items-center gap-1 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-purple-100 border border-slate-200/80 hover:border-purple-300 px-2.5 py-1 rounded-xl transition-all cursor-pointer"
+              >
                 <span>🥚</span>
                 <span>{userState.rewards.eggs}</span>
-              </div>
+              </button>
 
               {/* Feathers */}
-              <div className="hidden sm:flex items-center gap-1 text-xs font-semibold text-slate-700 bg-slate-100 border border-slate-200/80 px-2.5 py-1 rounded-xl">
+              <button
+                onClick={() => setActiveTab('my-sky')}
+                title="Go to My Sky Haven"
+                className="hidden sm:flex items-center gap-1 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-purple-100 border border-slate-200/80 hover:border-purple-300 px-2.5 py-1 rounded-xl transition-all cursor-pointer"
+              >
                 <span>🪶</span>
                 <span>{userState.rewards.feathers}</span>
-              </div>
+              </button>
 
               {/* User Avatar Pill */}
               <button
@@ -267,7 +276,11 @@ export const AppShell: React.FC<AppShellProps> = ({
           </div>
 
           {/* Small Companion Nova Widget (Bounded Container) */}
-          <div className="pt-2 flex items-center gap-3 bg-purple-50/50 border border-purple-200/60 p-3 rounded-2xl overflow-hidden">
+          <div
+            onClick={() => setActiveTab('my-sky')}
+            title="Open Nova's Sky Haven"
+            className="pt-2 flex items-center gap-3 bg-purple-50/50 hover:bg-purple-100/70 border border-purple-200/60 hover:border-purple-300 p-3 rounded-2xl overflow-hidden cursor-pointer transition-all"
+          >
             <div className="w-10 h-10 shrink-0 overflow-hidden rounded-xl bg-purple-100 flex items-center justify-center">
               <MagpieCharacter
                 bodyColor={userState.magpie.bodyColor}
@@ -279,7 +292,7 @@ export const AppShell: React.FC<AppShellProps> = ({
             </div>
             <div>
               <span className="block text-xs font-bold text-slate-900">{userState.magpie.name}</span>
-              <span className="text-[10px] font-semibold text-purple-700">Level {userState.magpie.level} AI Companion</span>
+              <span className="text-[10px] font-semibold text-purple-700">Level {userState.magpie.level} AI Companion · Sky Haven 🪽</span>
             </div>
           </div>
 

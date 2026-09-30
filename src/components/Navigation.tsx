@@ -25,6 +25,7 @@ export const Navigation: React.FC<NavigationProps> = ({
 }) => {
   const navItems = [
     { id: 'tasks' as ActiveTab, label: 'TASKS', icon: BookOpen },
+    { id: 'my-sky' as ActiveTab, label: 'MY SKY', icon: Sparkles },
     { id: 'coach' as ActiveTab, label: 'COACH', icon: MessageSquareHeart },
     { id: 'sky-league' as ActiveTab, label: 'LEAGUE', icon: Trophy },
     { id: 'training' as ActiveTab, label: 'TRAINING', icon: BarChart2 },
