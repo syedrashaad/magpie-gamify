@@ -92,8 +92,8 @@ export const FlightChallengeGame: React.FC<FlightChallengeGameProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
-      <div className="relative w-full max-w-2xl bg-slate-900 border border-purple-500/30 rounded-3xl shadow-2xl overflow-hidden p-6 text-white text-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto max-w-full">
+      <div className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto bg-slate-900 border border-purple-500/30 rounded-3xl shadow-2xl p-4 sm:p-6 text-white text-center my-auto">
         
         {/* Header Bar */}
         <div className="flex items-center justify-between border-b border-slate-800 pb-4 mb-4">

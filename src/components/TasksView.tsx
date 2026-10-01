@@ -49,8 +49,8 @@ export const TasksView: React.FC<TasksViewProps> = ({
     const unitIndex = Math.floor(globalIndex / 5);
     const inUnitIndex = globalIndex % 5;
 
-    // Winding X pattern: 25% (Left), 50% (Center), 75% (Right), 50% (Center), 25% (Left)...
-    const xPattern = [25, 50, 75, 50, 25];
+    // Winding X pattern optimized for mobile & desktop: 30% (Left), 50% (Center), 70% (Right), 50% (Center), 30% (Left)...
+    const xPattern = [30, 50, 70, 50, 30];
     const xPct = xPattern[inUnitIndex];
 
     // Y spacing taking destination illustration height and region banners into account
@@ -87,31 +87,31 @@ export const TasksView: React.FC<TasksViewProps> = ({
   const getDestinationIllustration = (levelNum: number) => {
     switch (levelNum) {
       case 1:
-        return <HotelEntranceIllustration className="w-20 h-20" />;
+        return <HotelEntranceIllustration className="w-14 h-14 sm:w-20 sm:h-20" />;
       case 2:
-        return <ConciergeDeskIllustration className="w-20 h-20" />;
+        return <ConciergeDeskIllustration className="w-14 h-14 sm:w-20 sm:h-20" />;
       case 3:
-        return <CheckoutCounterIllustration className="w-24 h-24" />;
+        return <CheckoutCounterIllustration className="w-16 h-16 sm:w-24 sm:h-24" />;
       case 4:
-        return <GuestServicesIllustration className="w-20 h-20" />;
+        return <GuestServicesIllustration className="w-14 h-14 sm:w-20 sm:h-20" />;
       case 5:
-        return <NightArrivalIllustration className="w-20 h-20" />;
+        return <NightArrivalIllustration className="w-14 h-14 sm:w-20 sm:h-20" />;
       case 6:
       case 7:
-        return <DiningRestaurantIllustration className="w-20 h-20" />;
+        return <DiningRestaurantIllustration className="w-14 h-14 sm:w-20 sm:h-20" />;
       case 11:
       case 14:
-        return <GuestSuitesIllustration className="w-20 h-20" />;
+        return <GuestSuitesIllustration className="w-14 h-14 sm:w-20 sm:h-20" />;
       case 15:
-        return <SpaPoolDeckIllustration className="w-20 h-20" />;
+        return <SpaPoolDeckIllustration className="w-14 h-14 sm:w-20 sm:h-20" />;
       case 16:
       case 20:
-        return <VIPLoungeIllustration className="w-20 h-20" />;
+        return <VIPLoungeIllustration className="w-14 h-14 sm:w-20 sm:h-20" />;
       case 21:
       case 25:
-        return <CommandCenterIllustration className="w-20 h-20" />;
+        return <CommandCenterIllustration className="w-14 h-14 sm:w-20 sm:h-20" />;
       default:
-        return <ConciergeDeskIllustration className="w-20 h-20" />;
+        return <ConciergeDeskIllustration className="w-14 h-14 sm:w-20 sm:h-20" />;
     }
   };
 
@@ -119,7 +119,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
   const allScenarios = DEMO_UNITS.flatMap((u) => u.scenarios);
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-20">
+    <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8 pb-20 overflow-x-hidden max-w-full">
       
       {/* TOAST POPUP NOTIFICATION */}
       <AnimatePresence>
@@ -128,28 +128,28 @@ export const TasksView: React.FC<TasksViewProps> = ({
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-5 py-2.5 rounded-xl shadow-xl text-xs font-bold border border-purple-400/40 flex items-center gap-2"
+            className="fixed top-16 sm:top-20 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl shadow-xl text-xs font-bold border border-purple-400/40 flex items-center gap-2 max-w-[90vw] text-center"
           >
-            <Info className="w-4 h-4 text-amber-400" />
+            <Info className="w-4 h-4 text-amber-400 shrink-0" />
             <span>{toastMessage}</span>
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* COMPACT JOURNEY HEADER & TEAM WIDGET */}
-      <div className="bg-[#FAF8F5] border border-slate-200/90 rounded-2xl p-6 shadow-2xs space-y-4">
+      <div className="bg-[#FAF8F5] border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-2xs space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           
           {/* Left Title & Property */}
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-purple-700 bg-purple-100/80 px-2.5 py-0.5 rounded-md border border-purple-200">
+            <div className="flex flex-wrap items-center gap-2 mb-1">
+              <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-purple-700 bg-purple-100/80 px-2 py-0.5 rounded-md border border-purple-200 truncate max-w-[200px] sm:max-w-none">
                 THE SANDALWOOD GRAND · BLR
               </span>
-              <span className="text-xs font-semibold text-slate-400">•</span>
+              <span className="text-xs font-semibold text-slate-400 hidden sm:inline">•</span>
               <span className="text-xs font-extrabold text-amber-700">Currently on Level 03</span>
             </div>
-            <h1 className="font-extrabold text-2xl text-slate-900 tracking-tight">
+            <h1 className="font-extrabold text-xl sm:text-2xl text-slate-900 tracking-tight">
               Hospitality Game World Map
             </h1>
             <p className="text-xs font-semibold text-slate-600 mt-0.5">
@@ -158,7 +158,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
           </div>
 
           {/* Right: Team Presence Widget */}
-          <div className="bg-white border border-slate-200/80 p-3 px-4 rounded-xl flex items-center gap-4 shrink-0 shadow-2xs">
+          <div className="bg-white border border-slate-200/80 p-3 px-4 rounded-xl flex items-center justify-between sm:justify-start gap-4 shrink-0 shadow-2xs">
             <div>
               <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
                 Your Hotel Team
@@ -192,37 +192,37 @@ export const TasksView: React.FC<TasksViewProps> = ({
         </div>
 
         {/* Status Pills */}
-        <div className="pt-3 border-t border-slate-200/60 flex flex-wrap items-center gap-3 text-xs font-bold text-slate-700">
-          <div className="flex items-center gap-1.5 bg-purple-100/80 text-purple-900 px-3 py-1 rounded-lg border border-purple-200">
+        <div className="pt-3 border-t border-slate-200/60 flex flex-wrap items-center gap-2 sm:gap-3 text-xs font-bold text-slate-700">
+          <div className="flex items-center gap-1.5 bg-purple-100/80 text-purple-900 px-2.5 py-1 rounded-lg border border-purple-200 text-[11px] sm:text-xs">
             <Sparkles className="w-3.5 h-3.5 text-purple-700" />
-            <span>82% Journey Mastery</span>
+            <span>82% Mastery</span>
           </div>
 
-          <div className="flex items-center gap-1.5 bg-amber-50 text-amber-900 px-3 py-1 rounded-lg border border-amber-200/80">
+          <div className="flex items-center gap-1.5 bg-amber-50 text-amber-900 px-2.5 py-1 rounded-lg border border-amber-200/80 text-[11px] sm:text-xs">
             <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
             <span>🔥 {userState.streak} Day Streak</span>
           </div>
 
-          <div className="flex items-center gap-1.5 bg-white border border-slate-200 text-slate-800 px-3 py-1 rounded-lg">
+          <div className="flex items-center gap-1.5 bg-white border border-slate-200 text-slate-800 px-2.5 py-1 rounded-lg text-[11px] sm:text-xs">
             <span>{userState.xp} Total XP</span>
           </div>
         </div>
       </div>
 
       {/* ROTATING DAILY HOSPITALITY CHALLENGE CARD */}
-      <div className="bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 text-white p-5 rounded-2xl border border-purple-400/30 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 text-white p-4 sm:p-5 rounded-2xl border border-purple-400/30 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 font-bold flex items-center justify-center text-xl shrink-0">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-400 text-slate-950 font-bold flex items-center justify-center text-lg sm:text-xl shrink-0">
             🎯
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-extrabold uppercase text-amber-300 bg-amber-400/20 px-2.5 py-0.5 rounded-md border border-amber-400/30">
+              <span className="text-[9px] sm:text-[10px] font-extrabold uppercase text-amber-300 bg-amber-400/20 px-2 py-0.5 rounded-md border border-amber-400/30">
                 DAILY HOSPITALITY CHALLENGE
               </span>
               <span className="text-[10px] text-purple-300 font-semibold">Resets in 8h</span>
             </div>
-            <h4 className="font-extrabold text-white text-base mt-1">
+            <h4 className="font-extrabold text-white text-sm sm:text-base mt-1">
               Master 1 VIP Guest Check-in Scenario Today
             </h4>
             <p className="text-xs text-purple-200 mt-0.5 font-medium">
@@ -236,7 +236,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
             const activeSc = allScenarios.find((s) => s.id === activeScenarioId) || allScenarios[2];
             onSelectScenario(activeSc);
           }}
-          className="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs shadow-md transition-all flex items-center gap-1.5 shrink-0 self-end sm:self-auto"
+          className="w-full sm:w-auto px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs shadow-md transition-all flex items-center justify-center gap-1.5 shrink-0"
         >
           <span>ACCEPT CHALLENGE</span>
           <ArrowRight className="w-3.5 h-3.5" />
@@ -244,7 +244,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
       </div>
 
       {/* ILLUSTRATED HOTEL WORLD GAME MAP CANVAS */}
-      <div className="bg-[#FAF8F5] border border-slate-200/90 rounded-3xl p-6 shadow-xs relative overflow-hidden min-h-[3950px] selection:bg-purple-100">
+      <div className="bg-[#FAF8F5] border border-slate-200/90 rounded-3xl p-3 sm:p-6 shadow-xs relative overflow-hidden min-h-[3600px] sm:min-h-[3950px] selection:bg-purple-100 max-w-full">
         
         {/* SUBTLE HOTEL FLOOR-PLAN ARCHITECTURAL GRID BACKGROUND */}
         <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#94A3B8_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
@@ -262,7 +262,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
 
         <div
           className="absolute z-20 flex flex-col items-center cursor-pointer hover:scale-125 transition-transform"
-          style={{ left: '75%', top: '1630px' }}
+          style={{ left: '70%', top: '1630px' }}
           onClick={() => showToast('💡 Discover Moment! "Always address returning Sandalwood Grand guests by surname" (+5 XP)!')}
         >
           <div className="bg-purple-600 text-white px-2 py-0.5 rounded-full text-[9px] font-black shadow-md animate-bounce">
@@ -324,17 +324,17 @@ export const TasksView: React.FC<TasksViewProps> = ({
           return (
             <React.Fragment key={unit.id}>
               <div
-                className="absolute left-1/2 -translate-x-1/2 z-10 w-11/12 max-w-lg text-center bg-white/95 backdrop-blur-md border border-slate-200 p-4 px-6 rounded-2xl shadow-2xs space-y-1"
+                className="absolute left-1/2 -translate-x-1/2 z-10 w-[92%] max-w-lg text-center bg-white/95 backdrop-blur-md border border-slate-200 p-3 sm:p-4 px-4 sm:px-6 rounded-2xl shadow-2xs space-y-1"
                 style={{ top: `${regionHeaderY}px` }}
               >
                 <div className="flex items-center justify-center gap-2">
-                  <span className="text-xl">{unit.icon}</span>
-                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-purple-800 bg-purple-100/80 px-2.5 py-0.5 rounded-md border border-purple-200">
+                  <span className="text-lg sm:text-xl">{unit.icon}</span>
+                  <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest text-purple-800 bg-purple-100/80 px-2 py-0.5 rounded-md border border-purple-200 truncate max-w-[220px] sm:max-w-none">
                     REGION 0{unitIdx + 1} · {unit.title}
                   </span>
                 </div>
-                <h3 className="font-extrabold text-base text-slate-900">{unit.atmosphere}</h3>
-                <p className="text-xs text-slate-500 font-medium">"{unit.subtitle}"</p>
+                <h3 className="font-extrabold text-sm sm:text-base text-slate-900 truncate">{unit.atmosphere}</h3>
+                <p className="text-[11px] sm:text-xs text-slate-500 font-medium line-clamp-1">"{unit.subtitle}"</p>
               </div>
             </React.Fragment>
           );
@@ -373,16 +373,16 @@ export const TasksView: React.FC<TasksViewProps> = ({
                       key={tm.id}
                       onMouseEnter={() => setHoveredTeammate(tm)}
                       onMouseLeave={() => setHoveredTeammate(null)}
-                      className="relative flex items-center gap-1.5 bg-white border border-slate-200 px-2.5 py-1 rounded-full shadow-2xs cursor-pointer hover:scale-110 transition-transform"
+                      className="relative flex items-center gap-1 bg-white border border-slate-200 px-2 py-0.5 rounded-full shadow-2xs cursor-pointer hover:scale-110 transition-transform"
                     >
-                      <div className="w-5 h-5 rounded-full bg-purple-100 flex items-center justify-center text-[10px] font-bold text-purple-900">
+                      <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-purple-100 flex items-center justify-center text-[9px] sm:text-[10px] font-bold text-purple-900">
                         {tm.name.charAt(0)}
                       </div>
-                      <span className="text-[10px] font-extrabold text-slate-800">{tm.name.split(' ')[0]}</span>
+                      <span className="text-[9px] sm:text-[10px] font-extrabold text-slate-800">{tm.name.split(' ')[0]}</span>
 
                       {/* Teammate Profile Tooltip */}
                       {hoveredTeammate?.id === tm.id && (
-                        <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-40 bg-slate-900 text-white text-[10px] p-2.5 rounded-xl shadow-xl z-40 pointer-events-none text-center">
+                        <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-36 sm:w-40 bg-slate-900 text-white text-[10px] p-2 rounded-xl shadow-xl z-40 pointer-events-none text-center">
                           <span className="font-extrabold block">{tm.name}</span>
                           <span className="text-slate-300 block">{tm.role}</span>
                           <span className="text-amber-300 font-extrabold block mt-0.5">{tm.xp} XP · Level {tm.currentLevelNumber}</span>
@@ -398,14 +398,14 @@ export const TasksView: React.FC<TasksViewProps> = ({
                 <motion.div
                   initial={{ y: -8, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  className="absolute -top-20 z-30 flex flex-col items-center select-none"
+                  className="absolute -top-16 sm:-top-20 z-30 flex flex-col items-center select-none"
                 >
-                  <span className="text-[9px] font-extrabold uppercase bg-amber-400 text-slate-950 px-2.5 py-0.5 rounded-full shadow-2xs mb-1 tracking-wider animate-bounce">
+                  <span className="text-[8px] sm:text-[9px] font-extrabold uppercase bg-amber-400 text-slate-950 px-2 py-0.5 rounded-full shadow-2xs mb-1 tracking-wider animate-bounce">
                     YOU ARE HERE
                   </span>
                   
-                  <div className="flex items-center gap-2 bg-slate-900 text-white border border-purple-400/80 px-3 py-1.5 rounded-2xl shadow-xl">
-                    <div className="w-9 h-9 overflow-hidden rounded-xl bg-purple-900 border border-purple-300 flex items-center justify-center shrink-0">
+                  <div className="flex items-center gap-1.5 sm:gap-2 bg-slate-900 text-white border border-purple-400/80 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-2xl shadow-xl">
+                    <div className="w-7 h-7 sm:w-9 sm:h-9 overflow-hidden rounded-xl bg-purple-900 border border-purple-300 flex items-center justify-center shrink-0">
                       <MagpieCharacter
                         bodyColor={userState.magpie.bodyColor}
                         featherStyle={userState.magpie.featherStyle}
@@ -414,11 +414,11 @@ export const TasksView: React.FC<TasksViewProps> = ({
                         size="sm"
                       />
                     </div>
-                    <div className="text-left leading-none pr-1">
-                      <span className="block text-[11px] font-extrabold text-amber-300">
+                    <div className="text-left leading-none pr-0.5">
+                      <span className="block text-[10px] sm:text-[11px] font-extrabold text-amber-300">
                         {userState.magpie.name.toUpperCase()}
                       </span>
-                      <span className="block text-[8px] font-semibold text-slate-300">
+                      <span className="block text-[7px] sm:text-[8px] font-semibold text-slate-300">
                         {userState.name.split(' ')[0]} (YOU)
                       </span>
                     </div>
@@ -435,7 +435,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                     showToast(`Complete Level ${scenario.levelNumber - 1} first to unlock Level ${scenario.levelNumber}!`);
                   }
                 }}
-                className={`w-14 h-14 rounded-full flex flex-col items-center justify-center font-bold transition-all duration-200 shadow-2xs relative z-10 ${
+                className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex flex-col items-center justify-center font-bold transition-all duration-200 shadow-2xs relative z-10 ${
                   isCompleted
                     ? 'bg-emerald-500 text-white ring-4 ring-emerald-100 hover:scale-110 shadow-emerald-200'
                     : isActive
@@ -446,18 +446,18 @@ export const TasksView: React.FC<TasksViewProps> = ({
                 }`}
               >
                 {isCompleted ? (
-                  <Check className="w-6 h-6 stroke-[3]" />
+                  <Check className="w-5 h-5 sm:w-6 sm:h-6 stroke-[3]" />
                 ) : isActive ? (
-                  <Play className="w-6 h-6 fill-white ml-0.5" />
+                  <Play className="w-5 h-5 sm:w-6 sm:h-6 fill-white ml-0.5" />
                 ) : isUnlocked ? (
-                  <Play className="w-5 h-5 fill-white ml-0.5" />
+                  <Play className="w-4 h-4 sm:w-5 sm:h-5 fill-white ml-0.5" />
                 ) : (
-                  <Lock className="w-4 h-4 text-slate-400" />
+                  <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400" />
                 )}
               </button>
 
               {/* LEVEL NUMBER BADGE */}
-              <span className={`text-[10px] font-extrabold tracking-wider uppercase mt-1 px-2 py-0.5 rounded-md ${
+              <span className={`text-[9px] sm:text-[10px] font-extrabold tracking-wider uppercase mt-1 px-1.5 py-0.5 rounded-md ${
                 isActive
                   ? 'bg-slate-900 text-white font-extrabold'
                   : isCompleted
@@ -468,21 +468,21 @@ export const TasksView: React.FC<TasksViewProps> = ({
               </span>
 
               {/* DESTINATION TITLE & METRICS */}
-              <div className="mt-0.5 text-center max-w-[160px] space-y-0.5">
-                <h4 className={`font-bold text-xs leading-tight ${
+              <div className="mt-0.5 text-center max-w-[130px] sm:max-w-[160px] space-y-0.5">
+                <h4 className={`font-bold text-[11px] sm:text-xs leading-tight ${
                   isActive ? 'text-slate-900 font-extrabold' : 'text-slate-700'
                 }`}>
                   {scenario.title}
                 </h4>
 
                 {isCompleted && (
-                  <span className="text-[10px] font-semibold text-emerald-600 block">
+                  <span className="text-[9px] sm:text-[10px] font-semibold text-emerald-600 block">
                     82/100 · +{scenario.xpReward} XP
                   </span>
                 )}
 
                 {!isCompleted && isUnlocked && !isActive && (
-                  <span className="text-[10px] font-semibold text-purple-700 block">
+                  <span className="text-[9px] sm:text-[10px] font-semibold text-purple-700 block">
                     +{scenario.xpReward} XP · {scenario.estimatedTime}
                   </span>
                 )}
@@ -493,29 +493,29 @@ export const TasksView: React.FC<TasksViewProps> = ({
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="mt-3 bg-white border border-purple-300 rounded-2xl p-4 shadow-xl text-left max-w-xs w-64 space-y-2.5 relative z-30"
+                  className="mt-3 bg-white border border-purple-300 rounded-2xl p-3 sm:p-4 shadow-xl text-left w-[85vw] max-w-[240px] xs:max-w-[270px] sm:w-64 space-y-2 relative z-30"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-purple-700 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-100">
+                    <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wider text-purple-700 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-100 truncate max-w-[140px]">
                       {scenario.department}
                     </span>
-                    <span className="text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] sm:text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded-full shrink-0">
                       +{scenario.xpReward} XP
                     </span>
                   </div>
 
                   <div>
-                    <h4 className="font-extrabold text-slate-900 text-sm">
+                    <h4 className="font-extrabold text-slate-900 text-xs sm:text-sm">
                       {scenario.title}
                     </h4>
-                    <p className="text-[11px] text-slate-600 mt-0.5 leading-snug line-clamp-2">
+                    <p className="text-[10px] sm:text-[11px] text-slate-600 mt-0.5 leading-snug line-clamp-2">
                       {scenario.description}
                     </p>
                   </div>
 
                   <button
                     onClick={() => onSelectScenario(scenario)}
-                    className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-2xs transition-all flex items-center justify-center gap-1.5"
+                    className="w-full py-2 sm:py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-[11px] sm:text-xs shadow-2xs transition-all flex items-center justify-center gap-1.5"
                   >
                     <span>CONTINUE SCENARIO</span>
                     <ArrowRight className="w-3.5 h-3.5 text-purple-400" />

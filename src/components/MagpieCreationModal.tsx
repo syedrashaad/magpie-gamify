@@ -64,12 +64,12 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto max-w-full">
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-4xl bg-[#FAF8F5] border border-slate-200 rounded-3xl shadow-2xl overflow-hidden my-8"
+          className="relative w-full max-w-4xl max-h-[95vh] bg-[#FAF8F5] border border-slate-200 rounded-3xl shadow-2xl overflow-hidden my-auto flex flex-col"
         >
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-slate-200/80">

@@ -146,22 +146,22 @@ export const SkyLeagueView: React.FC<SkyLeagueViewProps> = ({
 
             return (
               <div key={member.id} className="space-y-1.5">
-                <div className="flex items-center justify-between text-xs font-bold px-1">
-                  <div className="flex items-center gap-2">
-                    <span className={`w-5 h-5 rounded-full text-[10px] font-extrabold flex items-center justify-center ${
+                <div className="flex items-center justify-between text-xs font-bold px-1 gap-2">
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <span className={`w-5 h-5 rounded-full text-[10px] font-extrabold flex items-center justify-center shrink-0 ${
                       member.rank === 1 ? 'bg-amber-400 text-slate-950' : member.rank === 2 ? 'bg-slate-300 text-slate-950' : member.rank === 3 ? 'bg-amber-700 text-white' : 'bg-slate-700 text-slate-300'
                     }`}>
                       #{member.rank}
                     </span>
-                    <span className={isUser ? 'text-amber-300 font-extrabold' : 'text-slate-200'}>
+                    <span className={`truncate text-xs ${isUser ? 'text-amber-300 font-extrabold' : 'text-slate-200'}`}>
                       {member.name} {isUser && '(YOU)'}
                     </span>
-                    <span className="text-[10px] text-slate-400 font-normal">· {member.role}</span>
+                    <span className="text-[10px] text-slate-400 font-normal truncate hidden sm:inline">· {member.role}</span>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <span className="text-purple-300 font-extrabold">{member.xp} XP</span>
-                    <span className="text-amber-400 text-[11px] font-bold">{member.flightPower} FP</span>
+                  <div className="flex items-center gap-2 sm:gap-3 shrink-0 text-right">
+                    <span className="text-purple-300 font-extrabold text-[11px] sm:text-xs">{member.xp} XP</span>
+                    <span className="text-amber-400 text-[10px] sm:text-[11px] font-bold">{member.flightPower} FP</span>
                   </div>
                 </div>
 
@@ -188,7 +188,7 @@ export const SkyLeagueView: React.FC<SkyLeagueViewProps> = ({
                   {/* GLIDING BIRD / AVATAR ON TRACK */}
                   <div
                     className="absolute top-1/2 -translate-y-1/2 transition-all duration-700"
-                    style={{ left: `calc(${Math.max(trackPct, 4)}% - 18px)` }}
+                    style={{ left: `calc(${Math.max(8, Math.min(trackPct, 84))}% - 14px)` }}
                   >
                     {isUser ? (
                       <div className="w-8 h-8 rounded-xl bg-slate-900 border-2 border-amber-400 flex items-center justify-center shadow-lg relative animate-pulse">

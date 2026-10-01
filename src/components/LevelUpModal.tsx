@@ -34,12 +34,12 @@ export const LevelUpModal: React.FC<LevelUpModalProps> = ({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-xl overflow-hidden">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/90 backdrop-blur-xl overflow-y-auto max-w-full">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
-          className="relative w-full max-w-2xl bg-gradient-to-b from-purple-950 via-slate-900 to-indigo-950 text-white rounded-3xl border border-amber-400/40 shadow-2xl p-8 text-center overflow-hidden my-6"
+          className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto bg-gradient-to-b from-purple-950 via-slate-900 to-indigo-950 text-white rounded-3xl border border-amber-400/40 shadow-2xl p-5 sm:p-8 text-center my-auto"
         >
           {/* Background Radiant Glow */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.3)_0%,transparent_70%)] pointer-events-none" />

@@ -79,12 +79,12 @@ export const RewardSequence: React.FC<RewardSequenceProps> = ({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto max-w-full">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="relative w-full max-w-xl bg-slate-900 border border-purple-500/30 text-white rounded-3xl shadow-2xl p-8 overflow-hidden text-center my-6"
+          className="relative w-full max-w-xl max-h-[92vh] overflow-y-auto bg-slate-900 border border-purple-500/30 text-white rounded-3xl shadow-2xl p-5 sm:p-8 text-center my-auto"
         >
           {/* STEP 1: SCORE REVEAL & EARNED REWARDS */}
           {step === 'score' && (

@@ -205,39 +205,39 @@ export const MySkyView: React.FC<MySkyViewProps> = ({
           </motion.div>
 
           {/* UNLOCKED ISLAND DECORATIONS FLOATING AROUND NOVA */}
-          <div className="relative w-72 h-36 flex items-center justify-center">
+          <div className="relative w-64 sm:w-72 h-36 flex items-center justify-center">
             
             {/* Nest */}
             {unlockedIds.includes('nest-gold') && (
-              <div className="absolute left-2 bottom-6 text-3xl transition-all hover:scale-125 cursor-pointer" title="Golden Magpie Nest">
+              <div className="absolute left-1 sm:left-2 bottom-6 text-2xl sm:text-3xl transition-all hover:scale-125 cursor-pointer" title="Golden Magpie Nest">
                 🪹
               </div>
             )}
 
             {/* Botanical Garden */}
             {unlockedIds.includes('garden-botanical') && (
-              <div className="absolute left-10 top-0 text-3xl transition-all hover:scale-125 cursor-pointer" title="Rooftop Botanical Garden">
+              <div className="absolute left-8 sm:left-10 top-0 text-2xl sm:text-3xl transition-all hover:scale-125 cursor-pointer" title="Rooftop Botanical Garden">
                 🌴
               </div>
             )}
 
             {/* Marble Fountain */}
             {unlockedIds.includes('fountain-marble') && (
-              <div className="absolute right-10 top-2 text-3xl transition-all hover:scale-125 cursor-pointer" title="Sky Sanctuary Fountain">
+              <div className="absolute right-8 sm:right-10 top-2 text-2xl sm:text-3xl transition-all hover:scale-125 cursor-pointer" title="Sky Sanctuary Fountain">
                 ⛲
               </div>
             )}
 
             {/* Vantage Telescope */}
             {unlockedIds.includes('perch-teak') && (
-              <div className="absolute right-2 bottom-6 text-3xl transition-all hover:scale-125 cursor-pointer" title="Teak Vantage & Telescope">
+              <div className="absolute right-1 sm:right-2 bottom-6 text-2xl sm:text-3xl transition-all hover:scale-125 cursor-pointer" title="Teak Vantage & Telescope">
                 🪵
               </div>
             )}
 
             {/* Executive Lounge */}
             {unlockedIds.includes('lounge-executive') && (
-              <div className="absolute top-[-10px] text-3xl transition-all hover:scale-125 cursor-pointer" title="Executive Sky Lounge">
+              <div className="absolute top-[-10px] text-2xl sm:text-3xl transition-all hover:scale-125 cursor-pointer" title="Executive Sky Lounge">
                 🍸
               </div>
             )}
@@ -246,7 +246,7 @@ export const MySkyView: React.FC<MySkyViewProps> = ({
             <motion.div
               animate={{ y: [-4, 4, -4] }}
               transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-              className="w-24 h-24 rounded-2xl bg-white/20 backdrop-blur-md border border-white/40 shadow-2xl flex items-center justify-center p-2 z-20 cursor-pointer"
+              className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white/20 backdrop-blur-md border border-white/40 shadow-2xl flex items-center justify-center p-2 z-20 cursor-pointer"
               onClick={onNavigateToTasks}
             >
               <MagpieCharacter
@@ -260,8 +260,8 @@ export const MySkyView: React.FC<MySkyViewProps> = ({
           </div>
 
           {/* FLOATING GREEN LANDING ISLAND BASE GRAPHIC */}
-          <div className="w-80 h-10 bg-gradient-to-r from-emerald-500 via-green-600 to-emerald-700 rounded-[100%] shadow-2xl border-2 border-emerald-300/60 -mt-4 relative flex items-center justify-center">
-            <div className="text-[10px] font-extrabold text-emerald-100 uppercase tracking-widest opacity-80">
+          <div className="w-full max-w-[270px] xs:max-w-[300px] sm:w-80 h-10 bg-gradient-to-r from-emerald-500 via-green-600 to-emerald-700 rounded-[100%] shadow-2xl border-2 border-emerald-300/60 -mt-4 relative flex items-center justify-center px-2">
+            <div className="text-[9px] sm:text-[10px] font-extrabold text-emerald-100 uppercase tracking-widest opacity-80 text-center truncate">
               FLOATING SANCTUARY PLATFORM
             </div>
           </div>
