@@ -44,37 +44,30 @@ export const TasksView: React.FC<TasksViewProps> = ({
     setTimeout(() => setToastMessage(null), 2500);
   };
 
-  // Helper to map global level index (0..24) to (xPct, yPx) coordinates on map canvas
-  const getNodePosition = (globalIndex: number) => {
+  // Helper for Desktop Winding SVG Map (>= 1024px)
+  const getNodePositionDesktop = (globalIndex: number) => {
     const unitIndex = Math.floor(globalIndex / 5);
     const inUnitIndex = globalIndex % 5;
-
-    // Winding X pattern optimized for mobile & desktop: 30% (Left), 50% (Center), 70% (Right), 50% (Center), 30% (Left)...
-    const xPattern = [30, 50, 70, 50, 30];
+    const xPattern = [25, 50, 75, 50, 25];
     const xPct = xPattern[inUnitIndex];
-
-    // Y spacing taking destination illustration height and region banners into account
     const yPx = unitIndex * 780 + inUnitIndex * 135 + 160;
-
     return { xPct, yPx };
   };
 
-  // Build continuous SVG path 'd' attribute string connecting all 25 level destinations
-  const buildSvgPath = () => {
+  const buildSvgPathDesktop = () => {
     let d = '';
     const totalLevels = 25;
     for (let i = 0; i < totalLevels; i++) {
-      const pos = getNodePosition(i);
+      const pos = getNodePositionDesktop(i);
       const xPx = (pos.xPct / 100) * 600;
       const yPx = pos.yPx;
 
       if (i === 0) {
         d += `M ${xPx} ${yPx}`;
       } else {
-        const prevPos = getNodePosition(i - 1);
+        const prevPos = getNodePositionDesktop(i - 1);
         const prevXPx = (prevPos.xPct / 100) * 600;
         const prevYPx = prevPos.yPx;
-
         const cy1 = prevYPx + (yPx - prevYPx) / 2;
         const cy2 = prevYPx + (yPx - prevYPx) / 2;
         d += ` C ${prevXPx} ${cy1}, ${xPx} ${cy2}, ${xPx} ${yPx}`;
@@ -83,7 +76,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
     return d;
   };
 
-  // Map illustration selection for each level destination
+  // Environment Landmarks per Level
   const getDestinationIllustration = (levelNum: number) => {
     switch (levelNum) {
       case 1:
@@ -115,11 +108,10 @@ export const TasksView: React.FC<TasksViewProps> = ({
     }
   };
 
-  // Flatten all scenarios
   const allScenarios = DEMO_UNITS.flatMap((u) => u.scenarios);
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8 pb-20 overflow-x-hidden max-w-full">
+    <div className="w-full max-w-4xl mx-auto space-y-6 sm:space-y-8 pb-28 sm:pb-32 overflow-x-hidden box-border">
       
       {/* TOAST POPUP NOTIFICATION */}
       <AnimatePresence>
@@ -128,7 +120,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed top-16 sm:top-20 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl shadow-xl text-xs font-bold border border-purple-400/40 flex items-center gap-2 max-w-[90vw] text-center"
+            className="fixed top-16 sm:top-20 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-4 py-2.5 rounded-xl shadow-xl text-xs font-bold border border-purple-400/40 flex items-center gap-2 max-w-[90vw] text-center"
           >
             <Info className="w-4 h-4 text-amber-400 shrink-0" />
             <span>{toastMessage}</span>
@@ -143,14 +135,14 @@ export const TasksView: React.FC<TasksViewProps> = ({
           {/* Left Title & Property */}
           <div>
             <div className="flex flex-wrap items-center gap-2 mb-1">
-              <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-purple-700 bg-purple-100/80 px-2 py-0.5 rounded-md border border-purple-200 truncate max-w-[200px] sm:max-w-none">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-purple-700 bg-purple-100/80 px-2.5 py-0.5 rounded-md border border-purple-200 truncate max-w-[220px] sm:max-w-none">
                 THE SANDALWOOD GRAND · BLR
               </span>
               <span className="text-xs font-semibold text-slate-400 hidden sm:inline">•</span>
-              <span className="text-xs font-extrabold text-amber-700">Currently on Level 03</span>
+              <span className="text-xs font-extrabold text-amber-700">Level 03 Active</span>
             </div>
             <h1 className="font-extrabold text-xl sm:text-2xl text-slate-900 tracking-tight">
-              Hospitality Game World Map
+              Hospitality Learning Journey
             </h1>
             <p className="text-xs font-semibold text-slate-600 mt-0.5">
               Travel through hotel destinations, complete guest roleplays, and level up with your team.
@@ -194,12 +186,12 @@ export const TasksView: React.FC<TasksViewProps> = ({
         {/* Status Pills */}
         <div className="pt-3 border-t border-slate-200/60 flex flex-wrap items-center gap-2 sm:gap-3 text-xs font-bold text-slate-700">
           <div className="flex items-center gap-1.5 bg-purple-100/80 text-purple-900 px-2.5 py-1 rounded-lg border border-purple-200 text-[11px] sm:text-xs">
-            <Sparkles className="w-3.5 h-3.5 text-purple-700" />
-            <span>82% Mastery</span>
+            <Sparkles className="w-3.5 h-3.5 text-purple-700 shrink-0" />
+            <span>82% Journey Mastery</span>
           </div>
 
           <div className="flex items-center gap-1.5 bg-amber-50 text-amber-900 px-2.5 py-1 rounded-lg border border-amber-200/80 text-[11px] sm:text-xs">
-            <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+            <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500 shrink-0" />
             <span>🔥 {userState.streak} Day Streak</span>
           </div>
 
@@ -236,15 +228,188 @@ export const TasksView: React.FC<TasksViewProps> = ({
             const activeSc = allScenarios.find((s) => s.id === activeScenarioId) || allScenarios[2];
             onSelectScenario(activeSc);
           }}
-          className="w-full sm:w-auto px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs shadow-md transition-all flex items-center justify-center gap-1.5 shrink-0"
+          className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs shadow-md transition-all flex items-center justify-center gap-1.5 shrink-0"
         >
           <span>ACCEPT CHALLENGE</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>
 
-      {/* ILLUSTRATED HOTEL WORLD GAME MAP CANVAS */}
-      <div className="bg-[#FAF8F5] border border-slate-200/90 rounded-3xl p-3 sm:p-6 shadow-xs relative overflow-hidden min-h-[3600px] sm:min-h-[3950px] selection:bg-purple-100 max-w-full">
+      {/* ========================================================================= */}
+      {/* 1. DEDICATED MOBILE MAP LAYOUT (< 1024px) - CLEAN NORMAL DOCUMENT FLOW    */}
+      {/* ========================================================================= */}
+      <div className="lg:hidden space-y-8 w-full max-w-full overflow-x-hidden box-border">
+        {DEMO_UNITS.map((unit, unitIdx) => (
+          <div key={unit.id} className="space-y-6">
+            
+            {/* REGION HEADER (In normal document flow above levels) */}
+            <div className="bg-white border border-slate-200/90 p-4 rounded-2xl shadow-2xs space-y-1 text-center w-full">
+              <div className="flex items-center justify-center gap-2">
+                <span className="text-xl">{unit.icon}</span>
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-purple-800 bg-purple-100/80 px-2.5 py-0.5 rounded-md border border-purple-200">
+                  REGION 0{unitIdx + 1} · {unit.title}
+                </span>
+              </div>
+              <h3 className="font-extrabold text-base text-slate-900">{unit.atmosphere}</h3>
+              <p className="text-xs text-slate-500 font-medium">"{unit.subtitle}"</p>
+            </div>
+
+            {/* REGION LEVEL DESTINATIONS LIST */}
+            <div className="space-y-6 relative pl-4 pr-2">
+              {/* Connecting Vertical Carpet Path Line (Layer 3) */}
+              <div className="absolute left-9 top-6 bottom-6 w-1.5 bg-gradient-to-b from-purple-300 via-indigo-400 to-purple-200 rounded-full pointer-events-none z-0" />
+
+              {unit.scenarios.map((scenario, scenarioIdx) => {
+                const globalIdx = unitIdx * 5 + scenarioIdx;
+                const isCompleted = completedScenarioIds.includes(scenario.id);
+                const isUnlocked = unlockedScenarioIds.includes(scenario.id) || isCompleted;
+                const isActive = scenario.id === activeScenarioId || (!isCompleted && isUnlocked && globalIdx === 2);
+                const isUserHere = userState.currentLevelNumber === scenario.levelNumber || isActive;
+                const teammatesHere = teammates.filter((t) => t.currentLevelNumber === scenario.levelNumber);
+
+                return (
+                  <div key={scenario.id} className="relative z-10 flex flex-col space-y-3">
+                    
+                    {/* LEVEL NODE ROW */}
+                    <div className="flex items-start gap-4">
+                      
+                      {/* Left: Level Circular Node Button */}
+                      <div className="relative shrink-0 flex flex-col items-center">
+                        <button
+                          onClick={() => {
+                            if (isUnlocked) {
+                              onSelectScenario(scenario);
+                            } else {
+                              showToast(`Complete Level ${scenario.levelNumber - 1} first to unlock Level ${scenario.levelNumber}!`);
+                            }
+                          }}
+                          className={`w-12 h-12 rounded-full flex flex-col items-center justify-center font-bold transition-all duration-200 shadow-md relative z-10 ${
+                            isCompleted
+                              ? 'bg-emerald-500 text-white ring-4 ring-emerald-100'
+                              : isActive
+                              ? 'bg-slate-900 text-white ring-4 ring-purple-400 scale-105 animate-pulse'
+                              : isUnlocked
+                              ? 'bg-purple-700 text-white ring-4 ring-purple-100'
+                              : 'bg-slate-100 text-slate-400 border border-slate-300 cursor-not-allowed'
+                          }`}
+                        >
+                          {isCompleted ? (
+                            <Check className="w-5 h-5 stroke-[3]" />
+                          ) : isActive ? (
+                            <Play className="w-5 h-5 fill-white ml-0.5" />
+                          ) : isUnlocked ? (
+                            <Play className="w-4 h-4 fill-white ml-0.5" />
+                          ) : (
+                            <Lock className="w-4 h-4 text-slate-400" />
+                          )}
+                        </button>
+                      </div>
+
+                      {/* Right: Level Info & Teammate Markers */}
+                      <div className="flex-1 min-w-0 space-y-1.5">
+                        
+                        {/* Nova Avatar Badge (Normal Flow) */}
+                        {isUserHere && (
+                          <div className="inline-flex items-center gap-2 bg-slate-900 text-white border border-purple-400/80 px-2.5 py-1 rounded-xl shadow-md mb-1">
+                            <div className="w-6 h-6 overflow-hidden rounded-lg bg-purple-900 border border-purple-300 flex items-center justify-center shrink-0">
+                              <MagpieCharacter
+                                bodyColor={userState.magpie.bodyColor}
+                                featherStyle={userState.magpie.featherStyle}
+                                accessory={userState.magpie.accessory}
+                                level={userState.magpie.level}
+                                size="sm"
+                              />
+                            </div>
+                            <span className="text-[10px] font-extrabold text-amber-300">
+                              {userState.magpie.name.toUpperCase()} (YOU HERE)
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Teammate Compact Avatar Markers */}
+                        {teammatesHere.length > 0 && !isUserHere && (
+                          <div className="flex items-center gap-1.5 mb-1">
+                            {teammatesHere.map((tm) => (
+                              <button
+                                key={tm.id}
+                                onClick={() => showToast(`${tm.name} (${tm.role}) • Level ${tm.currentLevelNumber} · ${tm.xp} XP`)}
+                                className="flex items-center gap-1 bg-white border border-purple-200 px-2 py-0.5 rounded-full shadow-2xs text-[10px] font-bold text-slate-800"
+                              >
+                                <span className="w-4 h-4 rounded-full bg-purple-100 flex items-center justify-center text-[9px] font-extrabold text-purple-900">
+                                  {tm.name.charAt(0)}
+                                </span>
+                                <span>{tm.name.split(' ')[0]}</span>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Level Label & Title */}
+                        <div className="flex items-center gap-2">
+                          <span className={`text-[10px] font-extrabold tracking-wider uppercase px-2 py-0.5 rounded-md ${
+                            isActive ? 'bg-slate-900 text-white' : isCompleted ? 'text-emerald-700 bg-emerald-50' : 'text-slate-500 bg-slate-100'
+                          }`}>
+                            {scenario.levelLabel}
+                          </span>
+                          <span className="text-[11px] font-bold text-slate-500">{scenario.estimatedTime}</span>
+                        </div>
+
+                        <h4 className="font-extrabold text-slate-900 text-sm leading-snug">
+                          {scenario.title}
+                        </h4>
+
+                        <p className="text-xs text-slate-600 font-medium leading-relaxed">
+                          {scenario.description}
+                        </p>
+                      </div>
+
+                    </div>
+
+                    {/* EXPANDED HERO SCENARIO ACTION CARD (Normal Document Flow directly under Active Level) */}
+                    {isActive && (
+                      <div className="ml-16 bg-white border border-purple-300 rounded-2xl p-4 shadow-md space-y-3 box-border w-auto">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-[9px] font-bold uppercase text-purple-700 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-100">
+                            {scenario.department}
+                          </span>
+                          <span className="text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                            +{scenario.xpReward} XP REWARD
+                          </span>
+                        </div>
+
+                        <div>
+                          <h4 className="font-extrabold text-slate-900 text-sm sm:text-base">
+                            {scenario.title}
+                          </h4>
+                          <p className="text-xs text-slate-600 mt-1 leading-snug">
+                            {scenario.description}
+                          </p>
+                        </div>
+
+                        <button
+                          onClick={() => onSelectScenario(scenario)}
+                          className="w-full min-h-[48px] py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
+                        >
+                          <span>CONTINUE SCENARIO</span>
+                          <ArrowRight className="w-4 h-4 text-purple-400" />
+                        </button>
+                      </div>
+                    )}
+
+                  </div>
+                );
+              })}
+            </div>
+
+          </div>
+        ))}
+      </div>
+
+
+      {/* ========================================================================= */}
+      {/* 2. DESKTOP WIDE ILLUSTRATED WORLD MAP (>= 1024px)                        */}
+      {/* ========================================================================= */}
+      <div className="hidden lg:block bg-[#FAF8F5] border border-slate-200/90 rounded-3xl p-6 shadow-xs relative overflow-hidden min-h-[3950px] selection:bg-purple-100">
         
         {/* SUBTLE HOTEL FLOOR-PLAN ARCHITECTURAL GRID BACKGROUND */}
         <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#94A3B8_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
@@ -273,30 +438,24 @@ export const TasksView: React.FC<TasksViewProps> = ({
         {/* MULTI-LAYERED WINDING HOTEL CORRIDOR CARPET PATH */}
         <div className="absolute inset-0 pointer-events-none z-0">
           <svg className="w-full h-full" viewBox="0 0 600 3950" preserveAspectRatio="none">
-            
-            {/* Outer Walkway Floor Layer */}
             <path
-              d={buildSvgPath()}
+              d={buildSvgPathDesktop()}
               fill="none"
               stroke="#E5E0D8"
               strokeWidth="24"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-
-            {/* Inner Runner Carpet Line Layer */}
             <path
-              d={buildSvgPath()}
+              d={buildSvgPathDesktop()}
               fill="none"
               stroke="#D6CEC2"
               strokeWidth="14"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-
-            {/* Active / Completed Illuminated Runner Trail */}
             <path
-              d={buildSvgPath()}
+              d={buildSvgPathDesktop()}
               fill="none"
               stroke="url(#carpetRunnerGradient)"
               strokeWidth="8"
@@ -306,7 +465,6 @@ export const TasksView: React.FC<TasksViewProps> = ({
               strokeLinejoin="round"
               className="transition-all duration-1000"
             />
-
             <defs>
               <linearGradient id="carpetRunnerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#10B981" />
@@ -324,17 +482,17 @@ export const TasksView: React.FC<TasksViewProps> = ({
           return (
             <React.Fragment key={unit.id}>
               <div
-                className="absolute left-1/2 -translate-x-1/2 z-10 w-[92%] max-w-lg text-center bg-white/95 backdrop-blur-md border border-slate-200 p-3 sm:p-4 px-4 sm:px-6 rounded-2xl shadow-2xs space-y-1"
+                className="absolute left-1/2 -translate-x-1/2 z-10 w-11/12 max-w-lg text-center bg-white/95 backdrop-blur-md border border-slate-200 p-4 px-6 rounded-2xl shadow-2xs space-y-1"
                 style={{ top: `${regionHeaderY}px` }}
               >
                 <div className="flex items-center justify-center gap-2">
-                  <span className="text-lg sm:text-xl">{unit.icon}</span>
-                  <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest text-purple-800 bg-purple-100/80 px-2 py-0.5 rounded-md border border-purple-200 truncate max-w-[220px] sm:max-w-none">
+                  <span className="text-xl">{unit.icon}</span>
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-purple-800 bg-purple-100/80 px-2.5 py-0.5 rounded-md border border-purple-200">
                     REGION 0{unitIdx + 1} · {unit.title}
                   </span>
                 </div>
-                <h3 className="font-extrabold text-sm sm:text-base text-slate-900 truncate">{unit.atmosphere}</h3>
-                <p className="text-[11px] sm:text-xs text-slate-500 font-medium line-clamp-1">"{unit.subtitle}"</p>
+                <h3 className="font-extrabold text-base text-slate-900">{unit.atmosphere}</h3>
+                <p className="text-xs text-slate-500 font-medium">"{unit.subtitle}"</p>
               </div>
             </React.Fragment>
           );
@@ -342,15 +500,11 @@ export const TasksView: React.FC<TasksViewProps> = ({
 
         {/* ALL 25 HOTEL LEVEL DESTINATIONS INTEGRATED DIRECTLY ON PATH */}
         {allScenarios.map((scenario, globalIdx) => {
-          const pos = getNodePosition(globalIdx);
+          const pos = getNodePositionDesktop(globalIdx);
           const isCompleted = completedScenarioIds.includes(scenario.id);
           const isUnlocked = unlockedScenarioIds.includes(scenario.id) || isCompleted;
           const isActive = scenario.id === activeScenarioId || (!isCompleted && isUnlocked && globalIdx === 2);
-
-          // User presence check
           const isUserHere = userState.currentLevelNumber === scenario.levelNumber || isActive;
-
-          // Teammates positioned at this level number
           const teammatesHere = teammates.filter((t) => t.currentLevelNumber === scenario.levelNumber);
 
           return (
@@ -373,16 +527,16 @@ export const TasksView: React.FC<TasksViewProps> = ({
                       key={tm.id}
                       onMouseEnter={() => setHoveredTeammate(tm)}
                       onMouseLeave={() => setHoveredTeammate(null)}
-                      className="relative flex items-center gap-1 bg-white border border-slate-200 px-2 py-0.5 rounded-full shadow-2xs cursor-pointer hover:scale-110 transition-transform"
+                      className="relative flex items-center gap-1.5 bg-white border border-slate-200 px-2.5 py-1 rounded-full shadow-2xs cursor-pointer hover:scale-110 transition-transform"
                     >
-                      <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-purple-100 flex items-center justify-center text-[9px] sm:text-[10px] font-bold text-purple-900">
+                      <div className="w-5 h-5 rounded-full bg-purple-100 flex items-center justify-center text-[10px] font-bold text-purple-900">
                         {tm.name.charAt(0)}
                       </div>
-                      <span className="text-[9px] sm:text-[10px] font-extrabold text-slate-800">{tm.name.split(' ')[0]}</span>
+                      <span className="text-[10px] font-extrabold text-slate-800">{tm.name.split(' ')[0]}</span>
 
                       {/* Teammate Profile Tooltip */}
                       {hoveredTeammate?.id === tm.id && (
-                        <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-36 sm:w-40 bg-slate-900 text-white text-[10px] p-2 rounded-xl shadow-xl z-40 pointer-events-none text-center">
+                        <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-40 bg-slate-900 text-white text-[10px] p-2.5 rounded-xl shadow-xl z-40 pointer-events-none text-center">
                           <span className="font-extrabold block">{tm.name}</span>
                           <span className="text-slate-300 block">{tm.role}</span>
                           <span className="text-amber-300 font-extrabold block mt-0.5">{tm.xp} XP · Level {tm.currentLevelNumber}</span>
@@ -398,14 +552,14 @@ export const TasksView: React.FC<TasksViewProps> = ({
                 <motion.div
                   initial={{ y: -8, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  className="absolute -top-16 sm:-top-20 z-30 flex flex-col items-center select-none"
+                  className="absolute -top-20 z-30 flex flex-col items-center select-none"
                 >
-                  <span className="text-[8px] sm:text-[9px] font-extrabold uppercase bg-amber-400 text-slate-950 px-2 py-0.5 rounded-full shadow-2xs mb-1 tracking-wider animate-bounce">
+                  <span className="text-[9px] font-extrabold uppercase bg-amber-400 text-slate-950 px-2.5 py-0.5 rounded-full shadow-2xs mb-1 tracking-wider animate-bounce">
                     YOU ARE HERE
                   </span>
                   
-                  <div className="flex items-center gap-1.5 sm:gap-2 bg-slate-900 text-white border border-purple-400/80 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-2xl shadow-xl">
-                    <div className="w-7 h-7 sm:w-9 sm:h-9 overflow-hidden rounded-xl bg-purple-900 border border-purple-300 flex items-center justify-center shrink-0">
+                  <div className="flex items-center gap-2 bg-slate-900 text-white border border-purple-400/80 px-3 py-1.5 rounded-2xl shadow-xl">
+                    <div className="w-9 h-9 overflow-hidden rounded-xl bg-purple-900 border border-purple-300 flex items-center justify-center shrink-0">
                       <MagpieCharacter
                         bodyColor={userState.magpie.bodyColor}
                         featherStyle={userState.magpie.featherStyle}
@@ -414,11 +568,11 @@ export const TasksView: React.FC<TasksViewProps> = ({
                         size="sm"
                       />
                     </div>
-                    <div className="text-left leading-none pr-0.5">
-                      <span className="block text-[10px] sm:text-[11px] font-extrabold text-amber-300">
+                    <div className="text-left leading-none pr-1">
+                      <span className="block text-[11px] font-extrabold text-amber-300">
                         {userState.magpie.name.toUpperCase()}
                       </span>
-                      <span className="block text-[7px] sm:text-[8px] font-semibold text-slate-300">
+                      <span className="block text-[8px] font-semibold text-slate-300">
                         {userState.name.split(' ')[0]} (YOU)
                       </span>
                     </div>
@@ -435,7 +589,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                     showToast(`Complete Level ${scenario.levelNumber - 1} first to unlock Level ${scenario.levelNumber}!`);
                   }
                 }}
-                className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex flex-col items-center justify-center font-bold transition-all duration-200 shadow-2xs relative z-10 ${
+                className={`w-14 h-14 rounded-full flex flex-col items-center justify-center font-bold transition-all duration-200 shadow-2xs relative z-10 ${
                   isCompleted
                     ? 'bg-emerald-500 text-white ring-4 ring-emerald-100 hover:scale-110 shadow-emerald-200'
                     : isActive
@@ -446,18 +600,18 @@ export const TasksView: React.FC<TasksViewProps> = ({
                 }`}
               >
                 {isCompleted ? (
-                  <Check className="w-5 h-5 sm:w-6 sm:h-6 stroke-[3]" />
+                  <Check className="w-6 h-6 stroke-[3]" />
                 ) : isActive ? (
-                  <Play className="w-5 h-5 sm:w-6 sm:h-6 fill-white ml-0.5" />
+                  <Play className="w-6 h-6 fill-white ml-0.5" />
                 ) : isUnlocked ? (
-                  <Play className="w-4 h-4 sm:w-5 sm:h-5 fill-white ml-0.5" />
+                  <Play className="w-5 h-5 fill-white ml-0.5" />
                 ) : (
-                  <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400" />
+                  <Lock className="w-4 h-4 text-slate-400" />
                 )}
               </button>
 
               {/* LEVEL NUMBER BADGE */}
-              <span className={`text-[9px] sm:text-[10px] font-extrabold tracking-wider uppercase mt-1 px-1.5 py-0.5 rounded-md ${
+              <span className={`text-[10px] font-extrabold tracking-wider uppercase mt-1 px-2 py-0.5 rounded-md ${
                 isActive
                   ? 'bg-slate-900 text-white font-extrabold'
                   : isCompleted
@@ -468,21 +622,21 @@ export const TasksView: React.FC<TasksViewProps> = ({
               </span>
 
               {/* DESTINATION TITLE & METRICS */}
-              <div className="mt-0.5 text-center max-w-[130px] sm:max-w-[160px] space-y-0.5">
-                <h4 className={`font-bold text-[11px] sm:text-xs leading-tight ${
+              <div className="mt-0.5 text-center max-w-[160px] space-y-0.5">
+                <h4 className={`font-bold text-xs leading-tight ${
                   isActive ? 'text-slate-900 font-extrabold' : 'text-slate-700'
                 }`}>
                   {scenario.title}
                 </h4>
 
                 {isCompleted && (
-                  <span className="text-[9px] sm:text-[10px] font-semibold text-emerald-600 block">
+                  <span className="text-[10px] font-semibold text-emerald-600 block">
                     82/100 · +{scenario.xpReward} XP
                   </span>
                 )}
 
                 {!isCompleted && isUnlocked && !isActive && (
-                  <span className="text-[9px] sm:text-[10px] font-semibold text-purple-700 block">
+                  <span className="text-[10px] font-semibold text-purple-700 block">
                     +{scenario.xpReward} XP · {scenario.estimatedTime}
                   </span>
                 )}
@@ -493,29 +647,29 @@ export const TasksView: React.FC<TasksViewProps> = ({
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="mt-3 bg-white border border-purple-300 rounded-2xl p-3 sm:p-4 shadow-xl text-left w-[85vw] max-w-[240px] xs:max-w-[270px] sm:w-64 space-y-2 relative z-30"
+                  className="mt-3 bg-white border border-purple-300 rounded-2xl p-4 shadow-xl text-left max-w-xs w-64 space-y-2.5 relative z-30"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wider text-purple-700 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-100 truncate max-w-[140px]">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-purple-700 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-100">
                       {scenario.department}
                     </span>
-                    <span className="text-[10px] sm:text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded-full shrink-0">
+                    <span className="text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded-full">
                       +{scenario.xpReward} XP
                     </span>
                   </div>
 
                   <div>
-                    <h4 className="font-extrabold text-slate-900 text-xs sm:text-sm">
+                    <h4 className="font-extrabold text-slate-900 text-sm">
                       {scenario.title}
                     </h4>
-                    <p className="text-[10px] sm:text-[11px] text-slate-600 mt-0.5 leading-snug line-clamp-2">
+                    <p className="text-[11px] text-slate-600 mt-0.5 leading-snug line-clamp-2">
                       {scenario.description}
                     </p>
                   </div>
 
                   <button
                     onClick={() => onSelectScenario(scenario)}
-                    className="w-full py-2 sm:py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-[11px] sm:text-xs shadow-2xs transition-all flex items-center justify-center gap-1.5"
+                    className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-2xs transition-all flex items-center justify-center gap-1.5"
                   >
                     <span>CONTINUE SCENARIO</span>
                     <ArrowRight className="w-3.5 h-3.5 text-purple-400" />

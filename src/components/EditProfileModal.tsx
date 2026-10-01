@@ -35,8 +35,8 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-200 p-6 space-y-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-sm overflow-y-auto max-w-full">
+      <div className="w-full max-w-md max-h-[92vh] overflow-y-auto bg-white rounded-2xl shadow-xl border border-slate-200 p-5 sm:p-6 space-y-6 my-auto">
         
         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
           <h3 className="font-bold text-slate-900 text-lg">Edit Profile</h3>
