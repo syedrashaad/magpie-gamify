@@ -23,6 +23,7 @@ import { MagpieCoachModal } from './components/MagpieCoachModal';
 import { RewardSequence } from './components/RewardSequence';
 import { FlightChallengeGame } from './components/FlightChallengeGame';
 import { LevelUpModal } from './components/LevelUpModal';
+import { OnboardingModal } from './components/OnboardingModal';
 
 export function App() {
   const [userState, setUserState] = useState<UserState>(() => loadUserState());
@@ -42,6 +43,7 @@ export function App() {
   const [isRewardOpen, setIsRewardOpen] = useState(false);
   const [isLevelUpOpen, setIsLevelUpOpen] = useState(false);
   const [isFlightGameOpen, setIsFlightGameOpen] = useState(false);
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const [latestScore, setLatestScore] = useState(82);
   const [justOvertook, setJustOvertook] = useState(false);
 
@@ -307,6 +309,24 @@ export function App() {
           onClose={() => setIsFlightGameOpen(false)}
         />
       )}
+
+      <OnboardingModal
+        isOpen={isOnboardingOpen}
+        userState={userState}
+        onClose={(updated) => {
+          setIsOnboardingOpen(false);
+          if (updated) {
+            setUserState((prev) => ({
+              ...prev,
+              ...updated,
+              magpie: {
+                ...prev.magpie,
+                ...(updated.magpie || {}),
+              },
+            }));
+          }
+        }}
+      />
     </AppShell>
   );
 }

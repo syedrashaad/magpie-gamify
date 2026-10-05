@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UserState } from '../types';
 import { MagpieCharacter } from './MagpieCharacter';
-import { Sparkles, Check, Lock, Info, ArrowRight, Shield, Star, CloudSun } from 'lucide-react';
+import { Sparkles, Check, Lock, Info, ArrowRight, Star, Heart } from 'lucide-react';
 
 interface MySkyViewProps {
   userState: UserState;
@@ -92,7 +92,6 @@ export const MySkyView: React.FC<MySkyViewProps> = ({
     showToast(`🎉 Unlocked ${item.name}! Your Sky Sanctuary has been upgraded.`);
   };
 
-  // Calculate sanctuary completion score
   const unlockedCount = unlockedIds.length;
   const totalItems = SKY_ITEMS.length;
   const comfortPct = Math.round((unlockedCount / totalItems) * 100);
@@ -107,7 +106,7 @@ export const MySkyView: React.FC<MySkyViewProps> = ({
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-5 py-2.5 rounded-xl shadow-xl text-xs font-bold border border-purple-400/40 flex items-center gap-2 max-w-md text-center"
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-5 py-2.5 rounded-xl shadow-xl text-xs font-bold border border-amber-400 flex items-center gap-2 max-w-md text-center"
           >
             <Info className="w-4 h-4 text-amber-400 shrink-0" />
             <span>{toastMessage}</span>
@@ -119,40 +118,39 @@ export const MySkyView: React.FC<MySkyViewProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-md border border-purple-100">
-              Personal Haven · Nova's World
+            <span className="text-[10px] font-black uppercase tracking-wider text-sky-800 bg-sky-100 px-3 py-0.5 rounded-full">
+              Personal Haven · {userState.magpie.name}'s Sanctuary
             </span>
             <span className="text-xs font-semibold text-slate-400">•</span>
-            <span className="text-xs font-extrabold text-amber-700">{comfortPct}% Sanctuary Comfort</span>
+            <span className="text-xs font-black text-amber-700">{comfortPct}% Sanctuary Comfort</span>
           </div>
-          <h1 className="font-extrabold text-2xl sm:text-3xl text-slate-900 tracking-tight">
+          <h1 className="font-black text-2xl sm:text-3xl text-slate-900 tracking-tight">
             My Sky Haven
           </h1>
-          <p className="text-xs sm:text-sm font-medium text-slate-500 mt-1">
-            Spend earned eggs to build Nova's luxury floating hotel garden in the clouds.
+          <p className="text-xs sm:text-sm font-medium text-slate-600 mt-1">
+            Spend earned eggs to build {userState.magpie.name}'s luxury floating hotel sanctuary in the clouds.
           </p>
         </div>
 
         {/* Currency Pill */}
-        <div className="flex items-center gap-3 self-start sm:self-auto bg-white border border-slate-200/90 p-2.5 px-4 rounded-2xl shadow-2xs">
-          <div className="flex items-center gap-1.5 text-xs font-extrabold text-slate-800">
-            <span className="text-base">🥚</span>
+        <div className="flex items-center gap-3 self-start sm:self-auto bg-white border-2 border-white p-3 px-5 rounded-2xl shadow-md">
+          <div className="flex items-center gap-1.5 text-xs font-black text-slate-900">
+            <span className="text-lg">🥚</span>
             <span>{userState.rewards.eggs} Eggs</span>
           </div>
           <div className="h-4 w-[1px] bg-slate-200" />
-          <div className="flex items-center gap-1.5 text-xs font-bold text-purple-700">
-            <span className="text-base">🪶</span>
+          <div className="flex items-center gap-1.5 text-xs font-bold text-sky-700">
+            <span className="text-lg">🪶</span>
             <span>{userState.rewards.feathers} Feathers</span>
           </div>
         </div>
       </div>
 
       {/* 2D FLOATING SKY ISLAND CANVAS STAGE */}
-      <div className="bg-gradient-to-b from-sky-400 via-indigo-400 to-purple-600 rounded-3xl p-6 sm:p-10 shadow-xl relative overflow-hidden min-h-[380px] flex flex-col items-center justify-between border border-white/20 select-none">
+      <div className="bg-gradient-to-b from-sky-400 via-blue-500 to-indigo-600 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden min-h-[380px] flex flex-col items-center justify-between border-2 border-white select-none">
         
-        {/* Sky Clouds & Sun Graphics Background */}
+        {/* Sky Clouds Graphics Background */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {/* Animated Cloud 1 */}
           <motion.div
             animate={{ x: [0, 30, 0] }}
             transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
@@ -161,7 +159,6 @@ export const MySkyView: React.FC<MySkyViewProps> = ({
             ☁️
           </motion.div>
           
-          {/* Cloud 2 */}
           <motion.div
             animate={{ x: [0, -25, 0] }}
             transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
@@ -170,17 +167,16 @@ export const MySkyView: React.FC<MySkyViewProps> = ({
             ☁️
           </motion.div>
 
-          {/* Golden Sun Flare */}
           <div className="absolute -top-10 right-1/4 w-40 h-40 rounded-full bg-amber-300/30 blur-2xl pointer-events-none" />
         </div>
 
         {/* Top Floating Badge */}
-        <div className="relative z-10 bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full text-slate-900 border border-white/40 shadow-sm flex items-center gap-2">
-          <Sparkles className="w-3.5 h-3.5 text-purple-700" />
-          <span className="text-xs font-extrabold tracking-wide">
-            {userState.magpie.name.toUpperCase()}'S SKY SANCTUARY
+        <div className="relative z-10 bg-white/95 backdrop-blur-md px-4 py-1.5 rounded-full text-slate-900 border border-white shadow-md flex items-center gap-2">
+          <Sparkles className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
+          <span className="text-xs font-black tracking-wide">
+            {userState.magpie.name.toUpperCase()}'S SANCTUARY
           </span>
-          <span className="text-[10px] bg-purple-100 text-purple-900 font-bold px-2 py-0.5 rounded-full">
+          <span className="text-[10px] bg-sky-100 text-sky-900 font-extrabold px-2.5 py-0.5 rounded-full">
             Level {userState.magpie.level}
           </span>
         </div>
@@ -192,19 +188,19 @@ export const MySkyView: React.FC<MySkyViewProps> = ({
           <motion.div
             initial={{ y: 5, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="mb-3 bg-white text-slate-900 p-3 px-4 rounded-2xl shadow-xl border border-purple-200 text-xs font-bold max-w-xs text-center relative"
+            className="mb-3 bg-white text-slate-900 p-3.5 px-5 rounded-2xl shadow-xl border-2 border-amber-300 text-xs font-black max-w-xs text-center relative"
           >
             <span>
               {unlockedCount === 1
                 ? `"Welcome to My Sky! Spend eggs to add gardens, fountains & lounges!"`
                 : unlockedCount < 4
                 ? `"Our sky sanctuary is looking amazing! Let's build the complete hotel garden!"`
-                : `"Luxury 5-star sky sanctuary achieved! Sandalwood Grand looks stunning from up here!"`}
+                : `"Luxury 5-star sky sanctuary achieved! ${userState.property} looks stunning from up here!"`}
             </span>
-            <div className="w-3 h-3 bg-white rotate-45 border-r border-b border-purple-200 absolute -bottom-1.5 left-1/2 -translate-x-1/2" />
+            <div className="w-3 h-3 bg-white rotate-45 border-r-2 border-b-2 border-amber-300 absolute -bottom-2 left-1/2 -translate-x-1/2" />
           </motion.div>
 
-          {/* UNLOCKED ISLAND DECORATIONS FLOATING AROUND NOVA */}
+          {/* UNLOCKED ISLAND DECORATIONS */}
           <div className="relative w-64 sm:w-72 h-36 flex items-center justify-center">
             
             {/* Nest */}
@@ -242,11 +238,11 @@ export const MySkyView: React.FC<MySkyViewProps> = ({
               </div>
             )}
 
-            {/* CENTER MAGPIE CHARACTER (NOVA) */}
+            {/* CENTER MAGPIE CHARACTER */}
             <motion.div
               animate={{ y: [-4, 4, -4] }}
               transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-              className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white/20 backdrop-blur-md border border-white/40 shadow-2xl flex items-center justify-center p-2 z-20 cursor-pointer"
+              className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white/30 backdrop-blur-md border-2 border-white shadow-2xl flex items-center justify-center p-2 z-20 cursor-pointer"
               onClick={onNavigateToTasks}
             >
               <MagpieCharacter
@@ -259,46 +255,46 @@ export const MySkyView: React.FC<MySkyViewProps> = ({
             </motion.div>
           </div>
 
-          {/* FLOATING GREEN LANDING ISLAND BASE GRAPHIC */}
-          <div className="w-full max-w-[270px] xs:max-w-[300px] sm:w-80 h-10 bg-gradient-to-r from-emerald-500 via-green-600 to-emerald-700 rounded-[100%] shadow-2xl border-2 border-emerald-300/60 -mt-4 relative flex items-center justify-center px-2">
-            <div className="text-[9px] sm:text-[10px] font-extrabold text-emerald-100 uppercase tracking-widest opacity-80 text-center truncate">
+          {/* FLOATING LANDING PLATFORM */}
+          <div className="w-full max-w-[270px] xs:max-w-[300px] sm:w-80 h-10 bg-gradient-to-r from-emerald-500 via-green-600 to-emerald-700 rounded-[100%] shadow-2xl border-2 border-emerald-300/80 -mt-4 relative flex items-center justify-center px-2">
+            <div className="text-[9px] sm:text-[10px] font-black text-emerald-100 uppercase tracking-widest text-center truncate">
               FLOATING SANCTUARY PLATFORM
             </div>
           </div>
         </div>
 
         {/* Island Stats Footer Bar */}
-        <div className="relative z-10 w-full max-w-lg bg-slate-900/80 backdrop-blur-md text-white p-3 px-5 rounded-2xl border border-white/20 flex items-center justify-between text-xs font-bold">
+        <div className="relative z-10 w-full max-w-lg bg-slate-900/90 backdrop-blur-md text-white p-3.5 px-5 rounded-2xl border border-white/30 flex items-center justify-between text-xs font-bold shadow-lg">
           <div>
-            <span className="text-slate-400 block text-[10px] uppercase">Unlocked Items</span>
-            <span className="text-amber-300 font-extrabold">{unlockedCount} / {totalItems} Active</span>
+            <span className="text-slate-400 block text-[10px] uppercase font-bold">Unlocked Items</span>
+            <span className="text-amber-300 font-black">{unlockedCount} / {totalItems} Active</span>
           </div>
           <div className="h-6 w-[1px] bg-slate-700" />
           <div>
-            <span className="text-slate-400 block text-[10px] uppercase">Property</span>
+            <span className="text-slate-400 block text-[10px] uppercase font-bold">Property</span>
             <span className="text-white font-bold">{userState.property}</span>
           </div>
           <div className="h-6 w-[1px] bg-slate-700" />
           <button
             onClick={onNavigateToTasks}
-            className="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-xs shadow-md transition-all flex items-center gap-1"
+            className="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs uppercase tracking-wider shadow-md transition-all flex items-center gap-1 border border-amber-300"
           >
-            <span>Train for Eggs</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <span>EARN EGGS</span>
+            <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
           </button>
         </div>
       </div>
 
-      {/* SANCTUARY DECORATIONS & UPGRADES STORE */}
+      {/* SANCTUARY STORE */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-extrabold text-slate-900 text-lg">Sky Sanctuary Store</h3>
-            <p className="text-xs text-slate-500 font-medium">
-              Use eggs earned from hospitality scenarios to customize Nova's haven.
+            <h3 className="font-black text-slate-900 text-lg">Sky Sanctuary Upgrades</h3>
+            <p className="text-xs text-slate-600 font-medium">
+              Use eggs earned from hospitality scenarios to customize {userState.magpie.name}'s sanctuary.
             </p>
           </div>
-          <span className="text-xs font-bold text-purple-700 bg-purple-50 px-3 py-1 rounded-full border border-purple-100">
+          <span className="text-xs font-black text-sky-800 bg-sky-100 px-3 py-1 rounded-full">
             {unlockedCount} Unlocked
           </span>
         </div>
@@ -311,37 +307,37 @@ export const MySkyView: React.FC<MySkyViewProps> = ({
             return (
               <div
                 key={item.id}
-                className={`p-5 rounded-2xl border transition-all flex flex-col justify-between space-y-4 relative ${
+                className={`p-5 rounded-3xl border-2 transition-all flex flex-col justify-between space-y-4 relative ${
                   isUnlocked
-                    ? 'bg-purple-50/60 border-purple-300/80 shadow-2xs'
+                    ? 'bg-sky-50/80 border-sky-300 shadow-sm'
                     : canAfford
-                    ? 'bg-white border-slate-200/90 hover:border-purple-300 hover:shadow-md'
-                    : 'bg-slate-50/80 border-slate-200/60 opacity-85'
+                    ? 'bg-white border-sky-100 hover:border-amber-400 hover:shadow-md'
+                    : 'bg-slate-50 border-slate-200 opacity-80'
                 }`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center justify-center text-2xl shrink-0">
+                    <div className="w-12 h-12 rounded-2xl bg-white border border-sky-100 shadow-sm flex items-center justify-center text-2xl shrink-0">
                       {item.icon}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-purple-700 bg-purple-100/80 px-2 py-0.5 rounded-md">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-sky-800 bg-sky-100 px-2.5 py-0.5 rounded-full">
                           {item.category}
                         </span>
                         {isUnlocked && (
-                          <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md flex items-center gap-1">
+                          <span className="text-[10px] font-black text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full flex items-center gap-1">
                             <Check className="w-3 h-3 stroke-[3]" /> ACTIVE
                           </span>
                         )}
                       </div>
-                      <h4 className="font-extrabold text-slate-900 text-base mt-1">
+                      <h4 className="font-black text-slate-900 text-base mt-1">
                         {item.name}
                       </h4>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1 font-extrabold text-xs text-slate-800 bg-amber-50 border border-amber-200/80 px-2.5 py-1 rounded-xl shrink-0">
+                  <div className="flex items-center gap-1 font-black text-xs text-slate-900 bg-amber-100 border border-amber-300 px-3 py-1 rounded-full shrink-0">
                     <span>🥚</span>
                     <span>{item.cost}</span>
                   </div>
@@ -351,30 +347,30 @@ export const MySkyView: React.FC<MySkyViewProps> = ({
                   {item.description}
                 </p>
 
-                <div className="pt-3 border-t border-slate-200/60 flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-purple-700 flex items-center gap-1">
-                    <Sparkles className="w-3.5 h-3.5" />
+                <div className="pt-3 border-t border-sky-100 flex items-center justify-between">
+                  <span className="text-[11px] font-bold text-sky-800 flex items-center gap-1">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
                     <span>{item.bonusText}</span>
                   </span>
 
                   {isUnlocked ? (
-                    <span className="text-xs font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl flex items-center gap-1">
+                    <span className="text-xs font-black text-emerald-700 bg-emerald-50 border border-emerald-200 px-3.5 py-1.5 rounded-xl flex items-center gap-1">
                       <Check className="w-3.5 h-3.5 stroke-[3]" /> Unlocked
                     </span>
                   ) : (
                     <button
                       onClick={() => handleUnlock(item)}
                       disabled={!canAfford}
-                      className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all flex items-center gap-1.5 shadow-2xs ${
+                      className={`px-4 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 shadow-sm ${
                         canAfford
-                          ? 'bg-slate-900 hover:bg-slate-800 text-white'
+                          ? 'bg-amber-400 hover:bg-amber-300 text-slate-950 border border-amber-300'
                           : 'bg-slate-200 text-slate-500 cursor-not-allowed'
                       }`}
                     >
                       {canAfford ? (
                         <>
                           <span>Unlock ({item.cost} 🥚)</span>
-                          <ArrowRight className="w-3.5 h-3.5 text-amber-400" />
+                          <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
                         </>
                       ) : (
                         <>
