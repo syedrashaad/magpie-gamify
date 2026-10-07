@@ -94,23 +94,18 @@ export const RewardSequence: React.FC<RewardSequenceProps> = ({
               </div>
 
               {/* Celebrating Hero Character Card */}
-              <div className="relative overflow-hidden w-full max-w-sm mx-auto p-4 rounded-3xl bg-gradient-to-r from-sky-500 to-indigo-600 border-2 border-white shadow-md text-white flex items-center justify-around">
-                <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-emerald-400 text-slate-950 font-extrabold text-[10px] uppercase shadow-sm">
+              <div className="relative w-40 h-40 mx-auto flex items-center justify-center rounded-3xl bg-white/90 border-2 border-sky-100 shadow-md">
+                <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-700 font-extrabold text-[10px] uppercase">
                   5-STAR EXCELLENCE
                 </div>
-                <div className="w-20 h-20 rounded-2xl bg-white/20 backdrop-blur-md p-1 border border-white/40 flex items-center justify-center shrink-0">
-                  <img src="/assets/nova_celebrating.jpg" alt="Nova Celebrating" className="w-full h-full object-cover rounded-xl shadow-md" />
-                </div>
-                <div className="shrink-0">
-                  <MagpieCharacter
-                    bodyColor={userState.magpie.bodyColor}
-                    featherStyle={userState.magpie.featherStyle}
-                    accessory={userState.magpie.accessory}
-                    level={userState.magpie.level}
-                    isCelebrating={true}
-                    size="hero"
-                  />
-                </div>
+                <MagpieCharacter
+                  bodyColor={userState.magpie.bodyColor}
+                  featherStyle={userState.magpie.featherStyle}
+                  accessory={userState.magpie.accessory}
+                  level={userState.magpie.level}
+                  isCelebrating={true}
+                  size="hero"
+                />
               </div>
 
               {/* Score Display */}
@@ -132,20 +127,20 @@ export const RewardSequence: React.FC<RewardSequenceProps> = ({
                   <span className="text-[10px] font-bold text-sky-700">XP</span>
                 </div>
 
-                <div className="bg-white/90 border border-emerald-100 p-2 rounded-2xl flex flex-col items-center shadow-sm">
-                  <img src="/assets/reward_companion_food.jpg" alt="Food" className="w-7 h-7 rounded-lg object-cover mb-0.5 shadow-sm" />
+                <div className="bg-white/90 border border-emerald-100 p-2.5 rounded-2xl flex flex-col items-center shadow-sm">
+                  <span className="text-xl mb-0.5">🍎</span>
                   <span className="text-xs font-black text-slate-900">+3</span>
                   <span className="text-[10px] font-bold text-emerald-700">Food</span>
                 </div>
 
-                <div className="bg-white/90 border border-amber-100 p-2 rounded-2xl flex flex-col items-center shadow-sm">
-                  <img src="/assets/reward_silk_feather.jpg" alt="Feathers" className="w-7 h-7 rounded-lg object-cover mb-0.5 shadow-sm" />
+                <div className="bg-white/90 border border-amber-100 p-2.5 rounded-2xl flex flex-col items-center shadow-sm">
+                  <span className="text-xl mb-0.5">🪶</span>
                   <span className="text-xs font-black text-slate-900">+2</span>
                   <span className="text-[10px] font-bold text-amber-700">Feathers</span>
                 </div>
 
-                <div className="bg-white/90 border border-purple-100 p-2 rounded-2xl flex flex-col items-center shadow-sm">
-                  <img src="/assets/reward_golden_egg.jpg" alt="Egg" className="w-7 h-7 rounded-lg object-cover mb-0.5 shadow-sm" />
+                <div className="bg-white/90 border border-purple-100 p-2.5 rounded-2xl flex flex-col items-center shadow-sm">
+                  <span className="text-xl mb-0.5">🥚</span>
                   <span className="text-xs font-black text-slate-900">+1</span>
                   <span className="text-[10px] font-bold text-purple-700">Egg</span>
                 </div>
@@ -179,7 +174,9 @@ export const RewardSequence: React.FC<RewardSequenceProps> = ({
               {/* Unlocked My Sky Item Card */}
               <div className="bg-white/90 border-2 border-amber-300 p-3 rounded-2xl text-left flex items-center justify-between shadow-sm">
                 <div className="flex items-center gap-3">
-                  <img src="/assets/sky_golden_nest.jpg" alt="Golden Nest" className="w-10 h-10 rounded-xl object-cover border border-amber-200 shadow-sm shrink-0" />
+                  <div className="w-10 h-10 rounded-xl bg-amber-100 border border-amber-200 flex items-center justify-center text-xl shrink-0">
+                    🪹
+                  </div>
                   <div>
                     <div className="text-[10px] font-extrabold text-amber-700 uppercase tracking-wider">
                       UNLOCKED MY SKY ITEM

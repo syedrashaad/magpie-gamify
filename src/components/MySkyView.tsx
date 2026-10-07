@@ -16,7 +16,6 @@ export interface SkySanctuaryItem {
   category: 'Nest' | 'Garden' | 'Fountain' | 'Vantage' | 'Lounge';
   cost: number;
   icon: string;
-  image?: string;
   description: string;
   bonusText: string;
 }
@@ -28,7 +27,6 @@ export const SKY_ITEMS: SkySanctuaryItem[] = [
     category: 'Nest',
     cost: 10,
     icon: '🪹',
-    image: '/assets/sky_golden_nest.jpg',
     description: 'A cozy 5-star woven nest lined with silk feathers and gold thread resting atop your cloud island.',
     bonusText: '+5% XP Boost during daily scenarios',
   },
@@ -38,7 +36,6 @@ export const SKY_ITEMS: SkySanctuaryItem[] = [
     category: 'Garden',
     cost: 15,
     icon: '🌴',
-    image: '/assets/sky_botanical_garden.jpg',
     description: 'Lush tropical flora, orchids and fragrant jasmine inspired by luxury hotel courtyard gardens.',
     bonusText: '+2 Feathers per completed level',
   },
@@ -48,7 +45,6 @@ export const SKY_ITEMS: SkySanctuaryItem[] = [
     category: 'Fountain',
     cost: 20,
     icon: '⛲',
-    image: '/assets/sky_marble_fountain.jpg',
     description: 'Tiered Italian marble water fountain with gentle crystal-clear water flow for Nova.',
     bonusText: 'Unlocks ambient water soundscapes',
   },
@@ -58,7 +54,6 @@ export const SKY_ITEMS: SkySanctuaryItem[] = [
     category: 'Vantage',
     cost: 25,
     icon: '🪵',
-    image: '/assets/journey_sky_island.jpg',
     description: 'High brass telescope and polished teak wood perch overseeing all of Sandalwood Grand.',
     bonusText: 'Displays real-time associate flight paths',
   },
@@ -68,7 +63,6 @@ export const SKY_ITEMS: SkySanctuaryItem[] = [
     category: 'Lounge',
     cost: 35,
     icon: '🍸',
-    image: '/assets/hotel_entrance.jpg',
     description: 'VIP sky lounge seating with ambient hotel lights, plush sofas, and hospitality amenity tray.',
     bonusText: 'Maximum Sky Comfort & prestige badge',
   },
@@ -155,9 +149,6 @@ export const MySkyView: React.FC<MySkyViewProps> = ({
       {/* 2D FLOATING SKY ISLAND CANVAS STAGE */}
       <div className="bg-gradient-to-b from-sky-400 via-blue-500 to-indigo-600 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden min-h-[380px] flex flex-col items-center justify-between border-2 border-white select-none">
         
-        {/* Sky Island Atmosphere Backdrop Image */}
-        <div className="absolute inset-0 opacity-20 bg-cover bg-center pointer-events-none" style={{ backgroundImage: `url('/assets/journey_sky_island.jpg')` }} />
-
         {/* Sky Clouds Graphics Background */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <motion.div
@@ -214,36 +205,36 @@ export const MySkyView: React.FC<MySkyViewProps> = ({
             
             {/* Nest */}
             {unlockedIds.includes('nest-gold') && (
-              <div className="absolute left-1 sm:left-2 bottom-4 w-10 h-10 rounded-xl overflow-hidden border-2 border-amber-300 shadow-md transition-all hover:scale-125 cursor-pointer z-10" title="Golden Magpie Nest">
-                <img src="/assets/sky_golden_nest.jpg" alt="Golden Nest" className="w-full h-full object-cover" />
+              <div className="absolute left-1 sm:left-2 bottom-6 text-2xl sm:text-3xl transition-all hover:scale-125 cursor-pointer" title="Golden Magpie Nest">
+                🪹
               </div>
             )}
 
             {/* Botanical Garden */}
             {unlockedIds.includes('garden-botanical') && (
-              <div className="absolute left-6 sm:left-8 top-0 w-10 h-10 rounded-xl overflow-hidden border-2 border-emerald-300 shadow-md transition-all hover:scale-125 cursor-pointer z-10" title="Rooftop Botanical Garden">
-                <img src="/assets/sky_botanical_garden.jpg" alt="Botanical Garden" className="w-full h-full object-cover" />
+              <div className="absolute left-8 sm:left-10 top-0 text-2xl sm:text-3xl transition-all hover:scale-125 cursor-pointer" title="Rooftop Botanical Garden">
+                🌴
               </div>
             )}
 
             {/* Marble Fountain */}
             {unlockedIds.includes('fountain-marble') && (
-              <div className="absolute right-6 sm:right-8 top-0 w-10 h-10 rounded-xl overflow-hidden border-2 border-sky-300 shadow-md transition-all hover:scale-125 cursor-pointer z-10" title="Sky Sanctuary Fountain">
-                <img src="/assets/sky_marble_fountain.jpg" alt="Marble Fountain" className="w-full h-full object-cover" />
+              <div className="absolute right-8 sm:right-10 top-2 text-2xl sm:text-3xl transition-all hover:scale-125 cursor-pointer" title="Sky Sanctuary Fountain">
+                ⛲
               </div>
             )}
 
             {/* Vantage Telescope */}
             {unlockedIds.includes('perch-teak') && (
-              <div className="absolute right-1 sm:right-2 bottom-4 w-10 h-10 rounded-xl overflow-hidden border-2 border-amber-200 shadow-md transition-all hover:scale-125 cursor-pointer z-10" title="Teak Vantage & Telescope">
-                <img src="/assets/journey_sky_island.jpg" alt="Teak Vantage" className="w-full h-full object-cover" />
+              <div className="absolute right-1 sm:right-2 bottom-6 text-2xl sm:text-3xl transition-all hover:scale-125 cursor-pointer" title="Teak Vantage & Telescope">
+                🪵
               </div>
             )}
 
             {/* Executive Lounge */}
             {unlockedIds.includes('lounge-executive') && (
-              <div className="absolute top-[-14px] w-10 h-10 rounded-xl overflow-hidden border-2 border-purple-300 shadow-md transition-all hover:scale-125 cursor-pointer z-10" title="Executive Sky Lounge">
-                <img src="/assets/hotel_entrance.jpg" alt="Sky Lounge" className="w-full h-full object-cover" />
+              <div className="absolute top-[-10px] text-2xl sm:text-3xl transition-all hover:scale-125 cursor-pointer" title="Executive Sky Lounge">
+                🍸
               </div>
             )}
 
@@ -326,12 +317,8 @@ export const MySkyView: React.FC<MySkyViewProps> = ({
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-white border border-sky-100 shadow-sm flex items-center justify-center overflow-hidden shrink-0">
-                      {item.image ? (
-                        <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-                      ) : (
-                        <span className="text-2xl">{item.icon}</span>
-                      )}
+                    <div className="w-12 h-12 rounded-2xl bg-white border border-sky-100 shadow-sm flex items-center justify-center text-2xl shrink-0">
+                      {item.icon}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">

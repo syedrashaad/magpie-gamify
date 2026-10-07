@@ -102,8 +102,14 @@ export const MagpieCoachView: React.FC<MagpieCoachViewProps> = ({
         {/* Chat Header */}
         <div className="p-4 px-6 border-b border-sky-100 flex items-center justify-between bg-sky-50/50">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 shrink-0 overflow-hidden rounded-2xl bg-white border-2 border-sky-200 shadow-sm">
-              <img src="/assets/nova_thinking.jpg" alt="Nova Coach" className="w-full h-full object-cover" />
+            <div className="w-10 h-10 shrink-0 overflow-hidden rounded-2xl bg-white flex items-center justify-center border border-sky-100 shadow-sm">
+              <MagpieCharacter
+                bodyColor={userState.magpie.bodyColor}
+                featherStyle={userState.magpie.featherStyle}
+                accessory={userState.magpie.accessory}
+                level={userState.magpie.level}
+                size="sm"
+              />
             </div>
             <div>
               <h3 className="font-black text-sm text-slate-900">{userState.magpie.name}</h3>
@@ -120,8 +126,8 @@ export const MagpieCoachView: React.FC<MagpieCoachViewProps> = ({
               className={`flex items-start gap-3 ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}
             >
               {msg.sender === 'nova' ? (
-                <div className="w-8 h-8 rounded-xl overflow-hidden border border-sky-300 shadow-sm shrink-0">
-                  <img src="/assets/nova_thinking.jpg" alt="Nova" className="w-full h-full object-cover" />
+                <div className="w-8 h-8 rounded-xl bg-sky-100 border border-sky-300 flex items-center justify-center text-sm shrink-0">
+                  🐦
                 </div>
               ) : (
                 <div className="w-8 h-8 rounded-xl bg-slate-900 text-white flex items-center justify-center text-xs font-bold shrink-0">

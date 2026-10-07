@@ -146,8 +146,8 @@ export const MagpieCoachModal: React.FC<MagpieCoachModalProps> = ({
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 sm:px-6 sm:py-4 bg-slate-900 text-white shrink-0">
             <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden bg-white border border-sky-300 shadow-sm shrink-0">
-                <img src="/assets/nova_thinking.jpg" alt="Nova Coach" className="w-full h-full object-cover" />
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center font-bold text-lg sm:text-xl shrink-0">
+                🪽
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
