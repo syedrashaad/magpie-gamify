@@ -202,7 +202,7 @@ export const MagpieCoachModal: React.FC<MagpieCoachModalProps> = ({
                 <div className="w-full bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3.5 sm:p-4 mb-5 text-left">
                   <div className="flex items-center gap-2 text-amber-900 font-bold text-[10px] sm:text-xs uppercase tracking-wider mb-1">
                     <AlertTriangle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-700 shrink-0" />
-                    <span>Flight Scenario Briefing</span>
+                    <span>Hospitality Scenario Briefing</span>
                   </div>
                   <h4 className="font-serif font-bold text-slate-900 text-sm sm:text-base mb-1">
                     Wrong Charges at Checkout
@@ -214,10 +214,10 @@ export const MagpieCoachModal: React.FC<MagpieCoachModalProps> = ({
 
                 <button
                   onClick={() => setPhase('conversation')}
-                  className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-purple-700 to-indigo-700 text-white font-bold text-xs sm:text-sm shadow-xl hover:shadow-purple-500/30 transition-all flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider shadow-md border border-amber-300 transition-all flex items-center justify-center gap-2"
                 >
-                  <Play className="w-4 h-4 fill-white" />
-                  <span>START FLIGHT</span>
+                  <Play className="w-4 h-4 fill-slate-950 text-slate-950" />
+                  <span>START SCENARIO</span>
                 </button>
               </div>
             )}
@@ -336,7 +336,7 @@ export const MagpieCoachModal: React.FC<MagpieCoachModalProps> = ({
                   className="w-14 h-14 sm:w-16 sm:h-16 border-4 border-purple-200 border-t-purple-700 rounded-full mb-6"
                 />
                 <h3 className="font-serif font-bold text-xl sm:text-2xl text-slate-900 mb-2">
-                  Flight Complete!
+                  Scenario Complete!
                 </h3>
                 <p className="text-xs font-semibold text-slate-500">
                   Magpie Coach is scoring your resolution speed, empathy, and service accuracy...

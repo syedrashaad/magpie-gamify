@@ -15,7 +15,7 @@ import {
   VIPLoungeIllustration,
   CommandCenterIllustration,
 } from './HotelMapIllustrations';
-import { Check, Lock, Play, ArrowRight, Sparkles, Flame, Trophy, Info, Star, Cloud } from 'lucide-react';
+import { Check, Lock, Play, ArrowRight, Sparkles, Flame, Trophy, Info, Star } from 'lucide-react';
 
 interface TasksViewProps {
   userState: UserState;
@@ -44,7 +44,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
     setTimeout(() => setToastMessage(null), 2500);
   };
 
-  // Helper for Desktop Winding SVG Sky Path (>= 1024px)
+  // Helper for Desktop Winding SVG Path (>= 1024px)
   const getNodePositionDesktop = (globalIndex: number) => {
     const unitIndex = Math.floor(globalIndex / 5);
     const inUnitIndex = globalIndex % 5;
@@ -127,7 +127,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
         )}
       </AnimatePresence>
 
-      {/* MAGPIE SKY HERO SPEECH BUBBLE & HEADER */}
+      {/* MAGPIE HERO SPEECH BUBBLE & HEADER */}
       <div className="bg-gradient-to-b from-sky-50 via-blue-50 to-amber-50 border-2 border-white rounded-3xl p-5 sm:p-6 shadow-xl space-y-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           
@@ -147,13 +147,13 @@ export const TasksView: React.FC<TasksViewProps> = ({
             <div className="space-y-1 text-left">
               <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-amber-400 text-slate-950 font-black text-[10px] uppercase tracking-wider shadow-sm">
                 <Sparkles className="w-3 h-3 fill-slate-950" />
-                <span>FLY TO YOUR NEXT DESTINATION</span>
+                <span>CONTINUE YOUR HOTEL JOURNEY</span>
               </div>
               <h1 className="font-black text-2xl text-slate-900 tracking-tight">
-                Destination Level 03 Active
+                Level 03 Active · Front Desk
               </h1>
               <p className="text-xs font-medium text-slate-600">
-                "{userState.magpie.name} is ready! Complete VIP Guest Late Check-in to earn +20 XP."
+                "{userState.magpie.name} is ready! De-escalate Mr. Iyer's room service dispute to earn +20 XP."
               </p>
             </div>
           </div>
@@ -162,10 +162,10 @@ export const TasksView: React.FC<TasksViewProps> = ({
           <div className="bg-white/90 border border-sky-100 p-3 px-4 rounded-2xl flex items-center justify-between sm:justify-start gap-4 shrink-0 shadow-sm w-full md:w-auto">
             <div>
               <span className="block text-[10px] font-extrabold uppercase tracking-wider text-sky-700">
-                Hotel Sky Team
+                Hotel Team Associates
               </span>
               <span className="text-xs font-bold text-slate-800">
-                24 associates <span className="text-amber-600 font-extrabold">(6 soaring)</span>
+                24 associates <span className="text-amber-600 font-extrabold">(6 active)</span>
               </span>
               
               <div className="flex items-center gap-1.5 mt-1.5">
@@ -196,7 +196,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
         <div className="pt-3 border-t border-sky-100 flex flex-wrap items-center gap-2 sm:gap-3 text-xs font-bold text-slate-700">
           <div className="flex items-center gap-1.5 bg-white text-sky-800 px-3 py-1 rounded-full border border-sky-200 text-[11px] sm:text-xs shadow-sm">
             <Sparkles className="w-3.5 h-3.5 text-sky-500 shrink-0" />
-            <span>82% Sky Journey Mastery</span>
+            <span>82% Journey Mastery</span>
           </div>
 
           <div className="flex items-center gap-1.5 bg-amber-100 text-amber-900 px-3 py-1 rounded-full border border-amber-300 text-[11px] sm:text-xs shadow-sm">
@@ -220,7 +220,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-black uppercase text-slate-950 bg-amber-400 px-2.5 py-0.5 rounded-full shadow-sm">
-                DAILY SKY CHALLENGE
+                DAILY HOSPITALITY CHALLENGE
               </span>
               <span className="text-[10px] text-sky-100 font-bold">Resets in 8h</span>
             </div>
@@ -348,7 +348,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                                 <span className="w-4 h-4 rounded-full bg-sky-100 flex items-center justify-center text-[9px] font-extrabold text-sky-900">
                                   {tm.name.charAt(0)}
                                 </span>
-                                <span>{tm.name.split(' ')[0]}</span>
+                                <span>{tm.name.split(' ')[0]} is training</span>
                               </button>
                             ))}
                           </div>
@@ -400,7 +400,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                           onClick={() => onSelectScenario(scenario)}
                           className="w-full py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs uppercase tracking-wider shadow-md transition-all flex items-center justify-center gap-2 border border-amber-300 active:scale-[0.98]"
                         >
-                          <span>SOAR INTO SCENARIO</span>
+                          <span>START SCENARIO</span>
                           <ArrowRight className="w-4 h-4 text-slate-950" />
                         </button>
                       </div>
@@ -521,7 +521,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                       <div className="w-5 h-5 rounded-full bg-sky-100 flex items-center justify-center text-[10px] font-bold text-sky-900">
                         {tm.name.charAt(0)}
                       </div>
-                      <span className="text-[10px] font-extrabold text-slate-800">{tm.name.split(' ')[0]}</span>
+                      <span className="text-[10px] font-extrabold text-slate-800">{tm.name.split(' ')[0]} is training</span>
 
                       {/* Teammate Profile Tooltip */}
                       {hoveredTeammate?.id === tm.id && (
@@ -660,7 +660,7 @@ export const TasksView: React.FC<TasksViewProps> = ({
                     onClick={() => onSelectScenario(scenario)}
                     className="w-full py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs uppercase tracking-wider shadow-md transition-all flex items-center justify-center gap-1.5 border border-amber-300"
                   >
-                    <span>SOAR INTO SCENARIO</span>
+                    <span>START SCENARIO</span>
                     <ArrowRight className="w-4 h-4 text-slate-950" />
                   </button>
                 </motion.div>

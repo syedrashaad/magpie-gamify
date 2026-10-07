@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { UserState, SkyLeagueMember } from '../types';
-import { Trophy, Flame, Sparkles, Zap, ArrowRight, Star } from 'lucide-react';
+import { Trophy, Flame, Sparkles, Zap, ArrowRight, Star, ChevronUp, ShieldCheck } from 'lucide-react';
 import { MagpieCharacter } from './MagpieCharacter';
 
 interface SkyLeagueViewProps {
@@ -55,19 +55,20 @@ export const SkyLeagueView: React.FC<SkyLeagueViewProps> = ({
             <span className="text-xs font-black text-amber-700">Rank #{userMember.rank} Position</span>
           </div>
           <h1 className="font-black text-2xl sm:text-3xl text-slate-900 tracking-tight">
-            Sky League Race Circuit
+            Sky League
           </h1>
           <p className="text-xs sm:text-sm font-medium text-slate-600 mt-1">
-            Live team flight race driven by hospitality training XP, scenario mastery & Flight Power.
+            Train, earn XP, and climb with your team.
           </p>
         </div>
 
+        {/* Optional Secondary Action: Arcade Challenge */}
         <button
           onClick={onOpenFlightChallenge}
-          className="px-5 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs uppercase tracking-wider shadow-md transition-all flex items-center justify-center gap-2 self-start sm:self-auto shrink-0 border border-amber-300"
+          className="px-4 py-2.5 rounded-2xl bg-white hover:bg-amber-50 text-slate-900 font-bold text-xs uppercase tracking-wider shadow-sm transition-all flex items-center justify-center gap-2 self-start sm:self-auto shrink-0 border border-amber-300"
         >
-          <Zap className="w-4 h-4 text-slate-950 fill-slate-950 animate-pulse" />
-          <span>FLIGHT REWARD CHALLENGE (+8 FP)</span>
+          <Zap className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
+          <span>START FLIGHT CHALLENGE (+8 FP)</span>
         </button>
       </div>
 
@@ -76,12 +77,12 @@ export const SkyLeagueView: React.FC<SkyLeagueViewProps> = ({
         <div className="bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 text-slate-950 p-5 rounded-3xl border-2 border-white shadow-xl flex items-center justify-between gap-4 animate-bounce">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-slate-900 text-white font-black text-xl flex items-center justify-center">
-              🚀
+              🪽
             </div>
             <div>
-              <span className="text-xs font-black text-slate-900 uppercase tracking-wider">SKY LEAGUE OVERTAKE!</span>
+              <span className="text-xs font-black text-slate-900 uppercase tracking-wider">YOU MOVED UP!</span>
               <h4 className="font-black text-base text-slate-900">
-                You gained XP and bumped up on the Sandalwood Grand Leaderboard!
+                You gained XP and climbed to #{userMember.rank} on the Sandalwood Grand Leaderboard!
               </h4>
             </div>
           </div>
@@ -91,51 +92,55 @@ export const SkyLeagueView: React.FC<SkyLeagueViewProps> = ({
         </div>
       )}
 
-      {/* OVERTAKE TARGET CALLOUT */}
-      {personAhead && (
-        <div className="bg-amber-100/90 border-2 border-amber-300 p-4 px-6 rounded-3xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-200 text-amber-950 flex items-center justify-center font-black text-base shrink-0 border border-amber-300">
-              ⚔️
+      {/* PROMINENT USER STANDING CARD & OVERTAKE TARGET */}
+      <div className="bg-gradient-to-b from-sky-50 to-amber-50 border-2 border-amber-300 p-5 sm:p-6 rounded-3xl shadow-md space-y-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-2xl bg-slate-900 text-amber-400 border-2 border-amber-400 flex items-center justify-center font-black text-2xl shadow-md shrink-0">
+              #{userMember.rank}
             </div>
             <div>
-              <span className="text-[10px] font-black uppercase tracking-wider text-amber-900">
-                OVERTAKE TARGET
-              </span>
-              <h4 className="font-black text-slate-900 text-sm">
-                {personAhead.name} ({personAhead.role}) is only <span className="text-amber-950 font-black">{xpDifferenceAhead} XP ahead</span> of you!
-              </h4>
-              <p className="text-xs text-slate-700 font-medium">
-                Complete 1 scenario (+20 XP) to overtake #{personAhead.rank} rank!
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-black uppercase text-slate-950 bg-amber-400 px-2.5 py-0.5 rounded-full">
+                  YOUR POSITION
+                </span>
+                <span className="text-xs font-bold text-sky-800">{userMember.role}</span>
+              </div>
+              <h3 className="font-black text-slate-900 text-xl mt-0.5">
+                {userMember.name} <span className="text-amber-700 font-extrabold">({userMember.xp} XP)</span>
+              </h3>
+              <p className="text-xs text-slate-600 font-medium">
+                {personAhead
+                  ? `${xpDifferenceAhead} XP needed to overtake #${personAhead.rank} ${personAhead.name}`
+                  : "🏆 You are currently leading the Sandalwood Grand Sky League!"}
               </p>
             </div>
           </div>
 
-          <button
-            onClick={onOpenFlightChallenge}
-            className="px-4 py-2.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider shadow-md transition-all flex items-center gap-1.5 shrink-0 self-end sm:self-auto"
-          >
-            <span>Activate Nitro Boost</span>
-            <Zap className="w-3.5 h-3.5 fill-white" />
-          </button>
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <div className="text-right hidden sm:block">
+              <span className="text-[10px] font-bold text-slate-400 uppercase block">Training Streak</span>
+              <span className="text-xs font-black text-amber-700">🔥 {userMember.streak} Days</span>
+            </div>
+          </div>
         </div>
-      )}
+      </div>
 
-      {/* VISUAL SKY RACE TRACK STAGE */}
-      <div className="bg-gradient-to-b from-sky-500 via-blue-600 to-indigo-700 rounded-3xl p-6 sm:p-8 text-white shadow-2xl border-2 border-white space-y-6 overflow-hidden relative">
+      {/* VISUAL SKY LEAGUE ELEVATED BOARD */}
+      <div className="bg-gradient-to-b from-sky-400 via-blue-500 to-indigo-600 rounded-3xl p-6 sm:p-8 text-white shadow-2xl border-2 border-white space-y-6 overflow-hidden relative">
         
-        {/* Track Top Info */}
+        {/* Board Header */}
         <div className="flex items-center justify-between border-b border-white/20 pb-4">
           <div className="flex items-center gap-2">
             <Trophy className="w-5 h-5 text-amber-300 fill-amber-300" />
-            <span className="font-black text-base tracking-tight">Sandalwood Grand Sky Race Track</span>
+            <span className="font-black text-base tracking-tight">Sandalwood Grand Leaderboard</span>
           </div>
           <span className="text-xs font-black text-slate-950 bg-amber-400 px-3 py-1 rounded-full uppercase tracking-wider">
-            Week 39 Live Circuit
+            Week 39 Standings
           </span>
         </div>
 
-        {/* RACE LANES */}
+        {/* ELEVATED ASSOCIATE TRACK LANES */}
         <div className="space-y-4 pt-2">
           {sortedLeaderboard.slice(0, 5).map((member) => {
             const trackPct = Math.min(Math.round((member.xp / maxXP) * 100), 92);
@@ -146,7 +151,7 @@ export const SkyLeagueView: React.FC<SkyLeagueViewProps> = ({
                 <div className="flex items-center justify-between text-xs font-bold px-1 gap-2">
                   <div className="flex items-center gap-1.5 min-w-0">
                     <span className={`w-5 h-5 rounded-full text-[10px] font-black flex items-center justify-center shrink-0 ${
-                      member.rank === 1 ? 'bg-amber-400 text-slate-950' : member.rank === 2 ? 'bg-white text-slate-950' : member.rank === 3 ? 'bg-amber-200 text-slate-950' : 'bg-sky-800 text-white'
+                      member.rank === 1 ? 'bg-amber-400 text-slate-950' : member.rank === 2 ? 'bg-white text-slate-950' : member.rank === 3 ? 'bg-amber-200 text-slate-950' : 'bg-sky-900 text-white'
                     }`}>
                       #{member.rank}
                     </span>
@@ -158,16 +163,13 @@ export const SkyLeagueView: React.FC<SkyLeagueViewProps> = ({
 
                   <div className="flex items-center gap-2 sm:gap-3 shrink-0 text-right">
                     <span className="text-sky-100 font-black text-[11px] sm:text-xs">{member.xp} XP</span>
-                    <span className="text-amber-300 text-[10px] sm:text-[11px] font-bold">{member.flightPower} FP</span>
+                    <span className="text-amber-300 text-[10px] sm:text-[11px] font-bold">🔥 {member.streak}d</span>
                   </div>
                 </div>
 
-                {/* Race Track Bar */}
-                <div className="relative w-full h-10 bg-slate-900/60 rounded-2xl border border-white/20 overflow-hidden flex items-center p-1">
+                {/* Progress Runway Bar */}
+                <div className="relative w-full h-9 bg-slate-900/60 rounded-2xl border border-white/20 overflow-hidden flex items-center p-1">
                   
-                  {/* Track Finish Line Grid */}
-                  <div className="absolute right-3 top-0 bottom-0 w-2 bg-[repeating-linear-gradient(45deg,#fff,#fff_4px,#000_4px,#000_8px)] opacity-40" />
-
                   {/* Filled Progress Runway */}
                   <motion.div
                     initial={{ width: 0 }}
@@ -177,7 +179,7 @@ export const SkyLeagueView: React.FC<SkyLeagueViewProps> = ({
                       isUser
                         ? 'bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 shadow-[0_0_15px_rgba(250,204,21,0.6)]'
                         : member.rank === 1
-                        ? 'bg-gradient-to-r from-sky-400 to-amber-400'
+                        ? 'bg-gradient-to-r from-sky-400 to-amber-300'
                         : 'bg-gradient-to-r from-sky-600 to-blue-400'
                     }`}
                   />
@@ -196,9 +198,6 @@ export const SkyLeagueView: React.FC<SkyLeagueViewProps> = ({
                           level={userState.magpie.level}
                           size="sm"
                         />
-                        <div className="absolute -left-2 top-1/2 -translate-y-1/2 text-amber-400 text-xs">
-                          🔥
-                        </div>
                       </div>
                     ) : (
                       <div className="w-7 h-7 rounded-full bg-sky-900 border border-sky-300 flex items-center justify-center text-xs font-bold text-white shadow-md">
@@ -218,7 +217,7 @@ export const SkyLeagueView: React.FC<SkyLeagueViewProps> = ({
         <div className="flex items-center justify-between">
           <h3 className="font-black text-slate-900 text-base flex items-center gap-2">
             <Trophy className="w-5 h-5 text-amber-500 fill-amber-400" />
-            <span>Top Podium Associates · Sandalwood Grand</span>
+            <span>Podium Associates · Sandalwood Grand</span>
           </h3>
           <span className="text-xs font-bold text-sky-800 bg-sky-100 px-3 py-1 rounded-full">Week 39 Standings</span>
         </div>
@@ -257,7 +256,7 @@ export const SkyLeagueView: React.FC<SkyLeagueViewProps> = ({
                   <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
                   <span>{member.streak}d streak</span>
                 </span>
-                <span className="text-[11px] font-black text-amber-700">{member.flightPower} FP Boost</span>
+                <span className="text-[11px] font-black text-amber-700">{member.flightPower} FP</span>
               </div>
             </div>
           ))}
@@ -303,11 +302,6 @@ export const SkyLeagueView: React.FC<SkyLeagueViewProps> = ({
                 <div className="text-right">
                   <span className="text-[10px] font-bold text-slate-400 uppercase block">Total XP</span>
                   <span className="text-sm font-black text-sky-800">{member.xp} XP</span>
-                </div>
-
-                <div className="text-right hidden sm:block">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase block">Flight Power</span>
-                  <span className="text-xs font-bold text-amber-700">{member.flightPower} FP</span>
                 </div>
 
                 <div className="text-right hidden sm:block">

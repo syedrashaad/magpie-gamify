@@ -90,7 +90,7 @@ export const RewardSequence: React.FC<RewardSequenceProps> = ({
             <div className="space-y-5 relative z-10">
               <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-800 font-extrabold text-xs uppercase tracking-wider shadow-sm">
                 <Trophy className="w-4 h-4 text-amber-600 fill-amber-500" />
-                <span>SESSION COMPLETE!</span>
+                <span>SCENARIO COMPLETE!</span>
               </div>
 
               {/* Celebrating Hero Character Card */}
@@ -146,6 +146,31 @@ export const RewardSequence: React.FC<RewardSequenceProps> = ({
                 </div>
               </div>
 
+              {/* Skill Competency Scores Grid */}
+              <div className="bg-white/90 border border-sky-100 p-3 rounded-2xl max-w-md mx-auto text-left shadow-sm">
+                <span className="text-[10px] font-black uppercase text-sky-800 tracking-wider block mb-2 text-center">
+                  Competency Ratings Breakdown
+                </span>
+                <div className="grid grid-cols-2 gap-2 text-xs font-bold text-slate-800">
+                  <div className="flex justify-between bg-sky-50/60 p-2 rounded-xl border border-sky-100">
+                    <span>Empathy</span>
+                    <span className="text-sky-800">{userState.skills.empathy || 82}</span>
+                  </div>
+                  <div className="flex justify-between bg-sky-50/60 p-2 rounded-xl border border-sky-100">
+                    <span>Communication</span>
+                    <span className="text-sky-800">{userState.skills.communication || 76}</span>
+                  </div>
+                  <div className="flex justify-between bg-sky-50/60 p-2 rounded-xl border border-sky-100">
+                    <span>Problem Solving</span>
+                    <span className="text-emerald-700">{userState.skills.problemSolving || 91}</span>
+                  </div>
+                  <div className="flex justify-between bg-sky-50/60 p-2 rounded-xl border border-sky-100">
+                    <span>Guest Focus</span>
+                    <span className="text-amber-700">{userState.skills.ownership || 88}</span>
+                  </div>
+                </div>
+              </div>
+
               {/* Unlocked My Sky Item Card */}
               <div className="bg-white/90 border-2 border-amber-300 p-3 rounded-2xl text-left flex items-center justify-between shadow-sm">
                 <div className="flex items-center gap-3">
@@ -176,7 +201,7 @@ export const RewardSequence: React.FC<RewardSequenceProps> = ({
             </div>
           )}
 
-          {/* STEP 2: MAGPIE NOURISHED & FLIGHT CHALLENGE */}
+          {/* STEP 2: MAGPIE NOURISHED & NEXT ACTIONS */}
           {step === 'growth' && (
             <div className="space-y-5 relative z-10">
               <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-800 font-extrabold text-xs uppercase tracking-wider shadow-sm">
@@ -204,31 +229,21 @@ export const RewardSequence: React.FC<RewardSequenceProps> = ({
                 />
               </div>
 
-              <div className="bg-amber-100/80 border-2 border-amber-300 rounded-2xl p-3.5 text-center shadow-sm">
-                <p className="text-xs font-black text-slate-900 mb-0.5 flex items-center justify-center gap-1.5">
-                  <Zap className="w-4 h-4 text-amber-600 fill-amber-500" />
-                  <span>FLIGHT CHALLENGE UNLOCKED!</span>
-                </p>
-                <p className="text-[11px] font-semibold text-slate-700">
-                  Fly through the sky arcade challenge to earn <strong className="text-amber-800">+8 Flight Power</strong> and climb the Sandalwood Grand Leaderboard!
-                </p>
-              </div>
-
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button
-                  onClick={onLaunchFlightChallenge}
-                  className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-900 font-black text-xs uppercase tracking-wider shadow-md transition-all flex items-center justify-center gap-2 border border-amber-300"
+                  onClick={onClose}
+                  className="w-full sm:w-auto flex-1 py-4 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs uppercase tracking-wider shadow-md transition-all flex items-center justify-center gap-2 border border-amber-300"
                 >
-                  <Zap className="w-4 h-4 text-slate-900 fill-slate-900" />
-                  <span>PLAY FLIGHT CHALLENGE (+8 FP)</span>
+                  <span>CONTINUE JOURNEY</span>
+                  <ArrowRight className="w-4 h-4 text-slate-950" />
                 </button>
 
                 <button
-                  onClick={onClose}
-                  className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 font-black text-xs uppercase tracking-wider border border-slate-200 shadow-sm flex items-center justify-center gap-1.5"
+                  onClick={onLaunchFlightChallenge}
+                  className="w-full sm:w-auto py-4 px-4 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 font-black text-xs uppercase tracking-wider border border-slate-200 shadow-sm flex items-center justify-center gap-1.5"
                 >
-                  <span>RETURN TO MAP</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <Zap className="w-4 h-4 text-amber-500 fill-amber-400" />
+                  <span>TAKE FLIGHT (+8 FP)</span>
                 </button>
               </div>
             </div>

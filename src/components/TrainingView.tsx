@@ -66,7 +66,7 @@ export const TrainingView: React.FC<TrainingViewProps> = ({
       skillFocus: 'Problem Solving',
       estTime: '4 min',
       xp: '+20 XP',
-      reason: 'Recommended for asthmatic guest room relocation protocols',
+      reason: 'Recommended for handling a guest room relocation request.',
     },
   ];
 

@@ -11,9 +11,12 @@ import {
   Flame,
   Sparkles,
   ArrowRight,
-  ShieldCheck,
+  Zap,
+  Target,
+  Check,
 } from 'lucide-react';
 import { MagpieCharacter } from './MagpieCharacter';
+import { SKY_ITEMS } from './MySkyView';
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -53,6 +56,11 @@ export const AppShell: React.FC<AppShellProps> = ({
     { id: 'sky-league' as ActiveTab, label: 'League', icon: Trophy },
     { id: 'profile' as ActiveTab, label: 'Profile', icon: User },
   ];
+
+  // Sanctuary items calculation for My Sky sidebar widget
+  const unlockedIds = userState.mySkyUnlocks || ['nest-gold'];
+  const nextItemToUnlock = SKY_ITEMS.find((item) => !unlockedIds.includes(item.id)) || SKY_ITEMS[0];
+  const comfortPct = Math.round((unlockedIds.length / SKY_ITEMS.length) * 100);
 
   return (
     <div className="min-h-screen bg-[#F0F7FF] text-slate-900 font-sans flex justify-center selection:bg-amber-100 overflow-x-hidden max-w-full">
@@ -244,91 +252,299 @@ export const AppShell: React.FC<AppShellProps> = ({
           </main>
         </div>
 
-        {/* RIGHT RAIL (Visible >= 1280px) */}
+        {/* RIGHT SIDEBAR (Visible >= 1280px) - CONTEXTUAL PER TAB */}
         <aside className="hidden xl:block w-72 bg-white/95 backdrop-blur-md border-l border-sky-100 p-6 space-y-6 shrink-0 sticky top-0 h-screen overflow-y-auto">
           
-          {/* Today's Goal Widget */}
-          <div className="bg-sky-50/80 border border-sky-200 rounded-3xl p-4 space-y-3 shadow-sm">
-            <div className="flex items-center justify-between text-xs font-black">
-              <span className="text-sky-800 uppercase tracking-wider text-[10px]">Today's Goal</span>
-              <span className="text-slate-900">{userState.dailyGoal.currentXP} / {userState.dailyGoal.targetXP} XP</span>
-            </div>
+          {/* TAB 1: TASKS SIDEBAR */}
+          {activeTab === 'tasks' && (
+            <>
+              {/* Today's Goal Widget */}
+              <div className="bg-sky-50/80 border border-sky-200 rounded-3xl p-4 space-y-3 shadow-sm">
+                <div className="flex items-center justify-between text-xs font-black">
+                  <span className="text-sky-800 uppercase tracking-wider text-[10px]">Today's Goal</span>
+                  <span className="text-slate-900">{userState.dailyGoal.currentXP} / {userState.dailyGoal.targetXP} XP</span>
+                </div>
 
-            <div className="relative w-full h-2.5 bg-sky-200 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-amber-400 rounded-full"
-                style={{ width: `${Math.min((userState.dailyGoal.currentXP / userState.dailyGoal.targetXP) * 100, 100)}%` }}
-              />
-            </div>
-            <p className="text-[11px] text-slate-700 font-bold">
-              🔥 {userState.streak} day training streak active
-            </p>
-          </div>
-
-          {/* Up Next Scenario Card */}
-          <div className="bg-white border-2 border-amber-300 rounded-3xl p-4 shadow-md space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-black uppercase text-slate-950 bg-amber-400 px-2.5 py-0.5 rounded-full border border-amber-300">
-                Up Next
-              </span>
-              <span className="text-[10px] text-slate-500 font-bold">3 min</span>
-            </div>
-
-            <h4 className="font-black text-slate-900 text-sm">
-              Wrong Charges at Checkout
-            </h4>
-            <p className="text-xs text-slate-600 line-clamp-2 font-medium">
-              De-escalate Mr. Iyer's ₹18,000 room service dispute before his flight leaves.
-            </p>
-
-            <button
-              onClick={() => onSelectScenario('sc-3')}
-              className="w-full py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs uppercase tracking-wider shadow-md transition-all flex items-center justify-center gap-1.5 border border-amber-300"
-            >
-              <span>Start +20 XP</span>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
-            </button>
-          </div>
-
-          {/* Journey Progress */}
-          <div className="bg-white border border-sky-100 rounded-3xl p-4 space-y-2 shadow-sm">
-            <span className="block text-[10px] font-black uppercase tracking-wider text-sky-800">
-              Journey Progress
-            </span>
-            <div className="flex items-center justify-between text-xs font-black text-slate-900">
-              <span>Front Office Path</span>
-              <span className="text-sky-800">82%</span>
-            </div>
-            <div className="w-full h-2 bg-sky-100 rounded-full overflow-hidden">
-              <div className="h-full bg-sky-500 rounded-full" style={{ width: '82%' }} />
-            </div>
-          </div>
-
-          {/* Sky League Organisation Position */}
-          <div className="bg-amber-100/90 border-2 border-amber-300 rounded-3xl p-4 space-y-2 text-xs shadow-sm">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-black uppercase tracking-wider text-amber-950">
-                Sky League Rank
-              </span>
-              <span className="text-[10px] font-black text-amber-900 bg-amber-200/80 px-2.5 py-0.5 rounded-full border border-amber-300">
-                {userState.property.split(',')[0]}
-              </span>
-            </div>
-            <div className="flex items-center justify-between font-black text-slate-900">
-              <div>
-                <span className="text-base font-black text-slate-900">#{userState.rank} Position</span>
-                <span className="block text-[10px] text-amber-950 font-bold">{userState.flightPower} Flight Power</span>
+                <div className="relative w-full h-2.5 bg-sky-200 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-amber-400 rounded-full"
+                    style={{ width: `${Math.min((userState.dailyGoal.currentXP / userState.dailyGoal.targetXP) * 100, 100)}%` }}
+                  />
+                </div>
+                <p className="text-[11px] text-slate-700 font-bold">
+                  🔥 {userState.streak} day streak active
+                </p>
               </div>
-              <button
-                onClick={() => setActiveTab('sky-league')}
-                className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-[11px] uppercase tracking-wider shadow-sm transition-all"
-              >
-                VIEW
-              </button>
-            </div>
-          </div>
 
-          {/* Small Companion Nova Widget */}
+              {/* Up Next Scenario Card */}
+              <div className="bg-white border-2 border-amber-300 rounded-3xl p-4 shadow-md space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-black uppercase text-slate-950 bg-amber-400 px-2.5 py-0.5 rounded-full border border-amber-300">
+                    Up Next
+                  </span>
+                  <span className="text-[10px] text-slate-500 font-bold">3 min</span>
+                </div>
+
+                <h4 className="font-black text-slate-900 text-sm">
+                  Wrong Charges at Checkout
+                </h4>
+                <p className="text-xs text-slate-600 line-clamp-2 font-medium">
+                  De-escalate Mr. Iyer's ₹18,000 room service dispute before check-out.
+                </p>
+
+                <button
+                  onClick={() => onSelectScenario('sc-3')}
+                  className="w-full py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs uppercase tracking-wider shadow-md transition-all flex items-center justify-center gap-1.5 border border-amber-300"
+                >
+                  <span>Start +20 XP</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
+                </button>
+              </div>
+
+              {/* Journey Progress */}
+              <div className="bg-white border border-sky-100 rounded-3xl p-4 space-y-2 shadow-sm">
+                <span className="block text-[10px] font-black uppercase tracking-wider text-sky-800">
+                  Journey Progress
+                </span>
+                <div className="flex items-center justify-between text-xs font-black text-slate-900">
+                  <span>Front Office Path</span>
+                  <span className="text-sky-800">82%</span>
+                </div>
+                <div className="w-full h-2 bg-sky-100 rounded-full overflow-hidden">
+                  <div className="h-full bg-sky-500 rounded-full" style={{ width: '82%' }} />
+                </div>
+              </div>
+
+              {/* Sky League Rank */}
+              <div className="bg-amber-100/90 border-2 border-amber-300 rounded-3xl p-4 space-y-2 text-xs shadow-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-950">
+                    Sky League Rank
+                  </span>
+                  <span className="text-[10px] font-black text-amber-900 bg-amber-200/80 px-2.5 py-0.5 rounded-full border border-amber-300">
+                    {userState.property.split(',')[0]}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between font-black text-slate-900">
+                  <div>
+                    <span className="text-base font-black text-slate-900">#{userState.rank} Position</span>
+                    <span className="block text-[10px] text-amber-950 font-bold">840 XP total</span>
+                  </div>
+                  <button
+                    onClick={() => setActiveTab('sky-league')}
+                    className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-[11px] uppercase tracking-wider shadow-sm transition-all"
+                  >
+                    VIEW
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* TAB 2: SKY LEAGUE SIDEBAR */}
+          {activeTab === 'sky-league' && (
+            <>
+              {/* Your League Position Widget */}
+              <div className="bg-amber-100/90 border-2 border-amber-300 rounded-3xl p-4 space-y-3 shadow-md">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-950">
+                    Your League Standings
+                  </span>
+                  <span className="text-[10px] font-black text-amber-900 bg-amber-200 px-2.5 py-0.5 rounded-full">
+                    Week 39
+                  </span>
+                </div>
+                <div>
+                  <h4 className="font-black text-slate-900 text-lg">#{userState.rank} Rank Position</h4>
+                  <p className="text-xs font-bold text-amber-900 mt-0.5">
+                    {userState.name} · {userState.xp} XP
+                  </p>
+                </div>
+                <div className="p-2.5 bg-white rounded-2xl border border-amber-300 text-xs font-bold text-slate-800">
+                  ⚡ <strong className="text-amber-700">20 XP</strong> needed to overtake Priya Patel for #2!
+                </div>
+              </div>
+
+              {/* Optional Flight Challenge Secondary CTA */}
+              <div className="bg-white border-2 border-sky-100 rounded-3xl p-4 space-y-3 shadow-sm">
+                <div className="flex items-center gap-1.5 text-xs font-black text-slate-900">
+                  <Zap className="w-4 h-4 text-amber-500 fill-amber-400" />
+                  <span>Optional Reward Arcade</span>
+                </div>
+                <p className="text-xs text-slate-600 font-medium">
+                  Play the optional short arcade flight game to earn +8 Flight Power boost.
+                </p>
+                <button
+                  onClick={onOpenFlightGame}
+                  className="w-full py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs uppercase tracking-wider shadow-md transition-all flex items-center justify-center gap-1.5 border border-amber-300"
+                >
+                  <Zap className="w-3.5 h-3.5 fill-slate-950" />
+                  <span>START FLIGHT CHALLENGE (+8 FP)</span>
+                </button>
+              </div>
+
+              {/* Next Practice to Climb */}
+              <div className="bg-sky-50 border border-sky-200 rounded-3xl p-4 space-y-2 shadow-sm">
+                <span className="block text-[10px] font-black uppercase tracking-wider text-sky-800">
+                  Fastest Way to Climb
+                </span>
+                <p className="text-xs text-slate-700 font-bold">
+                  Complete 1 Hospitality Scenario (+20 XP)
+                </p>
+                <button
+                  onClick={() => onSelectScenario('sc-3')}
+                  className="w-full py-2.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider shadow-sm transition-all"
+                >
+                  Start Scenario (+20 XP)
+                </button>
+              </div>
+            </>
+          )}
+
+          {/* TAB 3: MY SKY SIDEBAR */}
+          {activeTab === 'my-sky' && (
+            <>
+              {/* Currency & Eggs Widget */}
+              <div className="bg-amber-100/90 border-2 border-amber-300 rounded-3xl p-4 space-y-3 shadow-md">
+                <span className="block text-[10px] font-black uppercase tracking-wider text-amber-950">
+                  Sanctuary Vault
+                </span>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-base font-black text-slate-900">
+                    <span>🥚</span>
+                    <span>{userState.rewards.eggs} Eggs</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs font-bold text-sky-800">
+                    <span>🪶</span>
+                    <span>{userState.rewards.feathers} Feathers</span>
+                  </div>
+                </div>
+                <p className="text-xs text-amber-900 font-medium">
+                  Earn eggs by completing hospitality scenarios.
+                </p>
+              </div>
+
+              {/* Sanctuary Comfort Progress */}
+              <div className="bg-white border border-sky-100 rounded-3xl p-4 space-y-3 shadow-sm">
+                <span className="block text-[10px] font-black uppercase tracking-wider text-sky-800">
+                  Sanctuary Comfort
+                </span>
+                <div className="flex items-center justify-between text-xs font-black text-slate-900">
+                  <span>{unlockedIds.length} / {SKY_ITEMS.length} Upgrades</span>
+                  <span className="text-sky-800">{comfortPct}%</span>
+                </div>
+                <div className="w-full h-2 bg-sky-100 rounded-full overflow-hidden">
+                  <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${comfortPct}%` }} />
+                </div>
+              </div>
+
+              {/* Next Upgrade Spotlight */}
+              {nextItemToUnlock && (
+                <div className="bg-sky-50 border border-sky-200 rounded-3xl p-4 space-y-2.5 shadow-sm">
+                  <span className="block text-[10px] font-black uppercase tracking-wider text-sky-800">
+                    Next Upgrade Spotlight
+                  </span>
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-2xl">{nextItemToUnlock.icon}</span>
+                    <div>
+                      <h4 className="font-black text-slate-900 text-xs">{nextItemToUnlock.name}</h4>
+                      <span className="text-[10px] font-bold text-amber-700">Cost: {nextItemToUnlock.cost} Eggs</span>
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-slate-600 font-medium leading-snug">
+                    {nextItemToUnlock.bonusText}
+                  </p>
+                </div>
+              )}
+            </>
+          )}
+
+          {/* TAB 4: COACH SIDEBAR */}
+          {activeTab === 'coach' && (
+            <>
+              {/* Live Mentor Insight */}
+              <div className="bg-sky-50 border border-sky-200 rounded-3xl p-4 space-y-3 shadow-sm">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-sky-600" />
+                  <span className="text-[10px] font-black uppercase tracking-wider text-sky-800">
+                    Mentor Insight
+                  </span>
+                </div>
+                <p className="text-xs font-bold text-slate-800 leading-relaxed">
+                  "{userState.magpie.name} recommends focusing on empathy validation during billing disputes."
+                </p>
+              </div>
+
+              {/* Skill Gap Analysis */}
+              <div className="bg-amber-100/90 border-2 border-amber-300 rounded-3xl p-4 space-y-2 shadow-md">
+                <span className="block text-[10px] font-black uppercase tracking-wider text-amber-950">
+                  Current Skill Gap
+                </span>
+                <div className="flex items-center justify-between text-xs font-black text-slate-900">
+                  <span>Empathy Score</span>
+                  <span className="text-amber-900">82 / 100</span>
+                </div>
+                <p className="text-[11px] text-slate-700 font-medium">
+                  Practice "Wrong Charges at Checkout" to boost Empathy back to 90+.
+                </p>
+                <button
+                  onClick={() => onSelectScenario('sc-3')}
+                  className="w-full py-2.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs uppercase tracking-wider shadow-sm transition-all border border-amber-300"
+                >
+                  Practise Now
+                </button>
+              </div>
+            </>
+          )}
+
+          {/* TAB 5: TRAINING SIDEBAR */}
+          {activeTab === 'training' && (
+            <>
+              {/* Skill Ratings Progress */}
+              <div className="bg-white border border-sky-100 rounded-3xl p-4 space-y-3 shadow-sm">
+                <span className="block text-[10px] font-black uppercase tracking-wider text-sky-800">
+                  Competence Pillars
+                </span>
+                <div className="space-y-2 text-xs font-bold">
+                  <div className="flex justify-between">
+                    <span>Empathy</span>
+                    <span className="text-sky-800">82/100</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Communication</span>
+                    <span className="text-sky-800">76/100</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Problem Solving</span>
+                    <span className="text-sky-800">91/100</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Guest Focus</span>
+                    <span className="text-amber-700">88/100</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Recommended Practice Quick Launch */}
+              <div className="bg-amber-100/90 border-2 border-amber-300 rounded-3xl p-4 space-y-2 shadow-md">
+                <span className="block text-[10px] font-black uppercase tracking-wider text-amber-950">
+                  Recommended Session
+                </span>
+                <h4 className="font-black text-slate-900 text-xs">Wrong Charges at Checkout</h4>
+                <p className="text-[11px] text-slate-700 font-medium">
+                  De-escalate guest room charge dispute before check-out.
+                </p>
+                <button
+                  onClick={() => onSelectScenario('sc-3')}
+                  className="w-full py-2.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs uppercase tracking-wider shadow-sm transition-all border border-amber-300"
+                >
+                  Start Practice (+20 XP)
+                </button>
+              </div>
+            </>
+          )}
+
+          {/* Small Persistent Companion Widget at Sidebar Bottom */}
           <div
             onClick={() => setActiveTab('my-sky')}
             title="Open Nova's Sky Haven"
