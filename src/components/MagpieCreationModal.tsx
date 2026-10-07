@@ -64,23 +64,23 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto max-w-full">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-900/60 backdrop-blur-md overflow-y-auto max-w-full">
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-4xl max-h-[95vh] bg-[#FAF8F5] border border-slate-200 rounded-3xl shadow-2xl overflow-hidden my-auto flex flex-col"
+          className="relative w-full max-w-4xl max-h-[95vh] bg-gradient-to-b from-sky-50 via-blue-50 to-amber-50 border-2 border-white rounded-3xl shadow-2xl overflow-hidden my-auto flex flex-col"
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-slate-200/80">
+          <div className="flex items-center justify-between px-6 py-4 bg-white/90 border-b border-sky-100">
             <div className="flex items-center gap-3">
               <span className="text-xl">✨</span>
               <div>
-                <h2 className="font-extrabold text-lg text-slate-900">
-                  Customise Your Magpie Companion
+                <h2 className="font-black text-lg text-slate-900">
+                  Customize Your Magpie Companion
                 </h2>
-                <p className="text-xs text-slate-500 font-medium">
-                  Personalise your persistent avatar across the Sandalwood Grand learning journey
+                <p className="text-xs text-sky-800 font-semibold">
+                  Personalize your avatar across the hotel learning journey, Sky League, and roleplays.
                 </p>
               </div>
             </div>
@@ -96,14 +96,14 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[480px]">
             {/* Left Preview Stage */}
             <div className="lg:col-span-5 bg-slate-900 p-6 flex flex-col items-center justify-center relative overflow-hidden">
-              <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#a78bfa_1px,transparent_1px)] [background-size:16px_16px]" />
+              <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#FACC15_1px,transparent_1px)] [background-size:16px_16px]" />
 
               <div className="relative z-10 w-full flex flex-col items-center">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-purple-300 bg-purple-900/60 border border-purple-700/50 px-3 py-1 rounded-full mb-2">
+                <span className="text-[10px] font-black uppercase tracking-wider text-slate-950 bg-amber-400 border border-amber-300 px-3 py-1 rounded-full mb-2">
                   Level {userState.magpie.level} Companion Avatar
                 </span>
 
-                <h3 className="text-2xl font-extrabold text-white mb-6">
+                <h3 className="text-2xl font-black text-white mb-6">
                   {name || 'Nova'}
                 </h3>
 
@@ -118,8 +118,8 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
                   />
                 </div>
 
-                <p className="text-xs text-purple-200/80 text-center mt-4 max-w-xs font-medium">
-                  "Your custom Magpie appears on the map, Sky League, coach, and profile."
+                <p className="text-xs text-sky-200 text-center mt-4 max-w-xs font-semibold">
+                  "Your custom Magpie appears live on the map, Sky League, coach, and profile."
                 </p>
               </div>
             </div>
@@ -129,7 +129,7 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
               
               {/* Magpie Name */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
+                <label className="block text-xs font-black uppercase tracking-wider text-slate-700 mb-2">
                   Magpie Name
                 </label>
                 <input
@@ -137,15 +137,15 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Nova"
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent text-sm"
+                  className="w-full px-4 py-3 rounded-2xl border border-sky-200 bg-white font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm"
                 />
               </div>
 
               {/* Body Color */}
               <div>
-                <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
-                  <Palette className="w-4 h-4 text-purple-700" />
-                  <span>Body Colour</span>
+                <label className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-slate-700 mb-2">
+                  <Palette className="w-4 h-4 text-sky-600" />
+                  <span>Body Color</span>
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                   {colorOptions.map((opt) => {
@@ -155,10 +155,10 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
                         key={opt.id}
                         type="button"
                         onClick={() => setBodyColor(opt.id)}
-                        className={`flex items-center gap-2.5 p-2.5 rounded-xl border text-xs font-bold transition-all text-left ${
+                        className={`flex items-center gap-2.5 p-3 rounded-2xl border-2 text-xs font-bold transition-all text-left ${
                           isSelected
-                            ? 'bg-purple-50 border-purple-600 text-purple-900 shadow-2xs'
-                            : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300'
+                            ? 'bg-sky-50 border-amber-400 text-slate-900 shadow-sm'
+                            : 'bg-white border-sky-100 text-slate-700 hover:border-sky-300'
                         }`}
                       >
                         <span
@@ -166,7 +166,7 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
                           style={{ backgroundColor: opt.hex }}
                         />
                         <span className="truncate">{opt.name}</span>
-                        {isSelected && <Check className="w-4 h-4 text-purple-600 ml-auto shrink-0" />}
+                        {isSelected && <Check className="w-4 h-4 text-amber-500 ml-auto shrink-0" />}
                       </button>
                     );
                   })}
@@ -175,8 +175,8 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
 
               {/* Feather Style */}
               <div>
-                <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
-                  <Feather className="w-4 h-4 text-purple-700" />
+                <label className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-slate-700 mb-2">
+                  <Feather className="w-4 h-4 text-sky-600" />
                   <span>Feather Style</span>
                 </label>
                 <div className="grid grid-cols-2 gap-2.5">
@@ -187,14 +187,14 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
                         key={opt.id}
                         type="button"
                         onClick={() => setFeatherStyle(opt.id)}
-                        className={`flex items-center justify-between p-2.5 rounded-xl border text-xs font-bold transition-all ${
+                        className={`flex items-center justify-between p-3 rounded-2xl border-2 text-xs font-bold transition-all ${
                           isSelected
-                            ? 'bg-purple-50 border-purple-600 text-purple-900 shadow-2xs'
-                            : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300'
+                            ? 'bg-sky-50 border-amber-400 text-slate-900 shadow-sm'
+                            : 'bg-white border-sky-100 text-slate-700 hover:border-sky-300'
                         }`}
                       >
                         <span>{opt.name}</span>
-                        {isSelected && <Check className="w-4 h-4 text-purple-600" />}
+                        {isSelected && <Check className="w-4 h-4 text-amber-500" />}
                       </button>
                     );
                   })}
@@ -203,7 +203,7 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
 
               {/* Accessories */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
+                <label className="block text-xs font-black uppercase tracking-wider text-slate-700 mb-2">
                   Accessories
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
@@ -214,10 +214,10 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
                         key={opt.id}
                         type="button"
                         onClick={() => setAccessory(opt.id)}
-                        className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-bold transition-all text-left ${
+                        className={`flex items-center gap-2 p-3 rounded-2xl border-2 text-xs font-bold transition-all text-left ${
                           isSelected
-                            ? 'bg-purple-50 border-purple-600 text-purple-900 shadow-2xs'
-                            : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300'
+                            ? 'bg-sky-50 border-amber-400 text-slate-900 shadow-sm'
+                            : 'bg-white border-sky-100 text-slate-700 hover:border-sky-300'
                         }`}
                       >
                         <span className="text-base">{opt.icon}</span>
@@ -229,20 +229,20 @@ export const MagpieCreationModal: React.FC<MagpieCreationModalProps> = ({
               </div>
 
               {/* Action Buttons */}
-              <div className="pt-4 border-t border-slate-200 flex items-center justify-end gap-3">
+              <div className="pt-4 border-t border-sky-100 flex items-center justify-end gap-3">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-100 transition-colors"
+                  className="px-5 py-3 rounded-2xl border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-100 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
                   onClick={handleSave}
-                  className="px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-2xs transition-all flex items-center gap-2"
+                  className="px-6 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-black uppercase tracking-wider shadow-md transition-all flex items-center gap-2 border border-amber-300"
                 >
-                  <Sparkles className="w-4 h-4 text-purple-400" />
+                  <Sparkles className="w-4 h-4 text-slate-950 fill-slate-950" />
                   <span>Save Magpie</span>
                 </button>
               </div>
