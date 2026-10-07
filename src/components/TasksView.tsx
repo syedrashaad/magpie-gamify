@@ -128,20 +128,16 @@ export const TasksView: React.FC<TasksViewProps> = ({
       </AnimatePresence>
 
       {/* MAGPIE HERO SPEECH BUBBLE & HEADER */}
-      <div className="bg-gradient-to-b from-sky-50 via-blue-50 to-amber-50 border-2 border-white rounded-3xl p-5 sm:p-6 shadow-xl space-y-4">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="relative overflow-hidden bg-gradient-to-b from-sky-50 via-blue-50 to-amber-50 border-2 border-white rounded-3xl p-5 sm:p-6 shadow-xl space-y-4">
+        {/* Background Hotel Entrance Artwork Overlay */}
+        <div className="absolute inset-0 opacity-15 bg-cover bg-center pointer-events-none" style={{ backgroundImage: `url('/assets/hotel_entrance.jpg')` }} />
+
+        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4">
           
           {/* Left: Nova Character Speech Bubble */}
           <div className="flex items-center gap-4">
-            <div className="relative w-20 h-20 shrink-0 bg-white rounded-2xl border-2 border-sky-100 flex items-center justify-center shadow-md">
-              <MagpieCharacter
-                bodyColor={userState.magpie.bodyColor}
-                featherStyle={userState.magpie.featherStyle}
-                accessory={userState.magpie.accessory}
-                level={userState.magpie.level}
-                isCelebrating={true}
-                size="md"
-              />
+            <div className="relative w-20 h-20 shrink-0 bg-white/90 rounded-2xl border-2 border-sky-200 overflow-hidden flex items-center justify-center shadow-md p-1">
+              <img src="/assets/nova_happy.jpg" alt="Nova Companion" className="w-full h-full object-cover rounded-xl" />
             </div>
 
             <div className="space-y-1 text-left">

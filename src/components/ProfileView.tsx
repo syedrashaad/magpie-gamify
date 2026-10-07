@@ -135,6 +135,9 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         </div>
 
         <div className="flex items-center gap-4 bg-sky-50 border border-sky-200 p-4 rounded-2xl">
+          <div className="w-16 h-16 shrink-0 overflow-hidden rounded-2xl bg-white border border-sky-200 shadow-sm">
+            <img src="/assets/nova_happy.jpg" alt="Nova Companion" className="w-full h-full object-cover" />
+          </div>
           <div className="w-16 h-16 shrink-0 overflow-hidden rounded-2xl bg-white flex items-center justify-center border border-sky-200 shadow-sm">
             <MagpieCharacter
               bodyColor={userState.magpie.bodyColor}
